@@ -1,0 +1,20 @@
+<!--main-->
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="true"/>
+  <include file="$(find navigation_stage)/move_base_config/move_base.xml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find navigation_stage)/stage_config/maps/willow-full-0.05.pgm 0.05" respawn="false" />
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(find navigation_stage)/stage_config/worlds/willow-pr2-5cm.world" respawn="false" >
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+  <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="odom" />
+     <param name="base_frame_id" value="base_footprint" />
+          <param name="global_frame_id" value="map" />
+
+     <param name="delta_x" value="-12.00" /> 
+     <param name="delta_y" value="-26.00" /> 
+     <param name="delta_yaw" value="0.0" />
+</node>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/single_robot.rviz" />
+</launch>

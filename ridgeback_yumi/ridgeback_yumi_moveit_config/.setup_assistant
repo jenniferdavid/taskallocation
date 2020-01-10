@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ridgeback_yumi_description
+    relative_path: urdf/ridgeback_yumi.urdf
+  SRDF:
+    relative_path: config/ridgeback_yumi.srdf
+  CONFIG:
+    author_name: Yoshua Nava
+    author_email: yoshua@kth.se
+    generated_timestamp: 1503445568

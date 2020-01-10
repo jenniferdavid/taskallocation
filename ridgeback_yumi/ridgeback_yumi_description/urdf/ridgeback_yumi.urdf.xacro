@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<robot name="ridgeback_yumi" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find ridgeback_description)/urdf/ridgeback.urdf.xacro" />
+
+
+
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find yumi_description)/urdf/Util/materials.xacro" />
+  <!-- Import utilities -->
+  <xacro:include filename="$(find yumi_description)/urdf/Util/utilities.xacro" />
+  <!--Import the yumi macro -->
+  <xacro:include filename="$(find yumi_description)/urdf/yumi.xacro"/>
+  <!--Import the yumi servo gripper macro -->
+  <xacro:include filename="$(find yumi_description)/urdf/Grippers/yumi_servo_gripper.xacro"/>
+  <!--Import the yumi optodaq sensors macro 
+  <xacro:include filename="$(find yumi_description)/urdf/Extras/yumi_optodaq_sensors.xacro"/-->
+  <!-- Import Gazebo plugins -->
+  <xacro:include filename="$(find yumi_description)/urdf/Gazebo/gazebo.urdf.xacro"/>
+
+
+  <!--yumi-->
+  <xacro:yumi name="yumi" hardware_interface="hardware_interface/VelocityJointInterface" parent="yumi_pedestal">
+    <origin xyz="0 0 0.1" rpy="0 0 0" />
+  </xacro:yumi>
+
+
+  <!--xacro:yumi_optodaq_sensor name="optodaq_r" parent="yumi_link_7_r">
+      <origin xyz="0 0 0.033" rpy="0 ${PI} ${-PI/4}" />
+  </xacro:yumi_optodaq_sensor>
+
+  <xacro:yumi_optodaq_sensor name="optodaq_l" parent="yumi_link_7_l">
+	  <origin xyz="0 0 0.033" rpy="0 ${PI} ${-PI/4}" />
+  </xacro:yumi_optodaq_sensor>
+
+  <right gripper
+  <xacro:yumi_servo_gripper name="gripper_r" hardware_interface="hardware_interface/EffortJointInterface" parent="optodaq_r_sensor_link">
+    <origin xyz="0 0 -0.033" rpy="${PI} 0.0 ${PI/4}" />
+  </xacro:yumi_servo_gripper>
+
+  <left gripper-
+  <xacro:yumi_servo_gripper name="gripper_l" hardware_interface="hardware_interface/EffortJointInterface" parent="optodaq_l_sensor_link">
+    <origin xyz="0 0 -0.033" rpy="${PI} 0.0 ${PI/4}" />
+  </xacro:yumi_servo_gripper-->
+
+
+
+
+
+  <xacro:property name="pedestal_height" value="0.28" />
+  <xacro:property name="pedestal_offset_x" value="0.32" />
+  <xacro:property name="yumi_offset_x" value="0.06" />
+  <xacro:property name="yumi_height" value="0.25" />
+  <xacro:property name="kinect_zrotation_fix" value="${- PI / 2.0}" />
+  <xacro:property name="kinect_base_pitch" value="${ -PI/2.0 }" />
+
+  <joint name="ridgeback_base_to_pedestal" type="fixed">
+    <origin rpy="0 0 ${PI}" xyz="${pedestal_offset_x} 0 ${pedestal_height}" />
+    <parent link="base_link" />
+    <child link="yumi_pedestal" />
+  </joint>
+
+  <link name="yumi_pedestal">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 ${PI}" />
+      <geometry>
+        <mesh filename="package://ridgeback_yumi_description/meshes/IRB14000_mount.stl"/>
+      </geometry>
+      <material name="black" />
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 ${PI}" />
+      <geometry>
+        <mesh filename="package://ridgeback_yumi_description/meshes/IRB14000_mount.stl"/>
+      </geometry>
+      <material name="black" />
+    </visual>
+  </link>
+
+
+  <joint name="pedestal_to_yumi" type="fixed">
+    <origin rpy="0 0 ${PI}" xyz="${yumi_offset_x} 0 ${yumi_height}" />
+    <parent link="yumi_pedestal" />
+    <child link="yumi_base_link" />
+  </joint>
+
+
+  <link name="kinect2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+                    <box size="0.4 0.02 0.02" />
+
+        <!--mesh scale="0.001 0.001 0.001" filename="package://yumi_description/meshes/accesories/KinectXboxOne.stl"/-->
+      </geometry>
+      <material name="Black" />
+    </visual>
+  </link>
+
+  <link name="left_kinect_base">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.4 0.02 0.02" />
+        </geometry>
+        <material name="Grey" />
+      </visual>
+  </link>
+
+
+  <link name="right_kinect_base">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.4 0.02 0.02" />
+        </geometry>
+        <material name="Grey" />
+      </visual>
+  </link>
+
+  <link name="middle_kinect_base">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.4 0.02 0.02" />
+        </geometry>
+        <material name="Grey" />
+      </visual>
+  </link>
+
+   <joint name="kinect2_to_right_kinect_base" type="fixed">
+    <parent link="yumi_base_link" />
+    <child link="right_kinect_base" />
+    <origin rpy="0 ${-PI/2} 0.17" xyz="-0.1 -0.03 0.56" />
+  </joint>
+
+  <joint name="kinect2_to_left_kinect_base" type="fixed">
+    <parent link="yumi_base_link" />
+    <child link="left_kinect_base" />
+    <origin rpy="0 ${-PI/2} -0.17" xyz="-0.1 0.03 0.56" />
+  </joint>
+
+  <joint name="yumi_to_middle_kinect_base" type="fixed">
+    <parent link="yumi_base_link" />
+    <child link="middle_kinect_base" />
+    <origin rpy="0 ${kinect_base_pitch} 0" xyz="-0.1 0 0.56" />
+  </joint>
+
+  <joint name="middle_kinect_base_to_kinect2" type="fixed">
+    <parent link="middle_kinect_base" />
+    <child link="kinect2" />
+    <origin rpy="${-PI/2} 0 ${kinect_zrotation_fix}" xyz="0.25 0 0" />
+  </joint>
+
+
+
+</robot>

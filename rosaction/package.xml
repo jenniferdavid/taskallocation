@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>rosaction</name>
+  <version>0.1.0</version>
+  <description>
+    This package provides a command-line tool to interact with ROS action
+    servers.
+  </description>
+  <maintainer email="mr@anassinator.com">anassinator</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rospy</build_depend>
+
+  <run_depend>rospy</run_depend>
+</package>

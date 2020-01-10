@@ -1,0 +1,37 @@
+poses:
+- position:
+    x: 54.0
+    y: 35.0
+    z: 0.0
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+- position:
+    x: 46.0
+    y: 22.0
+    z: 0.0
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+- position:
+    x: 47.0
+    y: 15.0
+    z: 0.0
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+- position:
+    x: 54.0
+    y: 5.0
+    z: 0.0
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
