@@ -9,7 +9,9 @@
 using namespace std;
 using namespace PlayerCc;
 
-struct Item
+int main(int argc, char *argv[])
+{
+    struct Item
     {
         char name[16];
         int id;
@@ -19,22 +21,55 @@ struct Item
         double yaw;
     }typedef item_t;
     
-int numRobots;
-int numTasks;
-navi_msgs::Problem details;
-char taskL = 'a';
-char dropL = 'A';
-char robotL = 'A';
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-//lists out coordinates of all the models from player using SimulationProxy
-Item totalModelList(item_t *modelList, SimulationProxy &simProxy, int numRobots, int numTasks)
-{
+    int numRobots;
+    int numTasks;
     
-int numDropoffs = numRobots;
-int numModels = numTasks + numDropoffs; 
-int totalModels = numRobots + numModels;  
+    ros::init(argc, argv, "stage_robot_node");
+    ros::NodeHandle n;
+    n.getParam("/stage_robot_node/numRobots", numRobots);
+    n.getParam("/stage_robot_node/numTasks", numTasks);
+   
+    int numDropoffs = numRobots;
+    int numModels = numTasks + numDropoffs; 
+    int totalModels = numRobots + numModels;     
 
+    item_t robotList[numRobots];
+    item_t modelList[numModels];
+    item_t finalList[totalModels];
+    
+    char taskL = 'a';
+    char dropL = 'A';
+    char robotL = 'A';
+    
+    PlayerClient *robot;
+    robot = new PlayerClient("localhost", 6665);
+    
+    Position2dProxy **position = new Position2dProxy*[numRobots];
+    SimulationProxy simProxy(robot,0);
+
+    navi_msgs::Item data;
+    navi_msgs::ItemStruct msg;
+    navi_msgs::Problem details;
+
+    ros::Publisher coords_pub;
+    ros::Publisher problem_pub;
+
+    for (int k = 0; k<numRobots; k++)
+        {
+            position[k] = new Position2dProxy(robot, k);
+            robot->Read();
+
+            //receive all robots pose
+            char robotStr[] = "robot%d";
+            sprintf(robotList[k].name, robotStr, k);
+            robotList[k].id = k;
+            robotList[k].A = robotL; 
+            robotList[k].x = position[k]->GetXPos(); 
+            robotList[k].y = position[k]->GetYPos(); 
+            robotList[k].yaw = position[k]->GetYaw(); 
+            ++robotL;
+        }
+            
     //get the poses of the task
     for(int i=0;i<numTasks;i++)
         {
@@ -56,73 +91,22 @@ int totalModels = numRobots + numModels;
             simProxy.GetPose2d(modelList[j].name, modelList[j].x, modelList[j].y, modelList[j].yaw);
             ++dropL;
         }
-    return modelList[numModels];
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-class Robot
-{
-public:
-    Item allModels(ros::NodeHandle n, int numRobots, int numTasks);
-          
-    navi_msgs::Item data;
-    navi_msgs::ItemStruct msg;
-        
-    ros::Publisher coords_pub;
-    ros::Publisher problem_pub;
-
-protected:
-    PlayerClient *robot;
-    Position2dProxy *p2dProxy;
-    SimulationProxy *simProxy;
-};
-
-Item Robot::allModels(ros::NodeHandle n, int numRobots, int numTasks)
-{
-        
-        int numDropoffs = numRobots;
-        int numModels = numTasks + numDropoffs; 
-        int totalModels = numRobots + numModels;     
-        item_t robotList[numRobots];
-        robot = new PlayerClient("localhost", 6665);
-        Position2dProxy **position = new Position2dProxy*[numRobots];
-        
-            
-        for (int k = 0; k<numRobots; k++)
-            {
-                position[k] = new Position2dProxy(robot, k);
-                robot->Read();
-
-                //receive all robots pose
-                char robotStr[] = "robot%d";
-                sprintf(robotList[k].name, robotStr, k);
-                robotList[k].id = k;
-                robotList[k].A = robotL; 
-                robotList[k].x = position[k]->GetXPos(); 
-                robotList[k].y = position[k]->GetYPos(); 
-                robotList[k].yaw = position[k]->GetYaw(); 
-                ++robotL;
-            }
     
-        //receive all models coords in itemList
-        SimulationProxy simProxy(robot,0);
-        item_t dupList[numModels];
-        totalModelList(dupList, simProxy, numRobots, numTasks); 
+    //create a finalList of all coordinates 
+    std::copy(modelList,modelList+numModels, std::copy(robotList,robotList+numRobots,finalList));
     
-        //create a finalList of all coordinates 
-        item_t finalList[totalModels];
-        std::copy(dupList,dupList+numModels, std::copy(robotList,robotList+numRobots,finalList));
-    
-        //totalList of robots and models stacked - printed out
-        for (int k = 0; k < totalModels; k++) {
+    //totalList of robots and models stacked - printed out
+    for (int k = 0; k < totalModels; k++) {
         std::cout << finalList[k].name << ' ' << finalList[k].id << ' ' << finalList[k].A << ' ' <<finalList[k].x << ' ' << finalList[k].y << ' '<< finalList[k].yaw << endl;
 	}
-        coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 100);
-        problem_pub = n.advertise<navi_msgs::Problem>("/problem", 100);
+    
+    delete []position;
 
-        while (ros::ok())
-            {
+    coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 100);
+    problem_pub = n.advertise<navi_msgs::Problem>("/problem", 100);
+
+    while (ros::ok())
+        {
             for (int k = 0; k< totalModels; k++)
                 {
                     {string str(finalList[k].name);
@@ -141,23 +125,7 @@ Item Robot::allModels(ros::NodeHandle n, int numRobots, int numTasks)
             details.nDropoffs = numDropoffs;
             details.nTotalmodels = totalModels;
             problem_pub.publish(details);
-            }
-            delete []position;
-            return finalList[totalModels];
-    }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-int main(int argc, char *argv[])
-{
-    ros::init(argc, argv, "stage_robot_node");
-    ros::NodeHandle n;
-    n.getParam("/stage_robot_node/numRobots", numRobots);
-    n.getParam("/stage_robot_node/numTasks", numTasks);
-
-    Robot robot;
-    robot.allModels(n,numRobots,numTasks);
-    //ros::spin();
+        }
     return 0;
 }
 
