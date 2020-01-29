@@ -369,6 +369,7 @@
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
       <robotNamespace>/</robotNamespace>
+          <legacyModeNS>true</legacyModeNS>
     </plugin>
     <plugin filename="libridgeback_ros_force_based_move.so" name="ridgeback_ros_force_based_move">
       <robotNamespace>/</robotNamespace>
@@ -589,6 +590,7 @@
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_controller">
       <robotNamespace>/yumi</robotNamespace>
+          <legacyModeNS>true</legacyModeNS>
     </plugin>
   </gazebo>
   <link name="yumi_base_link"/>
