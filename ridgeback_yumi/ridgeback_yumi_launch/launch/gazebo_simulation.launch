@@ -75,7 +75,7 @@
       <arg name="joystick" value="false"/>
   </include>
 
-<rosparam param="/gazebo_ros_control/pid_gains">
+<!--rosparam param="/gazebo_ros_control/pid_gains">
   front_left_wheel:
     p: 5
     i: 0.1
@@ -92,7 +92,7 @@
     p: 5
     i: 0.1
     d: 0
-</rosparam>
+</rosparam-->
   
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
   
