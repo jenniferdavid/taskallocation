@@ -1,0 +1,120 @@
+define block model
+(
+  size [0.5 0.5 0.5]
+  gui_nose 0
+)
+
+define direction model
+(
+  size [0.050 0.500 0.000]
+)
+
+define topurg ranger
+(
+  sensor(
+    range_max 30.0
+    fov 270.25
+    samples 1081
+  )
+  # generic model properties
+  color "black"
+  size [ 0.050 0.050 0.100 ]
+)
+
+define turtlebot position
+(
+  size [0.650 0.650 0.250]
+  origin [-0.050 0.000 0.000 0.000]
+  gui_nose 1
+  drive "omni"
+    #topurg(pose [ 0.275 0.000 0 0.000 ])
+  topurg(pose [ 0.275 0.000 -0.125 0.000 ])
+  direction(pose [0.300 0.000 0.000 0.000])
+)
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  ranger_return 1.000
+)
+
+# set the resolution of the underlying raytrace model in meters
+resolution 0.02
+interval_sim 100  # simulation timestep in milliseconds
+
+
+window
+( 
+  #size [ 745 448 ] 
+  size [1400 800]
+  rotate [ 0.000 0.000 ]
+  scale 6.269 
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "willow"
+  bitmap "../maps/willow-full-sparse.pgm"
+  size [58.400 52.600 0.500] #for willow.pgm
+  pose [ -26.300 29.200 0.000 90.000 ] #for willow.pgm
+
+  #bitmap "../maps/maze.pgm"
+  #size [60.00 60.00 0.500]
+  #pose [ -30.00 30.00 0.000 90.000 ]
+
+  #bitmap "../maps/twoRooms1.pgm"
+  #size [50.000 50.600 0.500]#for two_Rooms1.pgm
+  #pose [ 0.00 9.00 0.000 90.000 ] #translation not proper in rviz - to be fixed
+
+  #bitmap "../maps/my_map.pgm"
+  #size [105.200 175.200 0.500]#for my_map.pgm
+  #pose [ -43.80 28.80 0.000 90.000 ]
+
+  #bitmap "../maps/robopark2.pgm"
+  #size [140.6 100.00 00.00]  #for robo_park.pgm
+  #pose [ -45.00 64.58 0.000 90.00] #translation not proper in rviz - to be fixed
+)
+
+# throw in a robot
+turtlebot(pose [ -23.000 54.000 0.000 90.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ -46.000 6.000 0.000 90.000 ] name "turtlebot1" color "blue")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
