@@ -1,0 +1,30 @@
+<!--ridge-->
+<launch>
+ <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- more default parameters can be changed here -->
+    <arg name="debug" value="false" />
+    <arg name="gui" value="true" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="verbose" value="true" />
+  </include>
+
+<group ns="robot_0">
+<param name="tf_prefix" value="robot_0" />
+<!-- Spawn a ridgeback robot into Gazebo -->
+<param name="robot_description" command="$(find xacro)/xacro --inorder $(find ridgeback_description)/urdf/ridgeback.urdf.xacro" />
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model ridge" />
+</group>
+
+<group ns="robot_1">
+<param name="tf_prefix" value="robot_1" />
+<!-- Spawn a ridgeback2 robot into Gazebo -->
+<param name="robot_description" command="$(find xacro)/xacro --inorder $(find ridgeback_description)/urdf/ridgeback.urdf.xacro" />
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 4 -y 4 -z 0 -model ridge2" />
+</group>
+
+</launch>
+
+

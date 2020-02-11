@@ -81,6 +81,5 @@
    <node pkg="tf" type="static_transform_publisher" name="map_odom1" args="48.12 21.67 0 0 0 0 /map /robot_1/odom 100" />
   </group>
   <!-- END ROBOT 1 -->
-  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find navigation_stage)/multi_robot.rviz" />
 
 </launch>

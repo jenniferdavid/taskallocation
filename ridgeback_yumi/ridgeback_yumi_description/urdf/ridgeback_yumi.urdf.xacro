@@ -16,7 +16,7 @@
   <!--Import the yumi optodaq sensors macro 
   <xacro:include filename="$(find yumi_description)/urdf/Extras/yumi_optodaq_sensors.xacro"/-->
   <!-- Import Gazebo plugins -->
-  <xacro:include filename="$(find yumi_description)/urdf/Gazebo/gazebo.urdf.xacro"/>
+  <xacro:include filename="$(find yumi_description)/urdf/Gazebo/gazebo.urdf.xacro"/> <!--THIS IS THE CULPRIT - LOADS GAZEBO_ROS_CONTROL TWICE-->
 
 
   <!--yumi-->
@@ -24,25 +24,33 @@
     <origin xyz="0 0 0.1" rpy="0 0 0" />
   </xacro:yumi>
 
-
-  <!--xacro:yumi_optodaq_sensor name="optodaq_r" parent="yumi_link_7_r">
+  <!--optodaq
+  <xacro:yumi_optodaq_sensor name="optodaq_r" parent="yumi_link_7_r">
       <origin xyz="0 0 0.033" rpy="0 ${PI} ${-PI/4}" />
   </xacro:yumi_optodaq_sensor>
 
   <xacro:yumi_optodaq_sensor name="optodaq_l" parent="yumi_link_7_l">
 	  <origin xyz="0 0 0.033" rpy="0 ${PI} ${-PI/4}" />
-  </xacro:yumi_optodaq_sensor>
+  </xacro:yumi_optodaq_sensor
 
-  <right gripper
   <xacro:yumi_servo_gripper name="gripper_r" hardware_interface="hardware_interface/EffortJointInterface" parent="optodaq_r_sensor_link">
     <origin xyz="0 0 -0.033" rpy="${PI} 0.0 ${PI/4}" />
   </xacro:yumi_servo_gripper>
 
-  <left gripper-
   <xacro:yumi_servo_gripper name="gripper_l" hardware_interface="hardware_interface/EffortJointInterface" parent="optodaq_l_sensor_link">
     <origin xyz="0 0 -0.033" rpy="${PI} 0.0 ${PI/4}" />
   </xacro:yumi_servo_gripper-->
 
+
+  <!--right gripper-->
+  <xacro:yumi_servo_gripper name="gripper_r" hardware_interface="hardware_interface/EffortJointInterface" parent="yumi_link_7_r">
+    <origin xyz="0 0 0.007" rpy="0 0 ${PI}" />
+  </xacro:yumi_servo_gripper>
+
+  <!--left gripper-->
+  <xacro:yumi_servo_gripper name="gripper_l" hardware_interface="hardware_interface/EffortJointInterface" parent="yumi_link_7_l">
+    <origin xyz="0 0 0.007" rpy="0 0 ${PI}" />
+  </xacro:yumi_servo_gripper>
 
 
 
@@ -84,14 +92,14 @@
     <child link="yumi_base_link" />
   </joint>
 
-
+ <!--kinect 
   <link name="kinect2">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
                     <box size="0.4 0.02 0.02" />
 
-        <!--mesh scale="0.001 0.001 0.001" filename="package://yumi_description/meshes/accesories/KinectXboxOne.stl"/-->
+        <mesh scale="0.001 0.001 0.001" filename="package://yumi_description/meshes/accesories/KinectXboxOne.stl"/>
       </geometry>
       <material name="Black" />
     </visual>
@@ -150,7 +158,7 @@
     <parent link="middle_kinect_base" />
     <child link="kinect2" />
     <origin rpy="${-PI/2} 0 ${kinect_zrotation_fix}" xyz="0.25 0 0" />
-  </joint>
+  </joint-->
 
 
 
