@@ -97,9 +97,9 @@ class SubPub
     SubPub()
     {
         probSub = n.subscribe("/problem", 100, &SubPub::probCallback,this);
-        deltaMat_sub = n.subscribe("DeltaMat", 100, &SubPub::deltaMatCallback,this);
-        Coord_sub = n.subscribe("coords", 100, &SubPub::coordsCallback,this);
-        goalPublishers = n.advertise<navi_msgs::Goals>("/Goals", 100);
+        deltamatSub = n.subscribe("deltamat", 100, &SubPub::deltaMatCallback,this);
+        coordSub = n.subscribe("coords", 100, &SubPub::coordsCallback,this);
+        goalPub = n.advertise<navi_msgs::Goals>("/goals", 100);
        // Heuristic();
        // void publish(int n, std::vector<std::vector<char> > pS);
     }
@@ -303,7 +303,7 @@ void publish(int nVehicles, std::vector<std::vector<char> >plotString)
              poseArrayMsg.poses.push_back(poseMsg);
             }
      data.pList= poseArrayMsg;
-     goalPublishers.publish(data);
+     goalPub.publish(data);
      q++;       
      data.lT.clear();  
      data.lIT.clear();
@@ -716,15 +716,15 @@ void Heuristic()
 }
     private:
         ros::NodeHandle n;
-        ros::Subscriber Coord_sub;
-        ros::Subscriber deltaMat_sub;
+        ros::Subscriber coordSub;
+        ros::Subscriber deltamatSub;
         ros::Subscriber probSub;
-        ros::Publisher goalPublishers;
+        ros::Publisher goalPub;
 };
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "heuristic_node"); 
+    ros::init(argc, argv, "HeuristicNode"); 
     SubPub sp;
     ros::spin();
     //Heuristic();

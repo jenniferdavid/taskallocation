@@ -60,8 +60,8 @@ class SubPub
         //constructor function that publishes and subscribes
         SubPub()
         {
-            pub_ = n_.advertise<std_msgs::Float64MultiArray>("DeltaMat",100);
-            sub_ = n_.subscribe("/coords", 100, &SubPub::callback, this);
+            pub_ = n_.advertise<std_msgs::Float64MultiArray>("/deltamat",100);
+            coordSub_ = n_.subscribe("/coords", 100, &SubPub::coordCallback, this);
             probSub_ = n_.subscribe("/problem", 100, &SubPub::probCallback, this);
         }
         
@@ -71,7 +71,7 @@ class SubPub
         }
 
         //callback for subscribing /coords and publishing /EDdeltaMat
-        void callback(const navi_msgs::ItemStruct::ConstPtr& msg)
+        void coordCallback(const navi_msgs::ItemStruct::ConstPtr& msg)
         {
             std::vector<std::pair<double,double> > totalCoord;
             for (int i=0; i< totalModels; ++i) //msg->coords.size()
@@ -95,13 +95,13 @@ class SubPub
 private:
         ros::NodeHandle n_;
         ros::Publisher pub_;
-        ros::Subscriber sub_;
+        ros::Subscriber coordSub_;
         ros::Subscriber probSub_;
 };
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "dist_cost_node"); 
+    ros::init(argc, argv, "DistCostNode"); 
     SubPub sp;
 
     ros::spin();

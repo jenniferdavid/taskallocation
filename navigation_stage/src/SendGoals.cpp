@@ -73,7 +73,7 @@ void robotsCallback(const navi_msgs::Goals::ConstPtr& msg, int a)
 
 int main(int argc, char** argv) 
 {
-    ros::init(argc, argv, "send_goals_node");
+    ros::init(argc, argv, "SendGoalsNode");
     ros::NodeHandle nh_;
     ros::Subscriber probSub = nh_.subscribe("/problem", 100, probCallback);
     ros::AsyncSpinner s(nVehicles);  // Use multiple threads

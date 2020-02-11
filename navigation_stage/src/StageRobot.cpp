@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
     int numRobots;
     int numTasks;
     
-    ros::init(argc, argv, "stage_robot_node");
+    ros::init(argc, argv, "StageRobotNode");
     ros::NodeHandle n;
-    n.getParam("/stage_robot_node/numRobots", numRobots);
-    n.getParam("/stage_robot_node/numTasks", numTasks);
+    n.getParam("/StageRobotNode/numRobots", numRobots);
+    n.getParam("/StageRobotNode/numTasks", numTasks);
    
     int numDropoffs = numRobots;
     int numModels = numTasks + numDropoffs; 
