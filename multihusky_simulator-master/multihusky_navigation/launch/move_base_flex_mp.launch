@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robot_namespace" default="h1"/>
+  <arg name="odom_topic" default="/$(arg robot_namespace)/odometry/filtered"/>
+
+  <node pkg="mbf_costmap_nav" type="mbf_costmap_nav" respawn="false" name="move_base_flex" output="screen">
+    <param name="global_costmap/robot_base_frame" value="$(arg robot_namespace)_tf/base_link"/>
+    <param name="local_costmap/robot_base_frame" value="$(arg robot_namespace)_tf/base_link"/>
+    <param name="global_costmap/global_frame" value="map"/>
+    <param name="local_costmap/global_frame" value="$(arg robot_namespace)_tf/odom"/>
+
+    <param name="/move_base_flex/robot_frame" value="$(arg robot_namespace)_tf/base_link"/>
+    <param name="robot_frame" value="$(arg robot_namespace)_tf/base_link"/>
+    <param name="/robot_frame" value="$(arg robot_namespace)_tf/base_link"/>
+
+    <param name="global_costmap/width" value="100.0" />
+    <param name="global_costmap/height" value="100.0"/>
+
+    <param name="global_costmap/obstacles_laser/laser/topic" value="$(arg robot_namespace)/scan"/>
+    <param name="local_costmap/obstacles_laser/laser/topic" value="$(arg robot_namespace)/scan"/>
+
+    <rosparam file="$(find multihusky_navigation)/config/move_base_flex_cfg/planners.yaml" command="load" />
+    <rosparam file="$(find multihusky_navigation)/config/move_base_flex_cfg/recovery_behaviors.yaml" command="load" />
+
+    <rosparam file="$(find multihusky_navigation)/config/move_base_flex_cfg/controllers.yaml" command="load" />
+    <rosparam file="$(find multihusky_navigation)/config/teb_local_planner_params.yaml" command="load"/>
+<!--    <rosparam file="$(find multihusky_navigation)/config/planner.yaml" command="load"/>-->
+    <rosparam file="$(find multihusky_navigation)/config/costmap_common.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find multihusky_navigation)/config/costmap_common.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find multihusky_navigation)/config/costmap_local.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find multihusky_navigation)/config/costmap_global_laser.yaml" command="load" ns="global_costmap"/>
+    <param name="planner_frequency" value="1.0"/>
+    <param name="planner_patience" value="6.0"/>
+    <param name="controller_frequency" value="5.0"/>
+    <param name="controller_patience" value="3.0"/>
+    <param name="TebLocalPlannerROS/odom_topic" value="$(arg odom_topic)"/>
+    <remap from="cmd_vel" to="/$(arg robot_namespace)/cmd_vel"/>
+  </node>
+  <!-- Something for calling move_base_flex, remember to chmod +x flex_smach.py before using this-->
+  <node pkg="multihusky_navigation" type="mbf_state_machine.py" name="move_base_flex_action" output="screen"/>
+</launch>

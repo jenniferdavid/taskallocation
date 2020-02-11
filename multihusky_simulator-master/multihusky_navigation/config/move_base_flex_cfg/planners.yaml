@@ -1,0 +1,3 @@
+planners:
+  - name: 'navfn'
+    type: 'navfn/NavfnROS'

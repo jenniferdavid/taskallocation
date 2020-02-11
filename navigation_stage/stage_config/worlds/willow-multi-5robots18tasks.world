@@ -69,15 +69,15 @@ floorplan
   #size [58.400 52.600 0.500] #for willow.pgm
   #pose [ -26.300 29.200 0.000 90.000 ] #for willow.pgm
 
-  #bitmap "../maps/maze.pgm"
-  #size [60.00 60.00 0.500]
-  #pose [ -30.00 30.00 0.000 90.000 ]
+  bitmap "../maps/maze.pgm"
+  size [60.00 60.00 0.500]
+  pose [ -30.00 30.00 0.000 90.000 ]
 
   #bitmap "../maps/twoRooms.pgm"
 
-  bitmap "../maps/my_map.pgm"
-  size [57.600 87.600 0.500]#for my_map.pgm
-  pose [ -43.80 28.80 0.000 90.000 ]
+  #bitmap "../maps/my_map.pgm"
+  #size [57.600 87.600 0.500]#for my_map.pgm
+  #pose [ -43.80 28.80 0.000 90.000 ]
 )
 
 # throw in a robot
