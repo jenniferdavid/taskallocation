@@ -100,6 +100,7 @@ class SubPub
         deltamatSub = n.subscribe("deltamat", 100, &SubPub::deltaMatCallback,this);
         coordSub = n.subscribe("coords", 100, &SubPub::coordsCallback,this);
         goalPub = n.advertise<navi_msgs::Goals>("/goals", 100);
+        taskPub = n.advertise<navi_msgs::GoalsList>("/tasks", 100);
        // Heuristic();
        // void publish(int n, std::vector<std::vector<char> > pS);
     }
@@ -225,6 +226,7 @@ void publish(int nVehicles, std::vector<std::vector<char> >plotString)
     {
         //publish robot name
         data.name = "robot"+std::to_string(q); 
+        data.robotName = q;
         std::cout << data.name << " - robot name" << endl;
         //publish no of tasks
         data.tasks = plotString[q].size() - 1; 
@@ -277,14 +279,10 @@ void publish(int nVehicles, std::vector<std::vector<char> >plotString)
                     stringD3.namTask = dt;
                     data.nT.push_back(stringD3);
                     
-                    //pose of all tasks 
+                    //pose of the dropoff
                     for (int i = nTasks; i<totalCoord.size(); i++)
                     {
                         if (dt.compare(totalCoord[i].first) == 0)
-                            {
-                               //nothing
-                            }    
-                        else
                             {
                                 poseMsg.position.x = std::get<1>(totalCoord[i].second);
                                 poseMsg.position.y = -1 * (std::get<0>(totalCoord[i].second));
@@ -304,12 +302,14 @@ void publish(int nVehicles, std::vector<std::vector<char> >plotString)
             }
      data.pList= poseArrayMsg;
      goalPub.publish(data);
+     msg.list.push_back(data);
      q++;       
      data.lT.clear();  
      data.lIT.clear();
      data.nT.clear();
      poseArrayMsg.poses.clear();
     }
+    taskPub.publish(msg);
 }
 
 void Heuristic()
@@ -720,6 +720,7 @@ void Heuristic()
         ros::Subscriber deltamatSub;
         ros::Subscriber probSub;
         ros::Publisher goalPub;
+        ros::Publisher taskPub;
 };
 
 int main(int argc, char **argv)

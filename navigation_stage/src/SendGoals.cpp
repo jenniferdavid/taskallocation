@@ -9,7 +9,7 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <tf/transform_datatypes.h>
-#include "navi_msgs/Goals.h"
+#include "navi_msgs/GoalsList.h"
 #include "navi_msgs/Problem.h"
 
 #include <boost/bind.hpp>
@@ -23,6 +23,9 @@ int nTasks;
 int nDim; 
 int rDim; 
 
+class SendGoals
+{
+public:
 void probCallback(const navi_msgs::Problem::ConstPtr& msg)
     {
         nVehicles = msg->nRobots;
@@ -31,7 +34,7 @@ void probCallback(const navi_msgs::Problem::ConstPtr& msg)
         rDim = msg->nModels;
     }
     
-void robotsCallback(const navi_msgs::Goals::ConstPtr& msg, int a)
+void robotsCallback(const navi_msgs::GoalsList::ConstPtr& msg, int a)
     {
         typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
         std::string name1 = "robot_", name2 = "/move_base";
@@ -45,46 +48,58 @@ void robotsCallback(const navi_msgs::Goals::ConstPtr& msg, int a)
         ROS_INFO("Connected to move base server");
     
         move_base_msgs::MoveBaseGoal goal;
-        int i = 0;
+        int numTasks = msg->list[a].tasks;
+        
+        for (int i=0; i<numTasks; i++)
+            {   goal.target_pose.header.frame_id = "map";
+                goal.target_pose.header.stamp = ros::Time::now();	
+                goal.target_pose.pose.position.x = msg->list[a].pList.poses[i].position.x;
+                goal.target_pose.pose.position.y = msg->list[a].pList.poses[i].position.y;
 
-        for (int i=0; i<5; i++)
-        {   goal.target_pose.header.frame_id = "map";
-            goal.target_pose.header.stamp = ros::Time::now();	
-            goal.target_pose.pose.position.x = msg->pList.poses[i].position.x;
-            goal.target_pose.pose.position.y = msg->pList.poses[i].position.y;
+                double radians = msg->list[a].pList.poses[i].position.z * (M_PI/180);
+                tf::Quaternion quaternion;
+                quaternion = tf::createQuaternionFromYaw(radians);
+                geometry_msgs::Quaternion qMsg;
+                tf::quaternionTFToMsg(quaternion, qMsg);
+                goal.target_pose.pose.orientation = qMsg;
 
-            double radians = msg->pList.poses[i].position.z * (M_PI/180);
-            tf::Quaternion quaternion;
-            quaternion = tf::createQuaternionFromYaw(radians);
-            geometry_msgs::Quaternion qMsg;
-            tf::quaternionTFToMsg(quaternion, qMsg);
-            goal.target_pose.pose.orientation = qMsg;
-
-            ROS_INFO("Sending robot_%d to: x = %f, y = %f, theta = %f", 0,msg->pList.poses[i].position.x,msg->pList.poses[i].position.y,msg->pList.poses[i].position.z );    
-            ac.sendGoal(goal);
-            ac.waitForResult();
+                ROS_INFO("Sending robot_%d to: x = %f, y = %f, theta = %f", a,msg->list[a].pList.poses[i].position.x,msg->list[a].pList.poses[i].position.y,msg->list[a].pList.poses[i].position.z );    
+                ac.sendGoal(goal);
+                ac.waitForResult();
     
-            if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-                {ROS_INFO("The robot_%d reached the %d goal!",0,i);}    
-            else
-                ROS_INFO("The base failed for some reason");
-         }
-    }
+                if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+                    {ROS_INFO("The robot_%d REACHED the %d goal!",a,i+1);
+                        if (i == (numTasks-1))
+                        {   ROS_INFO("FINISHED TASKS FOR ROBOT %d",a);
+                            //std::terminate();
+                            
+                        }
+                    }    
+                else
+                    ROS_INFO("The base failed for some reason");
+            } 
+        }
+};
 
 int main(int argc, char** argv) 
 {
     ros::init(argc, argv, "SendGoalsNode");
     ros::NodeHandle nh_;
-    ros::Subscriber probSub = nh_.subscribe("/problem", 100, probCallback);
-    ros::AsyncSpinner s(nVehicles);  // Use multiple threads
-    ROS_INFO_STREAM("Main loop in thread:" << boost::this_thread::get_id());
-    s.start();
-    
-    std::vector<ros::Subscriber> subGoal;
-    for(int i = 0; i < nVehicles; i++) {
-        subGoal[i]= nh_.subscribe<navi_msgs::Goals>( "Goals", 1, boost::bind(&robotsCallback, _1, i) );
-    }
+    SendGoals sg;
+    ros::Subscriber probSub = nh_.subscribe<navi_msgs::Problem>("/problem", 100, &SendGoals::probCallback, &sg);
   
+    cout << nVehicles << endl;
+    ros::AsyncSpinner spinner(6);  // Use multiple threads
+    ROS_INFO_STREAM("Main loop in thread:" << boost::this_thread::get_id());
+    spinner.start();
+    cout << nVehicles << endl;
+
+        std::vector<ros::Subscriber> subGoal;
+        for(int i = 0; i < 6; i++) {
+            ros::Subscriber sub = nh_.subscribe<navi_msgs::GoalsList>( "/tasks", 1, boost::bind(&SendGoals::robotsCallback, &sg,_1, i) );
+            subGoal.push_back(sub);
+        }
+   
     ros::waitForShutdown();
     return 0;
 }
