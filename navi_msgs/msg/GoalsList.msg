@@ -1,1 +1,2 @@
+Problem input
 Goals[] list

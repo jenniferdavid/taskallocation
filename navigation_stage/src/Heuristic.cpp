@@ -89,7 +89,6 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseCl
 
 class SubPub
 {
-    
     public:
     std::vector<std::pair<std::string,std::tuple<double,double,double>> > totalCoord;
 
@@ -97,8 +96,9 @@ class SubPub
     SubPub()
     {
         probSub = n.subscribe("/problem", 100, &SubPub::probCallback,this);
-        deltamatSub = n.subscribe("deltamat", 100, &SubPub::deltaMatCallback,this);
-        coordSub = n.subscribe("coords", 100, &SubPub::coordsCallback,this);
+        deltamatSub = n.subscribe("/deltamat", 100, &SubPub::deltaMatCallback,this);
+        coordSub = n.subscribe("/coords", 100, &SubPub::coordsCallback,this);
+        
         goalPub = n.advertise<navi_msgs::Goals>("/goals", 100);
         taskPub = n.advertise<navi_msgs::GoalsList>("/tasks", 100);
        // Heuristic();
@@ -222,12 +222,19 @@ std::tuple<std::string, std::string, int, std::vector <std::vector <char>> > dis
 void publish(int nVehicles, std::vector<std::vector<char> >plotString)
 {
     int q = 0;
+    msg.input.nRobots = nVehicles;
+    msg.input.nTasks = nTasks;
+    msg.input.nModels = rDim;
+    msg.input.nTotalmodels = nDim;
+    msg.input.nDropoffs = nVehicles;
+
     while (q < nVehicles)
     {
+        data.robotName = q;
         //publish robot name
         data.name = "robot"+std::to_string(q); 
-        data.robotName = q;
         std::cout << data.name << " - robot name" << endl;
+        
         //publish no of tasks
         data.tasks = plotString[q].size() - 1; 
         std::cout << data.tasks << " - no of tasks" << endl;
@@ -728,9 +735,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "HeuristicNode"); 
     SubPub sp;
     ros::spin();
-    //Heuristic();
-  //  displaySolution(CostMatrix, DeltaMatrix, TVec);//Printing out the solution
-  //  publish(nVehicles, plotString);
+
     return 0;
 }
 
