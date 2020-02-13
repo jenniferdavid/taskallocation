@@ -38,16 +38,16 @@
 using namespace Eigen;
 using namespace std;
 
-int totalModels;    
-double goalTolerance = 0.1;
-
 class SubPub
 {
     public:
         
     Eigen::MatrixXd DeltaMatrix;
     std_msgs::Float64MultiArray deltaMat;
-        
+    int totalModels;    
+    double goalTolerance = 0.1;
+    nav_msgs::GetPlan srv;
+
     //constructor function that publishes and subscribes
     SubPub()
         {
@@ -60,7 +60,7 @@ class SubPub
             if (!serviceClient) 
             {   ROS_FATAL("Could not initialize get plan service from %s", serviceClient.getService().c_str());}
 		
-            pub_ = nh_.advertise<std_msgs::Float64MultiArray>("DeltaMat",100);
+            pub_ = nh_.advertise<std_msgs::Float64MultiArray>("/deltamat",100);
             sub_ = nh_.subscribe("/coords", 100, &SubPub::callback, this);
             probSub_ = nh_.subscribe("/problem", 100, &SubPub::probCallback, this);
         }
@@ -153,10 +153,10 @@ class SubPub
             return callPlanningService (serviceClient, srv);
         }   
     
-    ros::NodeHandle nh_;
-    nav_msgs::GetPlan srv;
     
 private:
+ 
+    ros::NodeHandle nh_;
     ros::Publisher pub_;
     ros::Subscriber sub_;
     ros::Subscriber probSub_;

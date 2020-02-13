@@ -38,8 +38,6 @@
 using namespace Eigen;
 using namespace std;
 
-int totalModels;
-
 //calculates eulcidean distance in an empty map
 double euclideanDistance (std::pair<double,double> a, std::pair<double,double> b)
 {
@@ -56,7 +54,8 @@ class SubPub
     public:
         Eigen::MatrixXd DeltaMatrix;
         std_msgs::Float64MultiArray deltaMat;
-        
+        int totalModels;
+
         //constructor function that publishes and subscribes
         SubPub()
         {

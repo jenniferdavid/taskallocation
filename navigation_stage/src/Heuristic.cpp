@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <csignal>
 #include <map>
-#include "Hungarian.h"
+#include "/home/jennifer/catkin_ws/src/taskallocation/navigation_stage/include/navigation_stage/Hungarian.h"
 #include "ros/ros.h"
 #include "navi_msgs/Item.h"
 #include "navi_msgs/ItemStruct.h"
@@ -101,8 +101,6 @@ class SubPub
         
         goalPub = n.advertise<navi_msgs::Goals>("/goals", 100);
         taskPub = n.advertise<navi_msgs::GoalsList>("/tasks", 100);
-       // Heuristic();
-       // void publish(int n, std::vector<std::vector<char> > pS);
     }
         
 void deltaMatCallback(const std_msgs::Float64MultiArray::ConstPtr& msg)
@@ -136,7 +134,6 @@ void coordsCallback(const navi_msgs::ItemStruct::ConstPtr& msg)
             totalCoord.push_back(std::make_pair(data.name,(std::make_tuple(data.x, data.y, data.yaw))));
         }
      Heuristic();
-     //publish();
     }
 
     //parses the solution

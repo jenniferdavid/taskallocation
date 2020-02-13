@@ -182,7 +182,7 @@
   </group>
   <!-- END ROBOT 5 -->
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_robot7.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_robot6.rviz" />
 
 
 
