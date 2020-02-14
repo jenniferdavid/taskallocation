@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <csignal>
 #include <map>
-#include "/home/jennifer/catkin_ws/src/taskallocation/navigation_stage/include/navigation_stage/Hungarian.h"
+#include "Hungarian.h"
 #include "ros/ros.h"
 #include "navi_msgs/Item.h"
 #include "navi_msgs/ItemStruct.h"

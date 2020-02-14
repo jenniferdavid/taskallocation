@@ -1,0 +1,9 @@
+<launch>
+  <arg name="controller_config" default="$(find scanner_controller)/config/scanner_controller_config.yaml" />
+  <node pkg="scanner_controller" type="scanner_controller" name="scanner_controller" clear_params="true" launch-prefix="xterm -e">
+		<rosparam file="$(arg controller_config)" command="load" />
+  </node>
+
+  <include file="$(find positioning)/launch/positioning.launch"/>
+  
+</launch>

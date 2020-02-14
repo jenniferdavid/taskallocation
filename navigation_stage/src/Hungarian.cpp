@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <cfloat> // for DBL_MAX
 #include <cmath>  // for fabs()
-#include "/home/jennifer/catkin_ws/src/taskallocation/navigation_stage/include/navigation_stage/Hungarian.h"
+#include "Hungarian.h"
 
 
 HungarianAlgorithm::HungarianAlgorithm(){}

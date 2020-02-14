@@ -33,7 +33,8 @@ DEPENDS
 )
 
 add_compile_options(-std=c++11)
-include_directories(include ${catkin_INCLUDE_DIRS})
+#include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include/navigation_stage ${catkin_INCLUDE_DIRS})
 include_directories(${pkg-config_INCLUDE_DIRS}) 
 include_directories(${player-3.0.2_INCLUDE_DIRS}) 
 #include_directories(/home/jendav/player-3.0.2/libplayercommon)
@@ -58,6 +59,9 @@ target_link_libraries(heuristic_node ${catkin_LIBRARIES})
 
 add_executable(send_goals_node src/SendGoals.cpp)
 target_link_libraries(send_goals_node ${catkin_LIBRARIES})
+
+add_executable(task_allocation_sub_node src/TaskAllocationSub.cpp)
+target_link_libraries(task_allocation_sub_node ${catkin_LIBRARIES})
 
 #if it is your library
 #add_library(mylib src/mylib.cpp)
