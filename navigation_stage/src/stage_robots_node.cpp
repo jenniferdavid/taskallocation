@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
     int numRobots;
     int numTasks;
     
-    ros::init(argc, argv, "StageRobotNode");
+    ros::init(argc, argv, "StageRobotsNode");
     ros::NodeHandle n;
-    n.getParam("/StageRobotNode/numRobots", numRobots);
-    n.getParam("/StageRobotNode/numTasks", numTasks);
+    n.getParam("/StageRobotsNode/numRobots", numRobots);
+    n.getParam("/StageRobotsNode/numTasks", numTasks);
    
     int numDropoffs = numRobots;
     int numModels = numTasks + numDropoffs; 
@@ -47,12 +47,8 @@ int main(int argc, char *argv[])
     Position2dProxy **position = new Position2dProxy*[numRobots];
     SimulationProxy simProxy(robot,0);
 
-    navi_msgs::Item data;
-    navi_msgs::ItemStruct msg;
-    navi_msgs::Problem details;
-
-    ros::Publisher coords_pub;
-    ros::Publisher problem_pub;
+    ros::Publisher coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 100);
+    ros::Publisher problem_pub = n.advertise<navi_msgs::Problem>("/problem", 100);
 
     //receive all robots pose
     for (int k = 0; k<numRobots; k++)
@@ -100,10 +96,11 @@ int main(int argc, char *argv[])
 	}
     
     delete []position;
-
-    coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 100);
-    problem_pub = n.advertise<navi_msgs::Problem>("/problem", 100);
-
+    
+    navi_msgs::Item data;
+    navi_msgs::ItemStruct msg;
+    navi_msgs::Problem details;
+   
     while (ros::ok())
         {
             for (int k = 0; k< totalModels; k++)

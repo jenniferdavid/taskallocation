@@ -44,29 +44,26 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 
 #file(GLOB SOURCES "src/*.cpp")
 #PLAYER_ADD_PLAYERCPP_CLIENT (robot SOURCES src/robot.cpp src/RefreshItemList.cpp LINKFLAGS)
-PLAYER_ADD_PLAYERCPP_CLIENT (stage_robot_node SOURCES src/StageRobot.cpp LINKFLAGS)
-TARGET_LINK_LIBRARIES (stage_robot_node ${catkin_LIBRARIES})
+
+PLAYER_ADD_PLAYERCPP_CLIENT (stage_robots_node SOURCES src/stage_robots_node.cpp LINKFLAGS)
+TARGET_LINK_LIBRARIES (stage_robots_node ${catkin_LIBRARIES})
  
-add_executable(path_cost_node src/PathCost.cpp)
+add_executable(path_cost_node src/path_cost_node.cpp)
 target_link_libraries(path_cost_node ${catkin_LIBRARIES})
-add_dependencies(path_cost_node ${cost_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(dist_cost_node src/DistCost.cpp)
-target_link_libraries(dist_cost_node ${catkin_LIBRARIES})
+add_executable(euclidean_cost_node src/euclidean_cost_node.cpp)
+target_link_libraries(euclidean_cost_node ${catkin_LIBRARIES})
 
-add_executable(heuristic_node src/Heuristic.cpp src/Hungarian.cpp)
-target_link_libraries(heuristic_node ${catkin_LIBRARIES})
-
-add_executable(send_goals_node src/SendGoals.cpp)
+add_executable(send_goals_node src/send_goals_node.cpp)
 target_link_libraries(send_goals_node ${catkin_LIBRARIES})
 
-add_executable(task_allocation_sub_node src/TaskAllocationSub.cpp)
-target_link_libraries(task_allocation_sub_node ${catkin_LIBRARIES})
+add_executable(task_allocation_node src/task_allocation_node.cpp src/task_subpub.cpp src/heuristic.cpp src/hungarian.cpp)
+target_link_libraries(task_allocation_node ${catkin_LIBRARIES})
 
 #if it is your library
 #add_library(mylib src/mylib.cpp)
 #FIND_LIBRARY (playerc++_LIBRARIES playerc++ /home/jendav/player-3.0.2)
 #add_executable(robot src/task.cpp src/robot.cpp src/RefreshItemList.cpp)
 #target_link_libraries(robot ${playerc++_LIBS})
-
+#add_dependencies(path_cost_node ${cost_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 

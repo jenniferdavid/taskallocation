@@ -165,7 +165,7 @@ private:
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "path_cost_node"); 
+    ros::init(argc, argv, "PathCostNode"); 
     SubPub sp;
     ros::spin();
     return 0;

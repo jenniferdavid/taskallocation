@@ -100,7 +100,7 @@ private:
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "DistCostNode"); 
+    ros::init(argc, argv, "EuclideanCostNode"); 
     SubPub sp;
 
     ros::spin();
