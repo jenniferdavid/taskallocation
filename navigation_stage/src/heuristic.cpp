@@ -18,7 +18,7 @@ using namespace Eigen;
 
 Heuristic::Heuristic(){}
 
-void Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix)
+Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix)
 {
     cout << "\nnvehicle is:" << nVehicles<< endl;
     cout << "\ntask is:" << nTasks << endl;
@@ -424,6 +424,7 @@ void Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::Ma
            
     //displaySolution(CostMatrix, DeltaMatrix, TVec);//Printing out the solution
     //publish(nVehicles, plotString);
+    return CostMatrix;
 
 }
   

@@ -1,0 +1,9 @@
+<!--Main-->
+<launch>
+   
+  <node name="send_goals_node" pkg="navigation_stage" type="send_goals_node" />
+
+
+</launch>
+
+

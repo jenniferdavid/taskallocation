@@ -17,7 +17,6 @@
   <node pkg="stage_ros" type="stageros" name="stageros" args="$(arg world_file)" respawn="false">
     <param name="base_watchdog_timeout" value="0.2"/>
   </node>
-
   
   <!-- BEGIN ROBOT 0 -->
   <group ns="robot_0">
@@ -184,8 +183,7 @@
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_robot6.rviz" />
 
-
-
+ 
 
 </launch>
 

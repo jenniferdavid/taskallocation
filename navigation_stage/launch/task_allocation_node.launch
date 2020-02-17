@@ -1,0 +1,13 @@
+<!--Main-->
+<launch>
+     <node name="euclidean_cost_node" pkg="navigation_stage" type="euclidean_cost_node" />
+
+  <arg name="path" default="_numRobots:=6 _numTasks:=18" />
+  <node name="stage_robots_node" pkg="navigation_stage" type="stage_robots_node" args="$(arg path)" />
+
+  <node name="task_allocation_node" pkg="navigation_stage" type="task_allocation_node" />
+
+
+</launch>
+
+

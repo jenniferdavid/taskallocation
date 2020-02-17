@@ -79,18 +79,20 @@ int main(int argc, char** argv)
     if (task_msgptr == NULL)
         {ROS_INFO("No task messages received");}
     else
-        {task_msg = * task_msgptr;}
-       
+        {
+    task_msg = * task_msgptr;
     //create multithreads to run all robots concurrently
+    ROS_INFO("----------STARTING THREADS-----------");
     std::vector<std::thread> threadsTask;
     int nVehicles = task_msg.input.nRobots;
+    cout << nVehicles <<endl;
     for(int a = 0; a < nVehicles; a++) 
     {threadsTask.push_back(std::thread(taskNavigation, a, task_msg));}
-    
+        
     for (auto& t : threadsTask)
     t.join();
     ROS_INFO("----------TASK ALLOCATION COMPLETED-----------");
-    
+        }
     return 0;
 }
     

@@ -71,7 +71,7 @@ public:
 	Eigen::VectorXd Edge3; 
 
 	Heuristic();
-	void compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix);
+	Eigen::MatrixXd compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix);
 
 };//End of class Heuristic
 

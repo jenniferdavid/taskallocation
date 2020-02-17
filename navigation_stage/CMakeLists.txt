@@ -57,7 +57,7 @@ target_link_libraries(euclidean_cost_node ${catkin_LIBRARIES})
 add_executable(send_goals_node src/send_goals_node.cpp)
 target_link_libraries(send_goals_node ${catkin_LIBRARIES})
 
-add_executable(task_allocation_node src/task_allocation_node.cpp src/task_subpub.cpp src/heuristic.cpp src/hungarian.cpp)
+add_executable(task_allocation_node src/task_allocation_node.cpp src/heuristic.cpp src/hungarian.cpp)
 target_link_libraries(task_allocation_node ${catkin_LIBRARIES})
 
 #if it is your library
