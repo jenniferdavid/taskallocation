@@ -1,4 +1,4 @@
-image: my_map.pgm
+image: oneRoom.pgm
 resolution: 0.3000000
 #origin: [-12.200000, -12.200000, 0.000000]
 origin: [0.00000, 0.00000, 0.000000]

@@ -1,12 +1,23 @@
 <!--Main-->
 <launch>
-    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow-multi-7robots7tasks.world" /-->
-    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow-multi-7robots18tasks.world" /-->
-    <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow-multi-7robots40tasks.world" />
+   <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots5tasks.world" /-->
+    <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots18tasks.world" />
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots30tasks.world" /-->
+
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms1.pgm 0.08" /-->
+    <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" />
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms.pgm 0.25" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/robopark_plan.yaml" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneRoom.yaml" /-->   
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-full-sparse.pgm 0.1" /-->
-    <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/my_map.yaml" />
-    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" /-->
-    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-test.pgm 0.1" /-->
+    
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/cobot.yaml" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/circle_maze.yaml" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/ridgeback_race.yaml" /-->   
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/playpen_map.yaml" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/playground.yaml" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/hospital.yaml" /-->
+
     <master auto="start"/>
     <param name="/use_sim_time" value="true"/>
 
