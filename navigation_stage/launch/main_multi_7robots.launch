@@ -1,8 +1,8 @@
 <!--Main-->
 <launch>
    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots5tasks.world" /-->
-    <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots18tasks.world" />
-    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots30tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots18tasks.world" /-->
+    <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots40tasks.world" />
 
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms1.pgm 0.08" /-->
     <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" />
@@ -10,7 +10,6 @@
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/robopark_plan.yaml" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneRoom.yaml" /-->   
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-full-sparse.pgm 0.1" /-->
-    
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/cobot.yaml" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/circle_maze.yaml" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/ridgeback_race.yaml" /-->   
@@ -53,7 +52,7 @@
         <param name="odom_frame_id" value="robot_0/odom" />
      </node>
       
-      <node pkg="tf" type="static_transform_publisher" name="map_odom0" args="20 60 0 0 0 0 /map /robot_0/odom 100" />
+      <node pkg="tf" type="static_transform_publisher" name="map_odom0" args="5 45 0 0 0 0 /map /robot_0/odom 100" />
 
   </group>
   <!-- END ROBOT 0 -->
@@ -216,7 +215,7 @@
      <param name="odom_frame_id" value="robot_6/odom" />
    </node>
     
-   <node pkg="tf" type="static_transform_publisher" name="map_odom6" args="22 30 0 0 0 0 /map /robot_6/odom 100" />
+   <node pkg="tf" type="static_transform_publisher" name="map_odom6" args="18 30 0 0 0 0 /map /robot_6/odom 100" />
   </group>
   <!-- END ROBOT 6 -->
 

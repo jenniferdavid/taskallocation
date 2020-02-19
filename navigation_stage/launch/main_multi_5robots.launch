@@ -5,14 +5,17 @@
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_5robots30tasks.world" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" /-->
 
-
-    <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots5tasks.world" />
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots5tasks.world" /-->
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots18tasks.world" /-->
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots30tasks.world" /-->
-    <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-full-sparse.pgm 0.1" />
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-full-sparse.pgm 0.1" /-->
 
+   <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots5tasks.world" />
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots30tasks.world" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms1.pgm 0.08" /-->
-    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms.pgm 0.25" /-->
+    <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms.png 0.3" />
+
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/robopark_plan.yaml" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneRoom.yaml" /-->   
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/cobot.yaml" /-->
@@ -57,7 +60,7 @@
         <param name="odom_frame_id" value="robot_0/odom" />
      </node>
       
-      <node pkg="tf" type="static_transform_publisher" name="map_odom0" args="23 54 0 0 0 0 /map /robot_0/odom 100" />
+      <node pkg="tf" type="static_transform_publisher" name="map_odom0" args="54 23 0 0 0 0 /map /robot_0/odom 100" />
 
   </group>
   <!-- END ROBOT 0 -->
@@ -85,7 +88,7 @@
      <param name="odom_frame_id" value="robot_1/odom" />
    </node>
     
-   <node pkg="tf" type="static_transform_publisher" name="map_odom1" args="46 6 0 0 0 0 /map /robot_1/odom 100" />
+   <node pkg="tf" type="static_transform_publisher" name="map_odom1" args="6 46 0 0 0 0 /map /robot_1/odom 100" />
   </group>
   <!-- END ROBOT 1 -->
   
@@ -112,7 +115,7 @@
      <param name="odom_frame_id" value="robot_2/odom" />
    </node>
     
-   <node pkg="tf" type="static_transform_publisher" name="map_odom2" args="25 33 0 0 0 0 /map /robot_2/odom 100" />
+   <node pkg="tf" type="static_transform_publisher" name="map_odom2" args="33 70 0 0 0 0 /map /robot_2/odom 100" />
   </group>
   <!-- END ROBOT 2 -->
   
@@ -139,7 +142,7 @@
      <param name="odom_frame_id" value="robot_3/odom" />
    </node>
     
-   <node pkg="tf" type="static_transform_publisher" name="map_odom3" args="40 44 0 0 0 0 /map /robot_3/odom 100" />
+   <node pkg="tf" type="static_transform_publisher" name="map_odom3" args="44 40 0 0 0 0 /map /robot_3/odom 100" />
   </group>
   <!-- END ROBOT 3 -->
   
@@ -166,7 +169,7 @@
      <param name="odom_frame_id" value="robot_4/odom" />
    </node>
     
-   <node pkg="tf" type="static_transform_publisher" name="map_odom4" args="4 39 0 0 0 0 /map /robot_4/odom 100" />
+   <node pkg="tf" type="static_transform_publisher" name="map_odom4" args="39 4 0 0 0 0 /map /robot_4/odom 100" />
   </group>
   <!-- END ROBOT 4 -->
 

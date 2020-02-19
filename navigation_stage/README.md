@@ -19,3 +19,23 @@ List of maps:
 10. playpen
 11. playground
 
+ name "willow"
+  #bitmap "../maps/willow-full-sparse.pgm"
+  #size [58.400 52.600 0.500] #for willow.pgm
+  #pose [ -26.300 29.200 0.000 90.000 ] #for willow.pgm
+
+  bitmap "../maps/maze.pgm"
+  size [60.00 60.00 0.500]
+  pose [ -30.00 30.00 0.000 90.000 ]
+
+  #bitmap "../maps/twoRooms1.pgm"
+  #size [50.000 50.600 0.500]#for two_Rooms1.pgm
+  #pose [ 0.00 9.00 0.000 90.000 ] #translation not proper in rviz - to be fixed
+
+  #bitmap "../maps/my_map.pgm"
+  #size [105.200 175.200 0.500]#for my_map.pgm
+  #pose [ -43.80 28.80 0.000 90.000 ]
+
+  #bitmap "../maps/robopark2.pgm"
+  #size [140.6 100.00 00.00]  #for robo_park.pgm
+  #pose [ -45.00 64.58 0.000 90.00] #translation not proper in rviz - to be fixed
