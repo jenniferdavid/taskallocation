@@ -21,7 +21,8 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>eigen</build_depend>
   <build_depend>roscpp</build_depend>
- 
+  <build_depend>message_filters</build_depend>
+
   <run_depend>amcl</run_depend>
   <run_depend>fake_localization</run_depend>
   <run_depend>gmapping</run_depend>
@@ -30,5 +31,6 @@
   <run_depend>stage_ros</run_depend>
   <run_depend>eigen</run_depend>
   <run_depend>roscpp</run_depend>
+  <run_depend>message_filters</run_depend>
   
 </package>

@@ -1,0 +1,69 @@
+<!--Main-->
+<launch>
+    <!-- Configuration of Gazebo  -->
+  <arg name="debug" default="false"/>
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="true" />
+  <arg name="headless" default="false" />
+  <arg name="world_name" default="$(find ridgeback_gazebo)/worlds/ridgeback_race.world" />
+
+  <!-- Launch Gazebo with the specified world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="debug" value="$(arg debug)" />
+      <arg name="gui" value="$(arg gui)" />
+      <arg name="use_sim_time" value="$(arg use_sim_time)" />
+      <arg name="headless" value="$(arg headless)" />
+      <arg name="world_name" value="$(arg world_name)" />
+      <arg name="paused" value="false"/>
+  </include>
+
+  <include file="$(find ridgeback_yumi_launch)/launch/one_robot.launch">
+  </include>
+
+
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="first_tb3"  default="tb3_0"/>
+  <arg name="second_tb2"  default="tb2_0"/>
+
+  <arg name="first_tb3_x_pos" default="-7.0"/>
+  <arg name="first_tb3_y_pos" default="-1.0"/>
+  <arg name="first_tb3_z_pos" default=" 0.0"/>
+  <arg name="first_tb3_yaw"   default=" 1.57"/>
+
+  <group ns = "$(arg first_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" value="$(arg first_tb3)" />
+    </node>
+    
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg first_tb3) -x $(arg first_tb3_x_pos) -y $(arg first_tb3_y_pos) -z $(arg first_tb3_z_pos) -Y $(arg first_tb3_yaw) -param robot_description" />
+  </group>
+
+  <arg name="second_tb2_x_pos" default="-7.0"/>
+  <arg name="second_tb2_y_pos" default="1.0"/>
+  <arg name="second_tb2_z_pos" default=" 0.0"/>
+  <arg name="second_tb2_yaw"   default=" 1.57"/>
+
+  <group ns = "$(arg second_tb2)">
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot_description)/urdf/turtlebot_gazebo.urdf.xacro" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" value="$(arg second_tb2)" />
+    </node>
+    
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg second_tb2) -x $(arg second_tb2_x_pos) -y $(arg second_tb2_y_pos) -z $(arg second_tb2_z_pos) -Y $(arg second_tb2_yaw) -param robot_description" />
+  </group>
+
+
+
+  <param name="use_gui" value="true"/>
+  <arg name="mode" default="robot" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ridgeback_yumi_viz)/rviz/$(arg mode).rviz"/>
+
+</launch>
+

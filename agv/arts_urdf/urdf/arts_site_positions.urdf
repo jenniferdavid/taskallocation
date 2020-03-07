@@ -1,0 +1,25 @@
+<robot name="arts_site_positions">
+  <link name="site" />
+  <link name="arts_slave_1" />
+  <link name="arts_slave_2" />
+  <link name="arts_slave_3" />
+
+  <joint name="joint1" type="fixed">
+    <parent link="site"/>
+    <child link="arts_slave_1"/>
+    <origin xyz="10 10 10" rpy="0 0 0" />
+  </joint>
+
+  <joint name="joint2" type="fixed">
+    <parent link="site"/>
+    <child link="arts_slave_2"/>
+    <origin xyz="20 20 20" rpy="0 0 0" />
+  </joint>
+
+  <joint name="joint3" type="fixed">
+    <parent link="site"/>
+    <child link="arts_slave_3"/>
+    <origin xyz="30 30 30" rpy="0 0 0" />
+  </joint>
+  
+</robot>

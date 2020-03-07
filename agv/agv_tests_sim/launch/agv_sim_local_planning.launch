@@ -1,0 +1,46 @@
+<!-- Test AGV reactive behavior: local planner and local mapping, on a simulated environment -->
+
+<launch>
+
+    <!-- Enable/disable visualization and other args -->
+    <arg name="plots" default="false" />
+    <arg name="rviz" default="false" />
+    <arg name="gazebo_gui" default="false" />
+    <arg name="robot_model"  default="agv_iri" />
+    
+    <!-- test 03: gazebo world, agv description, controllers, odometry, driver and local mapping -->
+    <include file="$(find agv_tests_sim)/launch/agv_sim_local_mapping.launch">
+            <arg name="gazebo_gui" value="$(arg gazebo_gui)"/> 
+            <arg name="robot_model" value="$(arg robot_model)"/>  
+    </include>
+
+    <!-- AGV Path Adaptor -->  
+    <node name="agv_path_adaptor" pkg="cargo_ants_path_adaptor" type="agv_path_adaptor" args="" output="screen">
+    <!-- node name="agv_path_adaptor" pkg="cargo_ants_pa" type="agv_pa" args="" output="screen" -->
+        <param name="lambda" value="10"/>     <!--  weight of smoothness objective (default value is 10)-->
+        <param name="num_Iterations" value="100"/>     <!-- Number of interations in CHOMP -->
+        <param name="obs_cost_gain" value="10"/>     <!-- Gain inside cost function(default value is 10) -->
+        <param name="obs_inflation" value="4.0"/>  <!-- Obstacle inflation to account for vehicle size and safer margin(default value is 1meter)-->
+         <remap 
+            from="/obstacles"
+            to= "/$(env ROBOT)/local_mapping/obstacle_map"/>      
+    </node> 
+       
+     
+     <!-- Send a goal (for testing) -->
+    <node pkg="rostopic" type="rostopic" name="GoalPublisher"
+        args="pub --once /path_planner cargo_ants_msgs/Path '{mode: 0, container: name , goals: [{gx: 0, gy: 0, gth: 0, dr: 0, dth: 0},{gx: 50., gy: 0, gth: 0, dr: 0, dth: 0}]}'" 
+        output="screen">   
+    </node> 
+    
+    <!-- Run rviz node -->
+    <group if="$(arg rviz)">
+        <node   
+            pkg="rviz" 
+            type="rviz"
+            name="rviz"         
+            args="-d $(find agv_gazebo)/rviz/local_planner.rviz">
+        </node>
+    </group>
+    
+</launch>

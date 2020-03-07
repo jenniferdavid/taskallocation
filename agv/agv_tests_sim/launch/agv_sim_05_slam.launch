@@ -1,0 +1,60 @@
+<!-- Test AGV SLAM. Just localization and global mapping -->
+
+<launch>
+
+    <!-- Enable/disable visualization and other args -->
+    <arg name="plots" default="false" />
+    <arg name="rviz" default="false" />
+    <arg name="gazebo_gui" default="false" />
+    <arg name="world_model"  default="ground_with_barrel" />
+    <arg name="robot_model"  default="agv_iri" />
+    <arg name="render_map" default="false" />    
+    
+    <!-- test 01: gazebo world, agv description, controllers, odometry and driver -->
+    <include file="$(find agv_tests_sim)/launch/agv_sim_01_drive.launch">
+            <arg name="gazebo_gui" value="$(arg gazebo_gui)"/> 
+            <arg name="world_model" value="$(arg world_model)"/>
+            <arg name="robot_model" value="$(arg robot_model)"/> 
+    </include>
+
+    <!-- SLAM -->
+    <node 
+        pkg="cargo_ants_slam"
+        type="wolf_polylines"
+        name="wolf_polylines"
+        output="screen">
+
+        <!-- ROS integration -->
+        <param name="n_lasers" value="2"/>
+        <param name="laser_0_frame_name" value="agv_lidar2"/>
+        <param name="laser_1_frame_name" value="agv_lidar3"/>
+        <param name="~base_frame_name" value="agv_base_link"/>
+        <remap from="~odometry" to="/agv_odom_sim/odom"/>
+        <remap from="~laser_0" to="/agv/sl_lidar"/>
+        <remap from="~laser_1" to="/agv/sr_lidar"/>
+
+        <!-- Algotrithm tunning -->
+        <param name="compute_covariance" value="false"/>
+        <param name="filter_scans" value="false"/>
+        <param name="publish_features" value="true"/>
+        <param name="publish_trajectory" value="$(arg render_map)"/>
+        <param name="use_auto_diff_wrapper" value="true"/>
+        <param name="k_sigmas_ut" value="2"/>
+        <param name="new_features_th" value="50"/>
+        <param name="loop_frames_th" value="20"/>
+        <param name="max_iterations" value="10"/>
+        <param name="dist_traveled_th" value="10"/>
+        <param name="elapsed_time_th" value="30"/>      
+    </node>
+    
+    <!-- Run rviz node -->
+    <group if="$(arg rviz)">
+        <node   
+            pkg="rviz" 
+            type="rviz"
+            name="rviz"         
+            args="-d $(find agv_tests_sim)/rviz/agv_sim_05.rviz">
+        </node>
+    </group>
+    
+</launch>

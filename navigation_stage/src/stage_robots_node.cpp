@@ -41,14 +41,15 @@ int main(int argc, char *argv[])
     char dropL = 'A';
     char robotL = 'A';
     
+    navi_msgs::Item data;
+    navi_msgs::ItemStruct msg;
+    navi_msgs::Problem details;
+
     PlayerClient *robot;
     robot = new PlayerClient("localhost", 6665);
     
     Position2dProxy **position = new Position2dProxy*[numRobots];
     SimulationProxy simProxy(robot,0);
-
-    ros::Publisher coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 100);
-    ros::Publisher problem_pub = n.advertise<navi_msgs::Problem>("/problem", 100);
 
     //receive all robots pose
     for (int k = 0; k<numRobots; k++)
@@ -96,12 +97,12 @@ int main(int argc, char *argv[])
 	}
     
     delete []position;
-    
-    navi_msgs::Item data;
-    navi_msgs::ItemStruct msg;
-    navi_msgs::Problem details;
-   
-    while (ros::ok())
+
+    ros::Publisher coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 10);
+    ros::Publisher problem_pub = n.advertise<navi_msgs::Problem>("/problem", 10);
+    ros::Rate loop_rate(10);
+
+    while (ros::ok() )
         {
             for (int k = 0; k< totalModels; k++)
                 {
@@ -113,14 +114,20 @@ int main(int argc, char *argv[])
                     data.yaw = finalList[k].yaw;
 
                     msg.coords.push_back(data);
-                    coords_pub.publish(msg);
                 }
+            coords_pub.publish(msg);
+            ROS_INFO("Publishing coords data");
+
             details.nRobots = numRobots;
             details.nTasks = numTasks;
             details.nModels = numModels;
             details.nDropoffs = numDropoffs;
             details.nTotalmodels = totalModels;
             problem_pub.publish(details);
+            ROS_INFO("Publishing problem data");
+
+            ros::spinOnce();
+            loop_rate.sleep();
         }
     return 0;
 }

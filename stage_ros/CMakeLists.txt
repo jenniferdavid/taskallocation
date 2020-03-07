@@ -14,7 +14,6 @@ find_package(catkin REQUIRED
 )
 
 find_package(Boost REQUIRED COMPONENTS system thread)
-
 find_package(stage REQUIRED)
 
 include_directories(
@@ -22,11 +21,17 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${STAGE_INCLUDE_DIRS}
 )
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
-catkin_package()
+catkin_package(
+CATKIN_DEPENDS
+    roscpp
+DEPENDS
+)
 
 # Declare a cpp executable
 add_executable(stageros src/stageros.cpp)
+
 set(${PROJECT_NAME}_extra_libs "")
 if(UNIX AND NOT APPLE)
   set(${PROJECT_NAME}_extra_libs dl)

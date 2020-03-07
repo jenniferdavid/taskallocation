@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<robot name="prius" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <author>Rein Appeldoorn</author>
+    <license>TODO</license>
+    <review status="unreviewed" notes=""/>
+
+    <!-- includes -->
+    <xacro:include filename="$(find prius_description)/urdf/xacro/vehicle.urdf.xacro" />
+    <xacro:include filename="$(find prius_description)/urdf/xacro/sensor.urdf.xacro" />
+
+    <!-- Geometry of the vehicle -->
+    <xacro:vehicle />
+
+    <!-- Attached sensors -->
+    <xacro:sensor name="car" parent="vehicle" rpy="0 0 0" xyz="0 0 0" /> <!-- ibeo sensor -->
+
+    <xacro:sensor name="MobileyeCarInfo_3" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MobileyeGeneral_3" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MobileyeLaneLeft_3" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MobileyeLaneRight_3" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MobileyeObjectNumber_3" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MobileyeObject_3" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MoveHMIButtons_2" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MoveTarget1_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget2_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget3_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget4_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget5_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget6_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget7_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveTarget8_2" parent="vehicle" rpy="0 0 0" xyz="3 0 0" />
+    <xacro:sensor name="MoveVehicleSpeed_2" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MoveVehicleState_2" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+    <xacro:sensor name="MoveWheelSpeed_2" parent="vehicle" rpy="0 0 0" xyz="0 0 0" />
+
+    <xacro:sensor name="Continental20xTrack_4" parent="vehicle" rpy="0 0 2.6" xyz="1.2 1 1" />
+
+</robot>

@@ -1,0 +1,1454 @@
+<sdf version='1.4'>
+  <world name='default'>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+            <bounce/>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+    </model>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <model name='construction_barrel_1'>
+      <link name='link'>
+        <inertial>
+          <pose>0 0 0.4 0 -0 0</pose>
+          <mass>500</mass>
+          <inertia>
+            <ixx>51.2096</ixx>
+            <iyy>51.2096</iyy>
+            <izz>25</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose>-2 5 0 0 -0 0</pose>
+      <static>0</static>
+    </model>
+    <model name='construction_barrel_2'>
+      <link name='link'>
+        <inertial>
+          <pose>0 0 0.4 0 -0 0</pose>
+          <mass>500</mass>
+          <inertia>
+            <ixx>51.2096</ixx>
+            <iyy>51.2096</iyy>
+            <izz>25</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose>3 -6 0 0 -0 0</pose>
+      <static>0</static>
+    </model>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.8</gravity>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='agv'>
+      <link name='agv_footprint'>
+        <pose>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>3.25363e-05 1.47439e-19 1.48169 0 -0 0</pose>
+          <mass>1506.01</mass>
+          <inertia>
+            <ixx>1009.07</ixx>
+            <ixy>7.22451e-21</ixy>
+            <ixz>-0.0364221</ixz>
+            <iyy>12958.5</iyy>
+            <iyz>-1.2619e-16</iyz>
+            <izz>13151</izz>
+          </inertia>
+        </inertial>
+        <collision name='agv_footprint_collision_agv_base_link'>
+          <pose>0 0 1.2 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>10 1.6 1.4</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='agv_footprint_collision_agv_platform'>
+          <pose>0 0 2.05 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>10 3 0.3</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='agv_footprint_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <visual name='agv_footprint_visual_agv_base_link'>
+          <pose>0 0 1.2 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>10 1.6 1.4</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_fwd_mark'>
+          <pose>4.9 0 2.225 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 0.4 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Purple</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_lidar0'>
+          <pose>5 1.5 1.07 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_lidar1'>
+          <pose>5 -1.5 1.07 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_lidar2'>
+          <pose>0 1.7 1.07 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_lidar3'>
+          <pose>0 -1.7 1.07 0 0 -1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_lidar4'>
+          <pose>-5 1.5 1.07 0 -0 3.14159</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_lidar5'>
+          <pose>-5 -1.5 1.07 0 -0 3.14159</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.15</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='agv_footprint_visual_agv_platform'>
+          <pose>0 0 2.05 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>10 3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Orange</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <sensor name='lidar0' type='ray'>
+          <visualize>1</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5</min_angle>
+                <max_angle>1.5</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>50</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='agv_lidar0' filename='libgazebo_ros_laser.so'>
+            <topicName>agv/fl_lidar</topicName>
+            <frameName>agv_lidar0</frameName>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+          <pose>5 1.5 1.07 0 -0 0</pose>
+        </sensor>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <sensor name='lidar1' type='ray'>
+          <visualize>1</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5</min_angle>
+                <max_angle>1.5</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>50</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='agv_lidar1' filename='libgazebo_ros_laser.so'>
+            <topicName>agv/fr_lidar</topicName>
+            <frameName>agv_lidar1</frameName>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+          <pose>5 -1.5 1.07 0 -0 0</pose>
+        </sensor>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <sensor name='lidar2' type='ray'>
+          <visualize>1</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5</min_angle>
+                <max_angle>1.5</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>50</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='agv_lidar2' filename='libgazebo_ros_laser.so'>
+            <topicName>agv/sl_lidar</topicName>
+            <frameName>agv_lidar2</frameName>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+          <pose>0 1.7 1.07 0 -0 1.5708</pose>
+        </sensor>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>1</self_collide>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <sensor name='lidar3' type='ray'>
+          <visualize>1</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5</min_angle>
+                <max_angle>1.5</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>50</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='agv_lidar3' filename='libgazebo_ros_laser.so'>
+            <topicName>agv/sr_lidar</topicName>
+            <frameName>agv_lidar3</frameName>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+          <pose>0 -1.7 1.07 0 0 -1.5708</pose>
+        </sensor>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>1</self_collide>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <sensor name='lidar4' type='ray'>
+          <visualize>1</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5</min_angle>
+                <max_angle>1.5</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>50</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='agv_lidar4' filename='libgazebo_ros_laser.so'>
+            <topicName>agv/bl_lidar</topicName>
+            <frameName>agv_lidar4</frameName>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+          <pose>-5 1.5 1.07 0 -0 3.14159</pose>
+        </sensor>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>1</self_collide>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <sensor name='lidar5' type='ray'>
+          <visualize>1</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5</min_angle>
+                <max_angle>1.5</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>50</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='agv_lidar5' filename='libgazebo_ros_laser.so'>
+            <topicName>agv/br_lidar</topicName>
+            <frameName>agv_lidar5</frameName>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+          <pose>-5 -1.5 1.07 0 -0 3.14159</pose>
+        </sensor>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='agv_bl_hinge'>
+        <pose>-2.9 1.4 1.4 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>10</mass>
+          <inertia>
+            <ixx>0.8383</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.8383</iyy>
+            <iyz>0</iyz>
+            <izz>0.0166</izz>
+          </inertia>
+        </inertial>
+        <visual name='agv_bl_hinge_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Green</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_platform_2_bl_hinge' type='revolute'>
+        <child>agv_bl_hinge</child>
+        <parent>agv_footprint</parent>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-0.942478</lower>
+            <upper>0.942478</upper>
+            <effort>100000</effort>
+            <velocity>1</velocity>
+          </limit>
+          <dynamics>
+            <damping>100</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_bl_wheel'>
+        <pose>-2.9 1.475 0.9 -1.5708 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>100</mass>
+          <inertia>
+            <ixx>20.1898</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.1898</iyy>
+            <iyz>0</iyz>
+            <izz>40.5</izz>
+          </inertia>
+        </inertial>
+        <collision name='agv_bl_wheel_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='agv_bl_wheel_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.3</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_bl_hinge_2_wheel' type='revolute'>
+        <child>agv_bl_wheel</child>
+        <parent>agv_bl_hinge</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <damping>0.2</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_br_hinge'>
+        <pose>-2.9 -1.4 1.4 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>10</mass>
+          <inertia>
+            <ixx>0.8383</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.8383</iyy>
+            <iyz>0</iyz>
+            <izz>0.0166</izz>
+          </inertia>
+        </inertial>
+        <visual name='agv_br_hinge_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Green</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_platform_2_br_hinge' type='revolute'>
+        <child>agv_br_hinge</child>
+        <parent>agv_footprint</parent>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-0.942478</lower>
+            <upper>0.942478</upper>
+            <effort>100000</effort>
+            <velocity>1</velocity>
+          </limit>
+          <dynamics>
+            <damping>100</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_br_wheel'>
+        <pose>-2.9 -1.475 0.9 -1.5708 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>100</mass>
+          <inertia>
+            <ixx>20.1898</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.1898</iyy>
+            <iyz>0</iyz>
+            <izz>40.5</izz>
+          </inertia>
+        </inertial>
+        <collision name='agv_br_wheel_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='agv_br_wheel_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.3</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_br_hinge_2_wheel' type='revolute'>
+        <child>agv_br_wheel</child>
+        <parent>agv_br_hinge</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <damping>0.2</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_fl_hinge'>
+        <pose>2.9 1.4 1.4 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>10</mass>
+          <inertia>
+            <ixx>0.8383</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.8383</iyy>
+            <iyz>0</iyz>
+            <izz>0.0166</izz>
+          </inertia>
+        </inertial>
+        <visual name='agv_fl_hinge_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Green</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_platform_2_fl_hinge' type='revolute'>
+        <child>agv_fl_hinge</child>
+        <parent>agv_footprint</parent>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-0.942478</lower>
+            <upper>0.942478</upper>
+            <effort>100000</effort>
+            <velocity>1</velocity>
+          </limit>
+          <dynamics>
+            <damping>100</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_fl_wheel'>
+        <pose>2.9 1.475 0.9 -1.5708 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>100</mass>
+          <inertia>
+            <ixx>20.1898</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.1898</iyy>
+            <iyz>0</iyz>
+            <izz>40.5</izz>
+          </inertia>
+        </inertial>
+        <collision name='agv_fl_wheel_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='agv_fl_wheel_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.3</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_fl_hinge_2_wheel' type='revolute'>
+        <child>agv_fl_wheel</child>
+        <parent>agv_fl_hinge</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <damping>0.2</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_fr_hinge'>
+        <pose>2.9 -1.4 1.4 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>10</mass>
+          <inertia>
+            <ixx>0.8383</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.8383</iyy>
+            <iyz>0</iyz>
+            <izz>0.0166</izz>
+          </inertia>
+        </inertial>
+        <visual name='agv_fr_hinge_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Green</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_platform_2_fr_hinge' type='revolute'>
+        <child>agv_fr_hinge</child>
+        <parent>agv_footprint</parent>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-0.942478</lower>
+            <upper>0.942478</upper>
+            <effort>100000</effort>
+            <velocity>1</velocity>
+          </limit>
+          <dynamics>
+            <damping>100</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='agv_fr_wheel'>
+        <pose>2.9 -1.475 0.9 -1.5708 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>100</mass>
+          <inertia>
+            <ixx>20.1898</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.1898</iyy>
+            <iyz>0</iyz>
+            <izz>40.5</izz>
+          </inertia>
+        </inertial>
+        <collision name='agv_fr_wheel_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='agv_fr_wheel_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.3</length>
+              <radius>0.9</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='agv_fr_hinge_2_wheel' type='revolute'>
+        <child>agv_fr_wheel</child>
+        <parent>agv_fr_hinge</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <damping>0.2</damping>
+          </dynamics>
+        </axis>
+      </joint>
+      <plugin name='agv_ground_truth' filename='libgazebo_ros_p3d.so'>
+        <topicName>agv/ground_truth</topicName>
+        <frameName>world</frameName>
+        <bodyName>agv_footprint</bodyName>
+        <gaussianNoise>0.0</gaussianNoise>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>20.0</updateRate>
+        <robotNamespace>/</robotNamespace>
+      </plugin>
+      <static>0</static>
+      <plugin name='gazebo_ros_control' filename='libgazebo_ros_control.so'>
+        <robotNamespace>/agv</robotNamespace>
+        <controlPeriod>0.001</controlPeriod>
+      </plugin>
+      <pose>2 6 0.01 0 -0 0</pose>
+    </model>
+    <model name='container20'>
+      <static>1</static>
+      <link name='chassis'>
+        <pose>0 0 0.1 0 -0 0</pose>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://container20/CONTAINER20.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://container20/CONTAINER20.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose>26.5984 3 0 0 -0 0</pose>
+    </model>
+    <state world_name='default'>
+      <sim_time>1075 10000000</sim_time>
+      <real_time>735 339842164</real_time>
+      <wall_time>1472292145 352749380</wall_time>
+      <model name='Construction Barrel'>
+        <pose>9 -7.59439 -0 0 -0 -6.4e-05</pose>
+        <link name='link'>
+          <pose>9 -7.59439 -0 0 -0 -6.4e-05</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='agv'>
+        <pose>40.6131 1.94639 -2.8e-05 0 -2e-06 0.890301</pose>
+        <link name='agv_bl_hinge'>
+          <pose>37.7003 0.573173 1.39996 -2e-05 -2e-06 0.890316</pose>
+          <velocity>-0.000966 0.001761 -0.000256 0.000869 -0.000196 -0.000809</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_bl_wheel'>
+          <pose>37.642 0.620344 0.900004 -1.57094 -1.43211 0.890451</pose>
+          <velocity>-0.002164 0.003462 8.1e-05 -1.9e-05 0.001809 -0.000518</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_br_hinge'>
+          <pose>39.8767 -1.18852 1.39998 -9e-06 -2e-06 0.890312</pose>
+          <velocity>-0.001295 1e-06 -0.013927 -0.000324 -0.000919 -0.000263</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_br_wheel'>
+          <pose>39.9349 -1.23572 0.899983 -1.57086 1.43694 0.890255</pose>
+          <velocity>-0.000769 0.000157 -0.013303 -0.000254 -0.000583 -0.000731</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_fl_hinge'>
+          <pose>41.3496 5.08129 1.4 -8e-06 -0 0.890305</pose>
+          <velocity>0.001733 -0.000458 0.010307 0.00095 0.000219 -0.000924</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_fl_wheel'>
+          <pose>41.2913 5.12848 0.9 1.57092 -1.52752 -2.25142</pose>
+          <velocity>0.001517 0.000436 0.01016 -0.000471 0.001678 -0.000567</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_footprint'>
+          <pose>40.6131 1.94639 -2.8e-05 0 -2e-06 0.890301</pose>
+          <velocity>-0.002791 0.005266 -0.000832 0.003487 0.001818 -0.000534</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_fr_hinge'>
+          <pose>43.5259 3.31959 1.39998 -2e-06 -2e-06 0.890319</pose>
+          <velocity>0.000395 -0.001098 -0.001815 0.003935 0.00241 -0.000977</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='agv_fr_wheel'>
+          <pose>43.5842 3.27241 0.9 -1.57077 1.34785 0.890348</pose>
+          <velocity>0.000396 -9e-05 0.000128 0.000122 0.000421 -0.00096</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='construction_barrel_1'>
+        <pose>-2.01363 5.01826 -3e-06 3e-06 -7e-06 0.005518</pose>
+        <link name='link'>
+          <pose>-2.01363 5.01826 -3e-06 3e-06 -7e-06 0.005518</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='construction_barrel_2'>
+        <pose>2.99996 -5.99967 -3e-06 0 -7e-06 -0.000606</pose>
+        <link name='link'>
+          <pose>2.99996 -5.99967 -3e-06 0 -7e-06 -0.000606</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='container20'>
+        <pose>26.5984 3 0 0 -0 0</pose>
+        <link name='chassis'>
+          <pose>26.5984 3 0.1 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='container40'>
+        <pose>25.7391 8.17587 0 0 -0 0</pose>
+        <link name='chassis'>
+          <pose>25.7391 8.17587 0.1 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='crane1'>
+        <pose>14.4717 16 0 0 -0 0</pose>
+        <link name='chassis'>
+          <pose>14.4717 16 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='ground_plane'>
+        <pose>0 0 0 0 -0 0</pose>
+        <link name='link'>
+          <pose>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>64.6856 -54.2769 39.1074 -2.8e-05 0.161516 2.21378</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+    <model name='container40'>
+      <static>1</static>
+      <link name='chassis'>
+        <pose>0 0 0.1 0 -0 0</pose>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://container40/CONTAINER40.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://container40/CONTAINER40.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose>26 9.42264 0 0 -0 0</pose>
+    </model>
+    <model name='crane1'>
+      <static>1</static>
+      <link name='chassis'>
+        <pose>0 0 0 0 -0 0</pose>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://crane1/model.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://crane1/model.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose>14.4717 16 0 0 -0 0</pose>
+    </model>
+    <model name='Construction Barrel'>
+      <link name='link'>
+        <inertial>
+          <pose>0 0 0.4 0 -0 0</pose>
+          <mass>500</mass>
+          <inertia>
+            <ixx>51.2096</ixx>
+            <iyy>51.2096</iyy>
+            <izz>25</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://construction_barrel/meshes/construction_barrel.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose>9 -7.59443 0 0 -0 0</pose>
+      <static>0</static>
+    </model>
+  </world>
+</sdf>

@@ -1,0 +1,975 @@
+<?xml version="1.0"?>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    AGV MODEL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Partner: Institut de Robotica i Informatica Industrial (IRI) UPC-CSIC
+    authors:  Andreu Corominas-Murtra, acorominas@iri.upc.edu
+    Description: This file describes geometry and simulation parameters for the TNO-AGV, www.cargo-ants.eu
+    Units: [m], [rad] (SI)
+    Tutorials on urdf gazebo: http://gazebosim.org/tutorials?cat=connect_ros
+    Tutorials on urdf description: http://wiki.ros.org/urdf/Tutorials
+    Inertia of standard shapes: http://en.wikipedia.org/wiki/List_of_moments_of_inertia 
+    Some tips on wheeled robots: http://www.romin.upm.es/wiki/index.php?title=ROS%3ATutorials/Simulate_Your_Robot_in_Gazebo
+    More inspirations around ackerman's steering: http://www.rctek.com/technical/handling/ackerman_steering_principle.html
+                                                  https://en.wikipedia.org/wiki/Ackermann_steering_geometry
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- Robot name -->
+<robot name="agv" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- Included URDF Files -->
+<xacro:include filename="$(find agv_gazebo)/gazebo/agv_hil.gazebo" />
+<xacro:include filename="$(find arts_description)/urdf/arts.xacro" />
+
+<!-- user input dimensions  ( DEBUG: all mass values have been divided by 100 )  --> 
+<xacro:property name="robot"    value="agv" />
+<xacro:property name="pi"       value="3.141592" />
+<xacro:property name="body_length"   value="12." />
+<xacro:property name="body_width"    value="3" />
+<xacro:property name="body_height"   value="1.4" />
+<xacro:property name="body_mass"   value="1000." />
+<xacro:property name="platform_length"   value="${body_length}" />
+<xacro:property name="platform_width"   value="3." />
+<xacro:property name="platform_height"   value=".3" />
+<xacro:property name="platform_mass"   value="500." />
+<xacro:property name="wheel_width"    value="0.05" />
+<xacro:property name="wheel_width_vis"    value="0.3" />
+<xacro:property name="wheel_radius"   value="0.9" />
+<xacro:property name="wheel_mass"   value="100." />
+<xacro:property name="wheel_hinge_width"   value="0.1" />
+<xacro:property name="wheel_hinge_mass"   value="10." />
+<xacro:property name="lidar_mass"   value="1." />
+<xacro:property name="lidar_side"   value="0.15" />
+
+<!-- TNO definitions, measured in meters from ground -->
+<xacro:property name="radarbeam_height"   value="0.05" />
+<xacro:property name="radarbeam_mountingheight"   value="0.88" />
+<xacro:property name="lider_side_mountingheight"   value="0.725" />
+<xacro:property name="lider_side_offsetfront"   value="1.04" />
+<xacro:property name="arts_mountingheight"	value="2.220" />
+<xacro:property name="rtk_mountingheight"	value="1.720" />
+
+<!-- derived dimensions -->
+<xacro:property name="wheel_hinge_height"   value="${wheel_radius+0.1}" />
+<xacro:property name="body_floor_clearance"   value="${wheel_radius+wheel_hinge_height-body_height}" />
+<xacro:property name="footprint_to_baselink_height"   value="${body_floor_clearance+0.5*body_height}" />
+
+<!-- calculated dimensions to measured dimension -->
+<xacro:property name="baselink_to_ground_height"   value="${-footprint_to_baselink_height}" />
+<xacro:property name="baselink_to_radarbeam_height"   value="${baselink_to_ground_height+radarbeam_mountingheight}" />
+<xacro:property name="baselink_to_lidar_height"   value="${baselink_to_ground_height+lider_side_mountingheight}" />
+<xacro:property name="baselink_to_arts_height"   value="${baselink_to_ground_height+arts_mountingheight}" />
+<xacro:property name="baselink_to_rtk_height"   value="${baselink_to_ground_height+rtk_mountingheight}" />
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~ BODY AND PLATFORM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!--
+<link name="world">
+    <visual>
+        <origin xyz="0 0 -0.1" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.1 0.1 0.2"/>
+        </geometry>
+        <material name="red">
+            <color rgba="1 0. 0. 0.5"/>
+        </material>
+    </visual>
+</link>-->
+
+
+<!-- AGV Footprint Link (AGV footprint on ground)-->
+<!--<joint name="$world_2_{robot}_footprint" type="floating" >
+    <parent link="world"/>
+    <child link="${robot}_footprint"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>-->
+<link name="${robot}_footprint">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.1 0.1 0.1"/>
+        </geometry>
+        <material name="white">
+            <color rgba="1 1 1 0.1"/>
+        </material>
+    </visual>
+  
+<!--  [ WARN] [1434442482.866511790]: The root link agv_footprint has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF. -->
+<!--    <inertial> 
+      <mass value="0.1" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+               iyy="0.001" iyz="0.0" 
+               izz="0.001" />
+    </inertial>-->
+
+<!--    Comment collision below for normal mode: wheels on te ground -->    
+<!--    Uncomment collision below for "Podium" mode: Useful to check wheel control without moving agv -->
+   <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.1 0.1 0.1"/>
+        </geometry>
+    </collision>
+</link>
+
+<!-- AGV Base Link (AGV body)-->
+<joint name="${robot}_footprint_2_base" type="fixed" >
+    <parent link="${robot}_footprint"/>
+    <child link="${robot}_base_link"/>
+    <origin xyz="0 0 ${footprint_to_baselink_height}" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_base_link">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${body_length} ${body_width} ${body_height}"/>
+        </geometry>
+        <material name="reddish">
+            <color rgba="1 0.2 0.2 0.3"/>
+        </material>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${body_length} ${body_width} ${body_height}"/>
+        </geometry>
+    </collision>
+
+    <inertial>
+        <mass value="${body_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*body_mass*(body_width*body_width+body_height*body_height)}" 
+                 ixy="0.0" 
+                 ixz="0.0"
+                 iyy="${0.083*body_mass*(body_length*body_length+body_height*body_height)}"
+                 iyz="0.0"
+                 izz="${0.083*body_mass*(body_length*body_length+body_width*body_width)}" />        
+    </inertial>
+</link>
+
+<!-- AGV top platform-->
+<joint name="${robot}_base_2_platform" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_platform"/>
+    <origin xyz="0 0 ${0.5*body_height + 0.5*platform_height}" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_platform">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${platform_length} ${platform_width} ${platform_height}"/>
+        </geometry>
+        <material name="yellow">
+            <color rgba="1.0 0.9 0.0 0.5"/>
+        </material>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${platform_length} ${platform_width} ${platform_height}"/>
+        </geometry>
+    </collision>
+    
+    <inertial>
+        <mass value="${platform_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*platform_mass*(platform_width*platform_width+platform_height*platform_height)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*platform_mass*(platform_length*platform_length+platform_height*platform_height)}"
+                    iyz="0.0"
+                    izz="${0.083*platform_mass*(platform_length*platform_length+platform_width*platform_width)}" />        
+    </inertial>
+</link>
+
+<!-- AGV forward marker -->
+<joint name="${robot}_platform_2_fwd_mark" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fwd_mark"/>
+    <origin xyz="${0.5*platform_length-0.1} 0 ${0.5*platform_height+0.025}" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_fwd_mark">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.2 0.4 0.05"/>
+        </geometry>
+        <material name="purple">
+            <color rgba="1.0 0.0 1.0 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.01" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="0.01"
+                iyz="0.0"
+                izz="0.01" />        
+    </inertial>
+</link>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WHEELS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- front left hinge-->
+<joint name="${robot}_platform_2_fl_hinge" type="revolute" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fl_hinge"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." lower="${-0.3*pi}" upper="${0.3*pi}" velocity="1."/>
+    <dynamics damping="100."/>
+    <origin xyz="${0.4*platform_length-wheel_radius-0.2} ${0.5*platform_width-0.5*wheel_hinge_width-wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>
+<!--<joint name="${robot}_platform_2_fl_hinge" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fl_hinge"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="${0.5*platform_length-wheel_radius-0.2} ${0.5*platform_width-0.5*wheel_hinge_width-wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>-->
+<link name="${robot}_fl_hinge">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${wheel_hinge_width} ${wheel_hinge_width} ${wheel_hinge_height}"/>
+        </geometry>
+        <material name="green2">
+            <color rgba="0.5 1 0.3 1"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${wheel_hinge_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}"
+                    iyz="0.0"
+                    izz="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_width*wheel_hinge_width)}" />        
+    </inertial>
+
+</link>
+
+<!-- front left wheel-->
+<joint name="${robot}_fl_hinge_2_wheel" type="continuous" >
+    <parent link="${robot}_fl_hinge"/>
+    <child link="${robot}_fl_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." velocity="${pi}"/>
+    <dynamics damping="0.2"/>
+    <origin xyz="0 ${0.5*wheel_hinge_width+0.5*wheel_width} ${-0.5*wheel_hinge_height}" rpy="${-0.5*pi} 0 0"/>
+</joint>
+<link name="${robot}_fl_wheel">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width_vis}" radius="${wheel_radius}"/>
+        </geometry>
+        <material name="grey">
+            <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+    </collision>
+    
+    <inertial>
+        <mass value="${wheel_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}"
+                    iyz="0.0"
+                    izz="${0.5*wheel_mass*wheel_radius*wheel_radius}" />        
+    </inertial>    
+</link>
+
+<!-- front right hinge-->
+<joint name="${robot}_platform_2_fr_hinge" type="revolute" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fr_hinge"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." lower="${-0.3*pi}" upper="${0.3*pi}" velocity="1."/>
+    <dynamics damping="100."/>
+    <origin xyz="${0.4*platform_length-wheel_radius-0.2} ${-0.5*platform_width+0.5*wheel_hinge_width+wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>
+<!--<joint name="${robot}_platform_2_fr_hinge" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fr_hinge"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="${0.5*platform_length-wheel_radius-0.2} ${-0.5*platform_width+0.5*wheel_hinge_width+wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>-->
+<link name="${robot}_fr_hinge">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${wheel_hinge_width} ${wheel_hinge_width} ${wheel_hinge_height}"/>
+        </geometry>
+        <material name="green2">
+            <color rgba="0.5 1 0.3 1"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${wheel_hinge_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}"
+                    iyz="0.0"
+                    izz="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_width*wheel_hinge_width)}" />        
+    </inertial>
+    
+</link>
+
+<!-- front right wheel-->
+<joint name="${robot}_fr_hinge_2_wheel" type="continuous" >
+    <parent link="${robot}_fr_hinge"/>
+    <child link="${robot}_fr_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." velocity="${pi}"/>
+    <dynamics damping="0.2"/>
+    <origin xyz="0 ${-0.5*wheel_hinge_width-0.5*wheel_width} ${-0.5*wheel_hinge_height}" rpy="${-0.5*pi} 0 0"/>
+</joint>
+<link name="${robot}_fr_wheel">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width_vis}" radius="${wheel_radius}"/>
+        </geometry>
+        <material name="grey">
+            <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+    </collision>
+    
+    <inertial>
+        <mass value="${wheel_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}"
+                    iyz="0.0"
+                    izz="${0.5*wheel_mass*wheel_radius*wheel_radius}" />        
+    </inertial>        
+</link>
+
+<!-- back left hinge-->
+<joint name="${robot}_platform_2_bl_hinge" type="revolute" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_bl_hinge"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." lower="${-0.3*pi}" upper="${0.3*pi}" velocity="1."/>
+    <dynamics damping="100."/>
+    <origin xyz="${-0.4*platform_length+wheel_radius+0.2} ${0.5*platform_width-0.5*wheel_hinge_width-wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>
+<!--<joint name="${robot}_platform_2_bl_hinge" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_bl_hinge"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="${-0.5*platform_length+wheel_radius+0.2} ${0.5*platform_width-0.5*wheel_hinge_width-wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>-->
+<link name="${robot}_bl_hinge">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${wheel_hinge_width} ${wheel_hinge_width} ${wheel_hinge_height}"/>
+        </geometry>
+        <material name="green2">
+            <color rgba="0.5 1 0.3 1"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${wheel_hinge_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}"
+                    iyz="0.0"
+                    izz="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_width*wheel_hinge_width)}" />        
+    </inertial>    
+</link>
+
+<!-- back left wheel-->
+<joint name="${robot}_bl_hinge_2_wheel" type="continuous" >
+    <parent link="${robot}_bl_hinge"/>
+    <child link="${robot}_bl_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." velocity="${pi}"/>
+    <dynamics damping="0.2"/>
+    <origin xyz="0 ${0.5*wheel_hinge_width+0.5*wheel_width} ${-0.5*wheel_hinge_height}" rpy="${-0.5*pi} 0 0"/>
+</joint>
+<link name="${robot}_bl_wheel">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width_vis}" radius="${wheel_radius}"/>
+        </geometry>
+        <material name="grey">
+            <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+    </collision>
+    
+    <inertial>
+        <mass value="${wheel_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}"
+                    iyz="0.0"
+                    izz="${0.5*wheel_mass*wheel_radius*wheel_radius}" />        
+    </inertial>        
+</link>
+
+<!-- back right hinge-->
+<joint name="${robot}_platform_2_br_hinge" type="revolute" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_br_hinge"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." lower="${-0.3*pi}" upper="${0.3*pi}" velocity="1."/>
+    <dynamics damping="100."/>
+    <origin xyz="${-0.4*platform_length+wheel_radius+0.2} ${-0.5*platform_width+0.5*wheel_hinge_width+wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>
+<!--<joint name="${robot}_platform_2_br_hinge" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_br_hinge"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="${-0.5*platform_length+wheel_radius+0.2} ${-0.5*platform_width+0.5*wheel_hinge_width+wheel_width} ${-0.5*platform_height-0.5*wheel_hinge_height}" rpy="0 0 0"/>
+</joint>-->
+<link name="${robot}_br_hinge">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${wheel_hinge_width} ${wheel_hinge_width} ${wheel_hinge_height}"/>
+        </geometry>
+        <material name="green2">
+            <color rgba="0.5 1 0.3 1"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${wheel_hinge_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_height*wheel_hinge_height)}"
+                    iyz="0.0"
+                    izz="${0.083*wheel_hinge_mass*(wheel_hinge_width*wheel_hinge_width+wheel_hinge_width*wheel_hinge_width)}" />        
+    </inertial>    
+</link>
+
+<!-- back right wheel-->
+<joint name="${robot}_br_hinge_2_wheel" type="continuous" >
+    <parent link="${robot}_br_hinge"/>
+    <child link="${robot}_br_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100000." velocity="${pi}"/>
+    <dynamics damping="0.2"/>
+    <origin xyz="0 ${-0.5*wheel_hinge_width-0.5*wheel_width} ${-0.5*wheel_hinge_height}" rpy="${-0.5*pi} 0 0"/>
+</joint>
+<link name="${robot}_br_wheel">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width_vis}" radius="${wheel_radius}"/>
+        </geometry>
+        <material name="grey">
+            <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+    </visual>
+    
+    <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+    </collision>
+    
+    <inertial>
+        <mass value="${wheel_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}" 
+                    ixy="0.0" 
+                    ixz="0.0"
+                    iyy="${0.083*wheel_mass*(3*wheel_radius*wheel_radius+wheel_width*wheel_width)}"
+                    iyz="0.0"
+                    izz="${0.5*wheel_mass*wheel_radius*wheel_radius}" />        
+    </inertial>        
+</link>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TNO/MOUNT & Sensors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- radar beam -->
+<joint name="${robot}_baselink_2_radarbeam" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_radarbeam_link"/>
+    <origin xyz="${0.5*platform_length} 0 ${baselink_to_radarbeam_height+0.5*radarbeam_height}" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_radarbeam_link">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.03 3 ${radarbeam_height}"/>
+        </geometry>
+        <material name="blueish">
+            <color rgba="0.3 0.2 1 0.8"/>
+        </material>
+    </visual>
+</link>
+
+<!-- lidar-front center -->
+<joint name="${robot}_radarbeam_2_fc_lidar" type="fixed" >
+    <parent link="${robot}_radarbeam_link"/>
+    <child link="${robot}_lidar0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_lidar0">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+</link>
+
+
+<!-- {baselink} + baselink-radarbeamheight+laserscanner_height -->
+<!-- lidar-front left -->
+<joint name="${robot}_baselink_2_fl_lidar" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_lidar1"/>
+    <origin xyz="${0.5*platform_length-lider_side_offsetfront} ${0.5*platform_width} ${baselink_to_lidar_height}" rpy="0 0 ${pi/2}"/>
+</joint>
+<link name="${robot}_lidar1">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+</link>
+<!-- lidar-front right -->
+<joint name="${robot}_baselink_2_fr_lidar" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_lidar2"/>
+    <origin xyz="${0.5*platform_length-lider_side_offsetfront} ${-0.5*platform_width} ${baselink_to_lidar_height}" rpy="0 0 ${-pi/2}"/>
+</joint> 
+<link name="${robot}_lidar2">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+</link>
+<!-- 20X-front left -->
+<joint name="${robot}_beam_2_radarFL" type="fixed" >
+    <parent link="${robot}_radarbeam_link"/>
+    <child link="${robot}_radar_fl"/>
+    <origin xyz="0 1.5 0" rpy="0 0 0.8219"/>
+</joint>
+<link name="${robot}_radar_fl">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.15 0.15 0.15"/>
+        </geometry>
+        <material name="reddish">
+            <color rgba="1 0.2 0.2 0.3"/>
+        </material>
+    </visual>
+</link>
+<!-- 20X-front right -->
+<joint name="${robot}_beam_2_radarLR" type="fixed" >
+    <parent link="${robot}_radarbeam_link"/>
+    <child link="${robot}_radar_fr"/>
+    <origin xyz="0 -1.5 0" rpy="0 0 -0.8219"/>
+</joint>
+<link name="${robot}_radar_fr">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.15 0.15 0.15"/>
+        </geometry>
+        <material name="reddish">
+            <color rgba="1 0.2 0.2 0.3"/>
+        </material>
+    </visual>
+</link>
+<!-- 30x-front -->
+<joint name="${robot}_beam_2_radarFC" type="fixed" >
+    <parent link="${robot}_radarbeam_link"/>
+    <child link="${robot}_radar_fc"/>
+    <origin xyz="0 0 0.194" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_radar_fc">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.15 0.15 0.15"/>
+        </geometry>
+        <material name="reddish">
+            <color rgba="1 0.2 0.2 0.3"/>
+        </material>
+    </visual>
+</link>
+
+<!-- RTK-front -->
+<joint name="${robot}_base_2_f_rtk" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_f_rtk"/>
+    <origin xyz="${0.5*platform_length-0.2} 0 ${baselink_to_rtk_height}" rpy="0 0 0"/>
+</joint> 
+<link name="${robot}_f_rtk">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.1 0.1 0.1"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+</link>
+
+<!-- RTK-rear -->
+<joint name="${robot}_base_2_r_rtk" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_r_rtk"/>
+    <origin xyz="${-0.5*platform_length+0.2} 0 ${baselink_to_rtk_height}" rpy="0 0 0"/>
+</joint> 
+<link name="${robot}_r_rtk">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.1 0.1 0.1"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+</link>
+
+
+<xacro:arts_node suffix="0" x="${0.5*platform_length}" y="${0.5*platform_width-0.15}" z="${baselink_to_arts_height+0.15}" base_frame="${robot}_base_link" rp="${-pi/2}" />
+<xacro:arts_node suffix="1" x="${-0.5*platform_length}" y="${-0.5*platform_width+0.15}" z="${baselink_to_arts_height+0.15}" base_frame="${robot}_base_link" rp="${-pi/2}" />
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SENSORS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- front left lidar
+<joint name="${robot}_platform_2_fl_lidar" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fl_lidar"/>
+    <origin xyz="${0.5*platform_length} ${0.5*platform_width} ${-0.7*body_height}" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_fl_lidar">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${lidar_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="${0.083*lidar_mass*(2*lidar_side*lidar_side)}"
+                iyz="0.0"
+                izz="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" />        
+    </inertial>
+</link>
+-->
+
+<!-- front right lidar
+<joint name="${robot}_platform_2_fr_lidar" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_fr_lidar"/>
+    <origin xyz="${0.5*platform_length} ${-0.5*platform_width} ${-0.7*body_height}" rpy="0 0 0"/>
+</joint>
+<link name="${robot}_fr_lidar">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${lidar_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="${0.083*lidar_mass*(2*lidar_side*lidar_side)}"
+                iyz="0.0"
+                izz="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" />        
+    </inertial>
+</link>
+-->
+
+<!-- side left lidar
+<joint name="${robot}_platform_2_sl_lidar" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_sl_lidar"/>
+    <origin xyz="0 ${0.5*platform_width} ${-0.7*body_height}" rpy="0 0 ${0.5*pi}"/>
+</joint>
+<link name="${robot}_sl_lidar">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${lidar_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="${0.083*lidar_mass*(2*lidar_side*lidar_side)}"
+                iyz="0.0"
+                izz="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" />        
+    </inertial>
+</link>
+-->
+
+<!-- side right lidar
+<joint name="${robot}_platform_2_sr_lidar" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_sr_lidar"/>
+    <origin xyz="0 ${-0.5*platform_width} ${-0.7*body_height}" rpy="0 0 ${-0.5*pi}"/>
+</joint>
+<link name="${robot}_sr_lidar">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${lidar_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="${0.083*lidar_mass*(2*lidar_side*lidar_side)}"
+                iyz="0.0"
+                izz="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" />        
+    </inertial>
+</link>
+-->
+
+<!-- back left lidar
+<joint name="${robot}_platform_2_bl_lidar" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_bl_lidar"/>
+    <origin xyz="${-0.5*platform_length} ${0.5*platform_width} ${-0.7*body_height}" rpy="0 0 ${pi}"/>
+</joint>
+<link name="${robot}_bl_lidar">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${lidar_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="${0.083*lidar_mass*(2*lidar_side*lidar_side)}"
+                iyz="0.0"
+                izz="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" />        
+    </inertial>
+</link>
+-->
+
+<!-- back right lidar
+<joint name="${robot}_platform_2_br_lidar" type="fixed" >
+    <parent link="${robot}_platform"/>
+    <child link="${robot}_br_lidar"/>
+    <origin xyz="${-0.5*platform_length} ${-0.5*platform_width} ${-0.7*body_height}" rpy="0 0 ${pi}"/>
+</joint>
+<link name="${robot}_br_lidar">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="${lidar_side} ${lidar_side} ${lidar_side}"/>
+        </geometry>
+        <material name="blue">
+            <color rgba="0.0 0.0 1. 0.8"/>
+        </material>
+    </visual>
+    
+    <inertial>
+        <mass value="${lidar_mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="${0.083*lidar_mass*(2*lidar_side*lidar_side)}"
+                iyz="0.0"
+                izz="${0.083*lidar_mass*(2*lidar_side*lidar_side)}" />        
+    </inertial>
+</link>
+-->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRANSMISSIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- front left steering -->
+<transmission name="${robot}_fl_steer">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_platform_2_fl_hinge">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_fl_steer_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- front right steering -->
+<transmission name="${robot}_fr_steer">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_platform_2_fr_hinge">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_fr_steer_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- back left steering -->
+<transmission name="${robot}_bl_steer">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_platform_2_bl_hinge">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_bl_steer_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- back right steering -->
+<transmission name="${robot}_br_steer">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_platform_2_br_hinge">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_br_steer_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- front left driving -->
+<transmission name="${robot}_fl_drive">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_fl_hinge_2_wheel">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_fl_drive_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- front right driving -->
+<transmission name="${robot}_fr_drive">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_fr_hinge_2_wheel">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_fr_drive_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- back left driving -->
+<transmission name="${robot}_bl_drive">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_bl_hinge_2_wheel">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_bl_drive_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+<!-- back right driving -->
+<transmission name="${robot}_br_drive">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="${robot}_br_hinge_2_wheel">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="${robot}_br_drive_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+</transmission>
+
+
+</robot>
+

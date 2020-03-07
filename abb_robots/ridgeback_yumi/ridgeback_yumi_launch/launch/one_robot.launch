@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--There are two errors when this launch file is run. However they do not effect the operation of the yumi or ridgeback. The first one loads gazebo_ros_control twice - one is the general gazebo loads and another one with respect to yumi. Disabling second one does not let us control yumi joints and gripper. I have to check how to disable the first one. The other one is PID errors, if you fix the error, the gazebo model (this is a known bug in gazebo) -->
+<launch>
+
+<arg name="use_traj_vel_controllers" default="false"/>
+<group unless="$(arg use_traj_vel_controllers)">
+    <rosparam file="$(find yumi_control)/config/velocity_controllers.yaml" command="load" ns="/yumi"/>
+    <arg name="arm_controllers" value="joint_state_controller
+                     joint_vel_controller_7_r
+                     joint_vel_controller_1_r
+                     joint_vel_controller_6_r
+                     joint_vel_controller_2_r
+                     joint_vel_controller_3_r
+                     joint_vel_controller_4_r
+                     joint_vel_controller_5_r
+                     joint_vel_controller_7_l
+                     joint_vel_controller_1_l
+                     joint_vel_controller_6_l
+                     joint_vel_controller_2_l
+                     joint_vel_controller_3_l
+                     joint_vel_controller_4_l
+                     joint_vel_controller_5_l"/>
+    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_controllers)" ns="/yumi"/>
+</group>
+
+<group if="$(arg use_traj_vel_controllers)">
+    <rosparam file="$(find yumi_control)/config/traj_controllers.yaml" command="load" ns="/yumi"/>
+    <arg name="arm_controllers" value="joint_state_controller
+                   joint_traj_vel_controller_l
+                   joint_traj_vel_controller_r"/>
+    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_controllers)" ns="/yumi"/>
+</group>
+
+<rosparam file="$(find yumi_control)/config/gripper_controllers.yaml" command="load" ns="/yumi"/>
+<arg name="gripper_controllers" default="gripper_effort_controller_r
+                                           gripper_effort_controller_l"/>
+<node name="gripper_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg gripper_controllers)" ns="/yumi"/>
+
+<arg name="yumi_initial_pos" default="-J yumi_joint_1_r 1.41 
+                                        -J yumi_joint_2_r -2.1
+                                        -J yumi_joint_3_r 0.30
+                                        -J yumi_joint_4_r 0.0
+                                        -J yumi_joint_5_r 0.0
+                                        -J yumi_joint_6_r 0.0
+                                        -J yumi_joint_7_r -0.71
+                                        -J yumi_joint_1_l -1.41 
+                                        -J yumi_joint_2_l -2.1
+                                        -J yumi_joint_3_l 0.30
+                                        -J yumi_joint_4_l 0.0
+                                        -J yumi_joint_5_l 0.0
+                                        -J yumi_joint_6_l 0.0
+                                        -J yumi_joint_7_l 0.71"/>
+ 
+
+<node name="yumi_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      <remap from="/joint_states" to="/yumi/joint_states" />
+</node>
+  
+<node name="grippers_remapper" pkg="yumi_hw" type="gazebo_grippers_remap.py" />
+
+<rosparam command="load" file="$(find ridgeback_control)/config/control.yaml"/>
+<node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" />
+
+<node pkg="topic_tools" type="relay" name="cmd_vel_relay"
+      args="cmd_vel ridgeback_velocity_controller/cmd_vel" />
+
+<arg name="ridgeback_controllers" default="ridgeback_joint_publisher 
+            ridgeback_velocity_controller
+            --shutdown-timeout 1" />
+
+<node name="ridgeback_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg ridgeback_controllers) --timeout 50"/>
+  
+<include file="$(find ridgeback_control)/launch/teleop.launch">
+      <arg name="joystick" value="false"/>
+</include>
+  
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  
+  <!-- URDF / SRDF parameters -->
+  <arg name="ridgeback_config" default="base" />
+  <include file="$(find ridgeback_yumi_description)/launch/description.launch">
+      <arg name="config" value="$(arg ridgeback_config)" />
+  </include>
+ 
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model ridgeback_yumi $(arg yumi_initial_pos) -param robot_description"  respawn="false" output="screen" />
+
+</launch>

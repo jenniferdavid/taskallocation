@@ -1,0 +1,75 @@
+<!--Main-->
+<launch>
+    <!-- Configuration of Gazebo  -->
+  <arg name="debug" default="false"/>
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="true" />
+  <arg name="headless" default="false" />
+  <arg name="world_name" default="$(find ridgeback_gazebo)/worlds/ridgeback_race.world" />
+
+  <!-- Launch Gazebo with the specified world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="debug" value="$(arg debug)" />
+      <arg name="gui" value="$(arg gui)" />
+      <arg name="use_sim_time" value="$(arg use_sim_time)" />
+      <arg name="headless" value="$(arg headless)" />
+      <arg name="world_name" value="$(arg world_name)" />
+      <arg name="paused" value="false"/>
+  </include>
+
+  <include file="$(find ridgeback_yumi_launch)/launch/one_robot.launch">
+  </include>
+
+
+  <arg name="second_tb2"  default="tb2"/>
+  <group ns = "$(arg second_tb2)">
+  
+  <arg name="base"      value="$(optenv TURTLEBOT_BASE kobuki)"/> <!-- create, roomba -->
+  <arg name="battery"   value="$(optenv TURTLEBOT_BATTERY /proc/acpi/battery/BAT0)"/>  <!-- /proc/acpi/battery/BAT0 --> 
+  <arg name="stacks"    value="$(optenv TURTLEBOT_STACKS hexagons)"/>  <!-- circles, hexagons --> 
+  <arg name="3d_sensor" value="$(optenv TURTLEBOT_3D_SENSOR kinect)"/>  <!-- kinect, asus_xtion_pro --> 
+  
+  <arg name="urdf_file" default="$(find xacro)/xacro.py '$(find turtlebot_description)/robots/$(arg base)_$(arg stacks)_$(arg 3d_sensor).urdf.xacro'" />
+  <param name="robot_description" command="$(arg urdf_file)" />
+  
+  <!-- Gazebo model spawner -->
+  <node name="spawn_turtlebot_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg second_tb2) -x -7.0 -y -1.0 -z 0.0 -Y 1.57 -param robot_description"/>
+
+  <!-- Velocity muxer -->
+  <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="cmd_vel_mux"
+        args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+    <param name="yaml_cfg_file" value="$(find turtlebot_bringup)/param/mux.yaml" />
+    <remap from="cmd_vel_mux/output" to="mobile_base/commands/velocity"/>
+  </node>
+
+  <!-- Bumper/cliff to pointcloud (not working, as it needs sensors/core messages) -->
+  <include file="$(find turtlebot_bringup)/launch/includes/kobuki/bumper2pc.launch.xml"/>
+  
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+  
+  <!-- Fake laser -->
+  <node pkg="nodelet" type="nodelet" name="laserscan_nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan"
+        args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet laserscan_nodelet_manager">
+    <param name="scan_height" value="10"/>
+    <param name="output_frame_id" value="/camera_depth_frame"/>
+    <param name="range_min" value="0.45"/>
+    <remap from="image" to="/camera/depth/image_raw"/>
+    <remap from="scan" to="/scan"/>
+  </node>
+  </group>
+
+
+
+  <param name="use_gui" value="true"/>
+  <arg name="mode" default="robot" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ridgeback_yumi_viz)/rviz/$(arg mode).rviz"/>
+
+</launch>
+
+

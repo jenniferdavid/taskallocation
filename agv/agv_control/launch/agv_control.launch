@@ -1,0 +1,37 @@
+<!-- Launches controllers and joint/state publishers-->
+
+<launch>
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find agv_control)/config/agv_control.yaml" command="load"/>
+
+    <!-- load the controllers and launches joint state publisher-->
+    <node
+        name="controller_spawner" 
+        pkg="controller_manager" 
+        type="spawner" 
+        respawn="false"
+        output="screen" 
+        ns="/agv" 
+        args="agv_fl_steer_controller 
+              agv_fr_steer_controller
+              agv_bl_steer_controller 
+              agv_br_steer_controller 
+              agv_fl_drive_controller
+              agv_fr_drive_controller
+              agv_bl_drive_controller
+              agv_br_drive_controller
+              joint_state_controller">
+    </node>
+    
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <node 
+        name="robot_state_publisher" 
+        pkg="robot_state_publisher" 
+        type="robot_state_publisher"
+        respawn="false" 
+        output="screen">
+        <remap from="/joint_states" to="/agv/joint_states" />
+    </node>
+    
+</launch>

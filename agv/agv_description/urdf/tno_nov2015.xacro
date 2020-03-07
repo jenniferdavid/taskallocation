@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+
+<robot name="agv" xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:include filename="$(find arts_description)/urdf/arts.xacro" />
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    AGV MODEL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Partner: Institut de Robotica i Informatica Industrial (IRI) UPC-CSIC
+    authors:  acoromin, mmorta
+    Description: This file describes sensor mounting points for the Toyota car used by TNO to get the dataset of October 2014.
+
+    Units: [m], [rad] (SI)
+    Tutorials on urdf description: http://wiki.ros.org/urdf/Tutorials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<xacro:property name="robot" value="agv" />
+<xacro:property name="pi"    value="3.141592" />
+
+<!-- AGV Base Footprint-->
+<link name="${robot}_footprint">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.01 0.01 0.01"/>
+        </geometry>
+    </visual>
+</link>
+
+<!-- AGV Base Link-->
+<link name="${robot}_base_link">
+    <origin xyz="0.0 -0.75 0" rpy="0 0 0"/>
+        <material name="reddish">
+            <color rgba="1 0.2 0.2 0.3"/>
+        </material>
+</link>
+
+<link name="${robot}_car_link">
+    <visual>
+        <geometry>
+            <mesh filename="package://agv_description/meshes/prius.dae" scale="0.57 0.57 0.57"/>
+            <!-- <box size="4.48 1.745 1.490"/> -->
+        </geometry>
+        <origin rpy="0 0 0" xyz="0.0 -0.81 0"/>
+    </visual>
+</link>
+
+<joint name="${robot}_robot_2_carframe_link" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_car_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 ${pi}"/>
+</joint>
+
+<joint name="${robot}_footprint_2_base_link" type="fixed" >
+    <parent link="${robot}_footprint"/>
+    <child link="${robot}_base_link"/>
+    <origin xyz="0 0 0.3" rpy="0 0 0"/>
+</joint>
+
+<link name="${robot}_lidarbase_link">
+	 <origin xyz="0 0 0" rpy="0 0 0"/>
+</link>
+<link name="${robot}_radarbase_link">
+	 <origin xyz="0 0 0" rpy="0 0 0"/>
+</link>
+
+<joint name="${robot}_robot_2_lidarbase_link" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_lidarbase_link"/>
+    <origin xyz="0 0 0.7" rpy="0 0 0"/>
+</joint>
+
+<joint name="${robot}_robot_2_radarbase_link" type="fixed" >
+    <parent link="${robot}_base_link"/>
+    <child link="${robot}_radarbase_link"/>
+    <origin xyz="1.10 0 1.3" rpy="0 0 0"/>
+</joint>
+
+<!-- Lidar Macro-->
+<xacro:macro name="lidar" params="parent suffix *origin">
+    <link name="${suffix}">
+        <visual>
+            <origin xyz="-0.075 -0.075 -0.075" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.15 0.15 0.15"/>
+            </geometry>
+            <material name="blue_navy">
+                <color rgba="0.0 0.2 0.25 0.5"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="${parent}_2_${suffix}" type="fixed" >
+        <parent link="${parent}"/>
+        <child link="${suffix}"/>
+        <xacro:insert_block name="origin" />
+    </joint>   
+</xacro:macro>
+
+<!-- Radar Macro-->
+<xacro:macro name="radar" params="parent suffix *origin">
+    <link name="${suffix}">
+        <visual>
+            <origin xyz="-0.075 -0.075 -0.075" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.15 0.15 0.15"/>
+            </geometry>
+            <material name="Cyan">
+                 <color rgba="0 1.0 1.0 1.0"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="${parent}_2_${suffix}" type="fixed" >
+        <parent link="${parent}"/>
+        <child link="${suffix}"/>
+        <xacro:insert_block name="origin" />
+    </joint>   
+</xacro:macro>
+
+<!-- Lidar mounting points-->
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_lidar0">
+    <origin xyz="0.62 -1.05 00" rpy="0 0 -1.64388"/>
+</xacro:lidar>
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_lidar1">
+    <origin xyz="3.02 0 0.29" rpy="0 0 0"/>
+</xacro:lidar>
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_lidar5">
+    <origin xyz="0.62 1.05 0.0" rpy="0 0 1.64388"/>
+</xacro:lidar>
+
+<!-- Radar-->
+<xacro:radar parent="${robot}_radarbase_link" suffix="${robot}_conti20xL">
+    <origin xyz="0 1.5 0" rpy="0 0 0.8219"/>
+</xacro:radar>
+<xacro:radar parent="${robot}_radarbase_link" suffix="${robot}_conti30x">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+</xacro:radar>
+<xacro:radar parent="${robot}_radarbase_link" suffix="${robot}_conti20xR">
+    <origin xyz="0 -1.5 0" rpy="0 0 -0.8219"/>
+</xacro:radar>
+
+<!-- Car dimensions, seen from center-rear
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_fl">
+    <origin xyz="3.555 0.875 0" rpy="0 0 1.64388"/>
+</xacro:lidar>
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_fr">
+    <origin xyz="3.555 -0.875 0" rpy="0 0 1.64388"/>
+</xacro:lidar>
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_br">
+    <origin xyz="-0.925 -0.875 0" rpy="0 0 1.64388"/>
+</xacro:lidar>
+<xacro:lidar parent="${robot}_lidarbase_link" suffix="${robot}_bl">
+    <origin xyz="-0.925 0.875 0" rpy="0 0 1.64388"/>
+</xacro:lidar>
+-->
+
+<!-- ARTS -->
+<xacro:arts_node suffix="0" x="1.10" y="0" z="1.3" base_frame="${robot}_base_link"/>
+<xacro:arts_node suffix="6" x="2.92" y="0" z="0.99" base_frame="${robot}_base_link"/>
+
+</robot>
+

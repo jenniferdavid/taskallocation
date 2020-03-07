@@ -1,0 +1,57 @@
+<!-- Displays AGV coordinate frames-->
+
+<launch>
+
+    <!-- Enable/disable visualization -->
+    <arg name="rviz"  default="false" />
+	<arg name="gazebo_gui"  default="True" />
+
+    <!-- model arguments -->
+    <arg name="robot_model" default="agv_iri"/>
+    
+<!--     Launch a world file -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="worlds/ground_with_barrel.world"/> 
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="$(arg gazebo_gui)"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>  -->-->
+    </include>
+
+    <!-- Set robot_description parameter in the parameter server-->
+    <param  name="robot_description" 
+            command="$(find xacro)/xacro.py $(find agv_description)/urdf/$(arg robot_model).xacro" />
+<!--             command="$(find xacro)/xacro.py '$(arg robot_model)'" />     -->
+
+<!-- Spawn a robot into Gazebo (Gets robot_description from parameter server)-->
+    <node name="spawn_urdf" 
+          pkg="gazebo_ros" 
+          type="spawn_model" 
+          args="-param robot_description -urdf -model at -x 0 -y 0 -z 0.01" >
+    </node>
+            
+    <!-- Run joint state publisher (Gets robot_description from parameter server)-->
+    <node pkg="joint_state_publisher"
+          type="joint_state_publisher"
+          name="agv_joint_state_publisher" >
+    </node>
+
+    <!-- Run state publisher (Gets robot_description from parameter server)-->
+    <node pkg="robot_state_publisher"
+          type="robot_state_publisher"
+          name="agv_state_publisher" >
+          <param name="~publish_frequency" value="10" />
+    </node>
+    
+    <!-- Run rviz node -->
+    <group if="$(arg rviz)">
+        <node   
+            pkg="rviz" 
+            type="rviz"
+            name="rviz"         
+            args="-d $(find agv_description)/rviz/agv_display.rviz">
+        </node>
+    </group>
+    
+</launch>

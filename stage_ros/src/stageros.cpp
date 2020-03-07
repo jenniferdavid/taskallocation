@@ -507,6 +507,7 @@ StageNode::WorldCallback()
 
     navi_msgs::OdomArray robotground_truth_array_msg;
     navi_msgs::OdomArray modelground_truth_array_msg;
+    navi_msgs::Problem problem_msg;
 
     //loop on the robot models
     for (size_t r = 0; r < this->robotmodels_.size(); ++r)
@@ -865,6 +866,13 @@ StageNode::WorldCallback()
     }
     modelcoords_pub_.publish(modelground_truth_array_msg);
     
+    problem_msg.nRobots = positionmodels.size();
+    problem_msg.nTasks = (modelmodels.size() -(positionmodels.size() *3) -2 -positionmodels.size());
+    problem_msg.nModels = (positionmodels.size() + (modelmodels.size() -(positionmodels.size() *3) -2 -positionmodels.size()));
+    problem_msg.nDropoffs = positionmodels.size();
+    problem_msg.nTotalmodels = ((positionmodels.size()*2) + modelmodels.size() -(positionmodels.size() *3) -2 -positionmodels.size()) ;
+    
+    problem_pub_.publish(problem_msg);
     this->base_last_globalpos_time = this->sim_time;
     rosgraph_msgs::Clock clock_msg;
     clock_msg.clock = sim_time;

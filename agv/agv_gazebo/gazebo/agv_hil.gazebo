@@ -1,0 +1,357 @@
+<?xml version="2.0"?>
+<robot>
+
+    <gazebo>
+        <static>0</static>
+    </gazebo>
+ 
+<!--     Links -->
+    <gazebo reference="${robot}_base_link">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="${robot}_platform">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Orange</material>        
+    </gazebo>
+    
+    <gazebo reference="${robot}_fwd_mark">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Purple</material>        
+    </gazebo>    
+    
+    <gazebo reference="${robot}_fl_hinge">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <material>Gazebo/Green</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_fr_hinge">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <material>Gazebo/Green</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_bl_hinge">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <material>Gazebo/Green</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_br_hinge">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <material>Gazebo/Green</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_fl_wheel">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <mu1>1.</mu1>
+        <mu2>1.</mu2>
+<!--        <kp  value="10000000.0" />
+        <kd  value="1.0" />
+        <fdir1 value="1 0 0"/>        -->
+        <material>Gazebo/Grey</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_fr_wheel">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <mu1>1.</mu1>
+        <mu2>1.</mu2>        
+<!--        <kp  value="10000000.0" />
+        <kd  value="1.0" />
+        <fdir1 value="1 0 0"/>        -->
+        <material>Gazebo/Grey</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_bl_wheel">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <mu1>1.</mu1>
+        <mu2>1.</mu2>        
+<!--        <kp  value="10000000.0" />
+        <kd  value="1.0" />
+        <fdir1 value="1 0 0"/>        -->
+        <material>Gazebo/Grey</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_br_wheel">
+        <gravity>true</gravity>
+        <self_collide>false</self_collide>
+        <mu1>1.</mu1>
+        <mu2>1.</mu2>        
+<!--        <kp  value="10000000.0" />
+        <kd  value="1.0" />
+        <fdir1 value="1 0 0"/>        -->
+        <material>Gazebo/Grey</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_lidar0">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Blue</material>                
+    </gazebo>
+
+    <gazebo reference="${robot}_fr_lidar">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Blue</material>                
+    </gazebo>
+
+    <gazebo reference="${robot}_sl_lidar">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Blue</material>                
+    </gazebo>
+
+    <gazebo reference="${robot}_sr_lidar">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Blue</material>                
+    </gazebo>
+
+    <gazebo reference="${robot}_bl_lidar">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Blue</material>                
+    </gazebo>
+    
+    <gazebo reference="${robot}_br_lidar">
+        <gravity>true</gravity>
+        <self_collide>true</self_collide>
+        <material>Gazebo/Blue</material>                
+    </gazebo>
+    
+<!--     Lidar plugins -->
+    <gazebo reference="${robot}_lidar0">
+        <sensor type="ray" name="lidar0">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>50.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="${robot}_lidar0" filename="libgazebo_ros_laser.so">
+                <topicName>${robot}/fl_lidar</topicName>
+                <frameName>${robot}_lidar0</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+    
+    <gazebo reference="${robot}_lidar1">
+        <sensor type="ray" name="lidar1">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>50.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="${robot}_lidar1" filename="libgazebo_ros_laser.so">
+                <topicName>${robot}/fr_lidar</topicName>
+                <frameName>${robot}_lidar1</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="${robot}_lidar2">
+        <sensor type="ray" name="lidar2">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>50.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="${robot}_lidar2" filename="libgazebo_ros_laser.so">
+                <topicName>${robot}/sl_lidar</topicName>
+                <frameName>${robot}_lidar2</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="${robot}_lidar3">
+        <sensor type="ray" name="lidar3">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>50.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="${robot}_lidar3" filename="libgazebo_ros_laser.so">
+                <topicName>${robot}/sr_lidar</topicName>
+                <frameName>${robot}_lidar3</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="${robot}_bl_lidar">
+        <sensor type="ray" name="bl_lidar">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>50.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="${robot}_bl_lidar" filename="libgazebo_ros_laser.so">
+                <topicName>${robot}/bl_lidar</topicName>
+                <frameName>${robot}_bl_lidar</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+     
+    <gazebo reference="${robot}_br_lidar">
+        <sensor type="ray" name="br_lidar">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>50.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="${robot}_br_lidar" filename="libgazebo_ros_laser.so">
+                <topicName>${robot}/br_lidar</topicName>
+                <frameName>${robot}_br_lidar</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+<!--     Odometry -->
+<!--    <gazebo>
+        <plugin name="${robot}_odom" filename="libgazebo_ros_p3d.so">
+            <topicName>${robot}/odom</topicName>
+            <frameName>world</frameName>
+            <bodyName>${robot}_footprint</bodyName>
+            <gaussianNoise>0.1</gaussianNoise>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>20.0</updateRate>
+        </plugin>
+    </gazebo>        -->
+    
+<!--     Ground Truth -->
+    <gazebo>
+        <plugin name="${robot}_ground_truth" filename="libgazebo_ros_p3d.so">
+            <topicName>${robot}/ground_truth</topicName>
+            <frameName>world</frameName>
+            <bodyName>${robot}_footprint</bodyName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>20.0</updateRate>
+        </plugin>
+    </gazebo>    
+
+<!--     Joint control (steering and driving) -->
+    <gazebo>
+        <plugin name="gazebo_hil_control" filename="libagv_hil.so">
+            <robotNamespace>/${robot}</robotNamespace>
+	    <topicName>/bnrLog</topicName>
+            <controlPeriod>0.001</controlPeriod> <!--100Hz-->
+        </plugin>
+    </gazebo>
+    
+</robot>

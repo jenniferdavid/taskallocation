@@ -1,0 +1,12 @@
+<!-- Launches the example-->
+
+<launch>
+    <node
+        pkg="arts_driver"
+        type="arts_driver"
+        name="arts_driver"
+        args=""
+        output="screen">        
+    </node>   
+</launch>
+

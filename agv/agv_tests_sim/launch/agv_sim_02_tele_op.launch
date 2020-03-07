@@ -1,0 +1,13 @@
+<!-- Starts just the teleoperation from the keyboard -->
+
+<launch>
+    <!-- keyboard teleop and remap to agv driver input-->
+    <node   
+        pkg="teleop_twist_keyboard" 
+        type="teleop_twist_keyboard.py"
+        name="teleop_twist_keyboard">
+        <remap 
+            from="/cmd_vel"
+            to="/agv_drive_sim/teleop"/>                
+    </node>
+</launch>

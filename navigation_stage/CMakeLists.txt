@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(navigation_stage)
 
 # Find catkin
-find_package(catkin REQUIRED roscpp rospy std_msgs genmsg navi_msgs costmap_2d)
+find_package(catkin REQUIRED message_filters roscpp rospy std_msgs genmsg navi_msgs costmap_2d)
 find_package(PkgConfig REQUIRED)
 find_package(Eigen3 REQUIRED)
 
@@ -27,6 +27,7 @@ INCLUDE (UsePlayerPlugin)
 
 catkin_package(
 CATKIN_DEPENDS
+    message_filters
     roscpp
 DEPENDS
     eigen3
@@ -48,11 +49,11 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 PLAYER_ADD_PLAYERCPP_CLIENT (stage_robots_node SOURCES src/stage_robots_node.cpp LINKFLAGS)
 TARGET_LINK_LIBRARIES (stage_robots_node ${catkin_LIBRARIES})
  
-add_executable(path_cost_node src/path_cost_node.cpp)
-target_link_libraries(path_cost_node ${catkin_LIBRARIES})
+add_executable(path_cost src/path_cost.cpp)
+target_link_libraries(path_cost ${catkin_LIBRARIES})
 
-add_executable(euclidean_cost_node src/euclidean_cost_node.cpp)
-target_link_libraries(euclidean_cost_node ${catkin_LIBRARIES})
+add_executable(euclidean src/euclidean.cpp)
+target_link_libraries(euclidean ${catkin_LIBRARIES})
 
 add_executable(send_goals_node src/send_goals_node.cpp)
 target_link_libraries(send_goals_node ${catkin_LIBRARIES})

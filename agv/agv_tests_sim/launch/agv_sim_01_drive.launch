@@ -1,0 +1,35 @@
+<!-- Starts AGV simulated environment, sensors, controllers and odom & drive nodes -->
+
+<launch>
+
+    <!-- Enable/disable visualization and other args -->
+    <arg name="plots" default="false" />
+    <arg name="rviz" default="false" />
+    <arg name="gazebo_gui" default="false" />
+    <arg name="world_model"  default="ground_with_barrel" />
+    <arg name="robot_model"  default="agv_iri" />
+    
+    <!-- Simulated environment + AGV with sensors + controllers -->
+    <include file="$(find agv_gazebo)/launch/agv_on_sim_world.launch"> 
+    		<arg name="gazebo_gui" value="$(arg gazebo_gui)"/> 
+    		<arg name="world_model" value="$(arg world_model)"/>
+    		<arg name="robot_model" value="$(arg robot_model)"/> 
+    </include>
+    
+    <!-- AGV drive -->
+    <include file="$(find agv_drive_sim)/launch/agv_drive_sim.launch"/>
+
+    <!-- AGV odometry -->
+    <include file="$(find agv_odom_sim)/launch/agv_odom_sim.launch"/>
+    
+    <!-- Run rviz node -->
+    <group if="$(arg rviz)">
+        <node   
+            pkg="rviz" 
+            type="rviz"
+            name="rviz"         
+            args="-d $(find agv_tests_sim)/rviz/agv_sim_01.rviz">
+        </node>
+    </group>
+    
+</launch>

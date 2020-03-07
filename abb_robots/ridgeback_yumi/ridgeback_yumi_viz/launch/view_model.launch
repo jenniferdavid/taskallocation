@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- Ridgeback configuration to view. See ridgeback_description for details. -->
+	<arg name="ridgeback_config" default="base" />
+
+	<include file="$(find ridgeback_yumi_description)/launch/description.launch">
+		<arg name="config" value="$(arg ridgeback_config)" />
+	</include>
+
+	<node name="ridgeback_yumi_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	<node name="ridgeback_yumi_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
+
+	<param name="use_gui" value="true" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find ridgeback_yumi_viz)/rviz/model.rviz" />
+
+</launch>

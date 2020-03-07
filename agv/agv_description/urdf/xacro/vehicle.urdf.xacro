@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<part xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="vehicle">
+        <link name="vehicle">
+            <visual>
+		<origin rpy="0 0 0" xyz="1.5 0 0.75"/>
+                <geometry>
+                    <mesh filename="package://prius_description/meshes/prius.dae" scale="0.025 0.025 0.025"/>
+                </geometry>
+            </visual>
+        </link>
+    </xacro:macro>
+</part>
+

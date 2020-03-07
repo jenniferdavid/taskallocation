@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package>
+    <name>agv_odom_sim</name>
+    <version>0.0.0</version>
+    <description>
+        The agv_odom_sim package. This package implements a ROS node which receives an Odometry message from Gazebo p3d, add noises to linear and rotational velocities and integrates them to compute a 2D position, so it simulates a more real vehicle odometry system, than just adding noise directly to the p3d position. 
+    </description>
+
+    <!-- One maintainer tag required, multiple allowed, one person per tag --> 
+    <maintainer email="acoromin@iri.upc.edu">Andreu Corominas Murtra</maintainer>
+
+    <!-- One license tag required, multiple allowed, one license per tag -->
+    <license>TODO</license>
+
+    <!-- Dependencies -->
+    <buildtool_depend>catkin</buildtool_depend>
+    
+    <!-- Use build_depend for packages you need at compile time: -->
+    <build_depend>roscpp</build_depend>
+    <build_depend>rospy</build_depend>    
+    <build_depend>dynamic_reconfigure</build_depend>
+    <build_depend>nav_msgs</build_depend>
+    <build_depend>tf</build_depend>
+
+    <!-- Use run_depend for packages you need at runtime: -->
+    <run_depend>roscpp</run_depend>
+    <run_depend>rospy</run_depend>    
+    <run_depend>dynamic_reconfigure</run_depend>
+    <run_depend>nav_msgs</run_depend>
+    <run_depend>tf</run_depend>
+    
+    <!-- The export tag contains other, unspecified, tags -->
+    <export>
+        <!-- Other tools can request additional information be placed here -->
+    </export>
+    
+</package>
+

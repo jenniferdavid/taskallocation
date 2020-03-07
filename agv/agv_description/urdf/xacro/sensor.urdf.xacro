@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<part xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="sensor" params="name parent xyz rpy">
+        <link name="${name}"></link>
+        <joint name="${parent}_to_${name}_joint" type="fixed"> 
+            <parent link="${parent}"/> 
+            <child link="${name}"/> 
+            <origin rpy="${rpy}" xyz="${xyz}"/> 
+        </joint>
+    </xacro:macro>
+</part>

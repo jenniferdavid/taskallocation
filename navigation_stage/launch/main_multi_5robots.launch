@@ -1,20 +1,20 @@
 <!--Main-->
 <launch>
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_5robots5tasks.world" /-->
-    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_5robots18tasks.world" /-->
+    <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_5robots18tasks.world" />
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_5robots30tasks.world" /-->
-    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" /-->
+    <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" />
 
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots5tasks.world" /-->
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots18tasks.world" /-->
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_5robots30tasks.world" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-full-sparse.pgm 0.1" /-->
 
-   <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots5tasks.world" />
+   <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots5tasks.world" /-->
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots18tasks.world" /-->
     <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_5robots30tasks.world" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms1.pgm 0.08" /-->
-    <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms.png 0.3" />
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms.png 0.3" /-->
 
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/robopark_plan.yaml" /-->
     <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneRoom.yaml" /-->   
@@ -115,7 +115,10 @@
      <param name="odom_frame_id" value="robot_2/odom" />
    </node>
     
-   <node pkg="tf" type="static_transform_publisher" name="map_odom2" args="33 70 0 0 0 0 /map /robot_2/odom 100" />
+   <!--node pkg="tf" type="static_transform_publisher" name="map_odom2" args="33 70 0 0 0 0 /map /robot_2/odom 100" /-->
+   <node pkg="tf" type="static_transform_publisher" name="map_odom2" args="33 25 0 0 0 0 /map /robot_2/odom 100" />
+
+      
   </group>
   <!-- END ROBOT 2 -->
   

@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   geometry_msgs
+  nav_msgs
 )
 
 add_message_files(
@@ -25,13 +26,14 @@ GoalsList.msg
 listIntTasks.msg
 listTasks.msg
 nameTasks.msg
+OdomArray.msg
 )
 
 generate_messages(
   DEPENDENCIES
    geometry_msgs
-#   nav_msgs
-#   sensor_msgs
+   nav_msgs
+ #  sensor_msgs
    std_msgs
 )
 
@@ -133,8 +135,8 @@ catkin_package(
  CATKIN_DEPENDS 
     message_runtime
      geometry_msgs 
-#     nav_msgs 
-#     sensor_msgs 
+     nav_msgs 
+   #  sensor_msgs 
      std_msgs
 #  DEPENDS system_lib
 )

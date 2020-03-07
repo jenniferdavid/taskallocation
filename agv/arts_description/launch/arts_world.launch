@@ -1,0 +1,38 @@
+<!-- Displays arts nodes -->
+
+<launch>
+    <!-- Enable/disable visualization -->
+    <arg name="rviz"  default="True" />
+
+    <!-- model arguments -->
+    <arg name="model" default="$(find arts_description)/urdf/arts_world.xacro"/>
+
+    <!-- Set robot_description parameter in the parameter server-->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg model)'" />
+
+    <!-- Run joint state publisher (Gets robot_description from parameter server)-->
+    <node pkg="joint_state_publisher"
+          type="joint_state_publisher"
+          name="arts_joint_state_publisher" >
+    </node>
+
+    <!-- Run state publisher (Gets robot_description from parameter server)-->
+    <node pkg="robot_state_publisher"
+          type="robot_state_publisher"
+          name="arts_state_publisher" >
+          <param name="~publish_frequency" value="10" />
+    </node>
+
+    <!-- Run rviz node -->
+<!--    <group if="$(arg rviz)">
+        <node
+            pkg="rviz"
+            type="rviz"
+            name="rviz"
+            args="-d $(find arts_description)/rviz/arts_display.rviz">
+        </node>
+    </group>
+-->
+
+</launch>
+

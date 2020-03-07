@@ -1,0 +1,61 @@
+<!-- Test AGV reactive behavior: local planner and local mapping, on a simulated environment -->
+
+<launch>
+
+    <!-- Enable/disable visualization and other args -->
+    <arg name="plots" default="false" />
+    <arg name="rviz" default="false" />
+    <arg name="gazebo_gui" default="false" />
+    <arg name="world_model"  default="empty" />
+    <arg name="robot_model"  default="agv_iri" />
+    
+    <!-- test 03: gazebo world, agv description, controllers, odometry, driver and local mapping -->
+    <include file="$(find agv_tests_sim)/launch/agv_sim_03_local_mapping.launch">
+            <arg name="gazebo_gui" value="$(arg gazebo_gui)"/> 
+            <arg name="world_model" value="$(arg world_model)"/>
+            <arg name="robot_model" value="$(arg robot_model)"/> 
+    </include>
+
+    <!-- AGV Path Adaptor -->
+
+<!-- <node   
+        name="agv_path_adaptor" 
+        pkg="cargo_ants_agv_path_adaptor" 
+        type="agv_path_adaptor"
+        args=""
+        output="screen">
+        <remap 
+            from="/obstacles"
+            to= "/$(env ROBOT)/local_mapping/obstacle_map"/>
+    </node>   -->
+    
+ 
+     <node   
+        name="agv_path_adaptor" 
+        pkg="cargo_ants_path_adaptor" 
+        type="agv_path_adaptor"
+        args=""
+        output="screen">
+        <remap 
+            from="/obstacles"
+            to= "/$(env ROBOT)/local_mapping/obstacle_map"/>
+    </node>
+    
+     
+     <!-- Send a goal (for testing) -->
+    <node pkg="rostopic" type="rostopic" name="GoalPublisher"
+        args="pub --once /path_planner cargo_ants_msgs/Path '{mode: 0, container: name , goals: [{gx: 0, gy: 0, gth: 0, dr: 0, dth: 0},{gx: 15, gy: 15, gth: 0, dr: 0, dth: 0}]}'" 
+        output="screen">   
+    </node> 
+    
+    <!-- Run rviz node -->
+    <group if="$(arg rviz)">
+        <node   
+            pkg="rviz" 
+            type="rviz"
+            name="rviz"         
+            args="-d $(find agv_tests_sim)/rviz/agv_sim_04.rviz">
+        </node>
+    </group>
+    
+</launch>

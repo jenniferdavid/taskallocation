@@ -1,0 +1,21 @@
+<!-- -->
+<launch>
+
+<group ns="SITE">
+
+    <param name="robot_description" command="cat $(find arts_urdf)/urdf/arts_site_positions.urdf" />
+
+    <node pkg="robot_state_publisher"
+          type="state_publisher"
+          name="arts_site_state_publisher" >
+          <param name="~publish_frequency" value="1" />
+    </node>
+    
+<!--    <node pkg="joint_state_publisher"
+          type="joint_state_publisher"
+          name="arts_joint_state_publisher" >
+    </node>-->
+
+</group>
+    
+</launch>

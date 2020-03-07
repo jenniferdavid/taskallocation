@@ -1,0 +1,17 @@
+<!-- Starts AGV drive node, assuming controllers are already there -->
+
+<launch>
+
+    <!-- Run agv_odom_sim, and remaps outputs-->
+    <node   pkg="agv_odom_sim"
+            type="agv_odom_sim"
+            name="agv_odom_sim"
+            args=""
+            output="screen">
+            <remap 
+                from="/agv_odom_sim/ground_truth"
+                to="/agv/ground_truth" />
+            <rosparam command="load" file="$(find agv_odom_sim)/config/agv_odom_sim.yaml"/>
+    </node>
+    
+</launch>

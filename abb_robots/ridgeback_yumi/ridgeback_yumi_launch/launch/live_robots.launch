@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- URDF / SRDF parameters -->
+  <arg name="ridgeback_config" default="base" />
+  <arg name="use_traj_vel_controllers" default="false"/>
+
+  <include file="$(find ridgeback_yumi_description)/launch/description.launch">
+    <arg name="config" value="$(arg ridgeback_config)" />
+  </include>
+
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find yumi_control)/config/ft_sensors_controllers.yaml" command="load" ns="/yumi"/>
+  <group unless="$(arg use_traj_vel_controllers)">
+    <rosparam file="$(find yumi_control)/config/velocity_controllers.yaml" command="load" ns="/yumi"/>
+    <arg name="arm_controllers" value="joint_state_controller
+                     joint_vel_controller_7_r
+                     joint_vel_controller_1_r
+                     joint_vel_controller_6_r
+                     joint_vel_controller_2_r
+                     joint_vel_controller_3_r
+                     joint_vel_controller_4_r
+                     joint_vel_controller_5_r
+                     joint_vel_controller_7_l
+                     joint_vel_controller_1_l
+                     joint_vel_controller_6_l
+                     joint_vel_controller_2_l
+                     joint_vel_controller_3_l
+                     joint_vel_controller_4_l
+                     joint_vel_controller_5_l
+                     force_torque_sensor_controller"/>
+    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_controllers)" ns="/yumi"/>
+  </group>
+
+  <group if="$(arg use_traj_vel_controllers)">
+    <rosparam file="$(find yumi_control)/config/traj_controllers.yaml" command="load" ns="/yumi"/>
+    <arg name="arm_controllers" value="joint_state_controller
+                   joint_traj_vel_controller_l
+                   joint_traj_vel_controller_r
+                   force_torque_sensor_controller"/>
+    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="$(arg arm_controllers)" ns="/yumi"/>
+  </group>
+
+  <arg name="ip" default="192.168.125.1"/>
+  <arg name="port" default="80"/>
+  <arg name="egm" default="true"/>
+  <rosparam file="$(find yumi_hw)/config/egm_rws_config.yaml" command="load" ns="/yumi/yumi_hw" if="$(arg egm)"/>
+  <arg name="optodaq_pub_rate_hz" default="200.0"/>
+  <arg name="optodaq_filter" default="4"/>
+  <arg name="optodaq_cancel_bias" default="false"/>
+  <arg name="optodaq_ip_l" default="192.168.125.3"/>
+  <arg name="optodaq_ip_r" default="192.168.125.4"/>
+  <node required="true" name="yumi_hw" pkg="yumi_hw" type="yumi_hw_ifce_node" respawn="false" ns="/yumi" output="screen">
+    <!-- <param name="name" value="$(arg name)" /> -->
+    <param name="ip" value="$(arg ip)"/>
+    <param name="port" value="$(arg port)"/>
+    <param name="use_egm" value="$(arg egm)"/>
+    <param name="optodaq_pub_rate_hz" value="$(arg optodaq_pub_rate_hz)"/>
+    <param name="optodaq_filter" value="$(arg optodaq_filter)"/>
+    <param name="optodaq_cancel_bias" value="$(arg optodaq_cancel_bias)"/>
+    <param name="optodaq_ip_l" value="$(arg optodaq_ip_l)"/>
+    <param name="optodaq_ip_r" value="$(arg optodaq_ip_r)"/>
+  </node>
+  <node required="true" name="yumi_gripper" pkg="yumi_hw" type="yumi_gripper_node" respawn="false" ns="/yumi" output="screen">
+    <param name="ip" value="$(arg ip)"/>
+  </node>
+  <node name="yumi_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+    <rosparam param="source_list">["/yumi/joint_states", "/yumi/gripper_states", "joint_states"]</rosparam>
+    <param name="publish_default_positions" value="false"/>
+  </node>
+
+  <node name="yumi_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+    <param name="use_tf_static" value="false"/>
+    <param name="publish_frequency" value="250"/>
+  </node>
+
+  <param name="use_gui" value="false"/>
+  <arg name="mode" default="robot" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ridgeback_yumi_viz)/rviz/$(arg mode).rviz"/>
+
+</launch>

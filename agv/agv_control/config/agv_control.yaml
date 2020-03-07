@@ -1,0 +1,47 @@
+agv:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+  # Position Controllers ---------------------------------------
+  agv_fl_steer_controller:
+    type: effort_controllers/JointPositionController
+    joint: agv_platform_2_fl_hinge
+    pid: {p: 1000.0, i: 0.01, d: 10.0}
+    
+  agv_fr_steer_controller:
+    type: effort_controllers/JointPositionController
+    joint: agv_platform_2_fr_hinge
+    pid: {p: 1000.0, i: 0.01, d: 10.0}
+    
+  agv_bl_steer_controller:
+    type: effort_controllers/JointPositionController
+    joint: agv_platform_2_bl_hinge
+    pid: {p: 1000.0, i: 0.01, d: 10.0}
+    
+  agv_br_steer_controller:
+    type: effort_controllers/JointPositionController
+    joint: agv_platform_2_br_hinge
+    pid: {p: 1000.0, i: 0.01, d: 10.0}    
+    
+  agv_fl_drive_controller:
+    type: effort_controllers/JointVelocityController
+    joint: agv_fl_hinge_2_wheel
+    pid: {p: 100.0, i: 0.01, d: 30.0}
+    
+  agv_fr_drive_controller:
+    type: effort_controllers/JointVelocityController
+    joint: agv_fr_hinge_2_wheel
+    pid: {p: 100.0, i: 0.01, d: 30.0}        
+    
+  agv_bl_drive_controller:
+    type: effort_controllers/JointVelocityController
+    joint: agv_bl_hinge_2_wheel
+    pid: {p: 100.0, i: 0.01, d: 30.0}
+    
+  agv_br_drive_controller:
+    type: effort_controllers/JointVelocityController
+    joint: agv_br_hinge_2_wheel
+    pid: {p: 100.0, i: 0.01, d: 30.0}            
+    

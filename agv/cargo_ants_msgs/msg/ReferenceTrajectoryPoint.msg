@@ -1,0 +1,9 @@
+float32 xx
+float32 yy
+float32 th
+float32 xd
+float32 yd
+float32 thd
+float32 xdd
+float32 ydd
+float32 thdd

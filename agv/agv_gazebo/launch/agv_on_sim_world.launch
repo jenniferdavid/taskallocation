@@ -1,0 +1,51 @@
+<!-- agv with joint/state publisher, gazebo spawn and a sim world-->
+
+<launch>
+
+    <!-- Enable/disable visualization -->
+    <arg name="rviz"  default="true" />
+	<arg name="gazebo_gui"  default="true" />
+	<arg name="world_model"  default="ground_with_barrel" />
+	<arg name="robot_model"  default="agv_iri" />
+
+    <!-- Launch a world file -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="worlds/$(arg world_model).world"/> 
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="$(arg gazebo_gui)"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>  
+    </include>
+    
+    <!-- Robot description + joint and state publishers -->
+<!--    <include file="$(find agv_description)/launch/agv_display.launch">
+        <arg name="rviz" value="false"/>
+        <arg name="robot_model" value="$(arg robot_model)"/>
+    </include>-->
+    
+    <!-- Set robot_description parameter in the parameter server-->
+    <param  name="robot_description" 
+            command="$(find xacro)/xacro.py $(find agv_description)/urdf/$(arg robot_model).xacro" />
+
+    <!-- Spawn a robot into Gazebo (Gets robot_description from parameter server)-->
+    <node name="spawn_urdf" 
+          pkg="gazebo_ros" 
+          type="spawn_model" 
+          args="-param robot_description -urdf -model agv -x 2 -y 6 -z 0.01" >
+    </node>
+          
+    <!-- AGV controllers -->
+    <include file="$(find agv_control)/launch/agv_control.launch"/>
+
+    <!-- Run rviz node -->
+    <group if="$(arg rviz)">
+        <node   
+            pkg="rviz" 
+            type="rviz"
+            name="rviz"         
+            args="-d $(find agv_gazebo)/rviz/$(arg world_model).rviz">
+        </node>
+    </group>
+
+</launch>

@@ -1,0 +1,56 @@
+
+#GENERAL PARAMS
+# *********** GENERAL PARAMS ***********
+#verbose mode. True/False
+verbose_mode: False
+
+#Set to True if an occupancy grid has to be built
+build_grid: True
+
+#Set to True if obstacles have to be detected at grid
+detect_grid_obstacles: True
+
+#Set to True if obstacles have to be detected at scan
+detect_scan_obstacles: False
+
+#Set to True if lines have to be detected
+detect_lines: False
+
+#Set to True if corners have to be detected
+detect_corners: False
+
+#Set to True if polylines have to be detected
+detect_polylines: True
+
+# Algorithm loop rate [hz]
+mapping_rate: 10
+
+#True means odom pose published as relative increments (TNO2014 dataset case)
+#False means odom twist is published and used
+is_odom_relative: False
+
+# number of laser devices
+num_lasers: 6
+
+# number of radar devices
+num_radars: 0
+
+#base_link name as it is in the tf
+base_link_name: "agv_base_link"
+
+#laser link name as they are in the tf, without the laser id, which is assumed to be appened at the end, starting from 0 up to num_lasers-1
+laser_idx_offset: 0
+laser_link_name: "agv_lidar"
+
+#GRID PARAMS
+grid_size_x: 40.0
+grid_size_y: 30.0
+grid_cell_size: 0.5
+grid_x_max: 30.0
+grid_y_max: 15.0
+
+#ALGORITHM TUNNING
+cell_occupancy_odom_th: 0.1
+cell_occupancy_cluster_th: 0.5
+cell_occupancy_decay: 0.4
+cell_lidar_hit: 0.5

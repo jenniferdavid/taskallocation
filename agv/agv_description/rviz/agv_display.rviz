@@ -1,0 +1,293 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 81
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /TF1/Tree1
+      Splitter Ratio: 0.528662
+    Tree Height: 688
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.588679
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 5
+      Frames:
+        All Enabled: true
+        agv_base_link:
+          Value: true
+        agv_bl_hinge:
+          Value: true
+        agv_bl_lidar:
+          Value: true
+        agv_bl_wheel:
+          Value: true
+        agv_br_hinge:
+          Value: true
+        agv_br_lidar:
+          Value: true
+        agv_br_wheel:
+          Value: true
+        agv_fl_hinge:
+          Value: true
+        agv_fl_lidar:
+          Value: true
+        agv_fl_wheel:
+          Value: true
+        agv_footprint:
+          Value: true
+        agv_fr_hinge:
+          Value: true
+        agv_fr_lidar:
+          Value: true
+        agv_fr_wheel:
+          Value: true
+        agv_fwd_mark:
+          Value: true
+        agv_platform:
+          Value: true
+        agv_sl_lidar:
+          Value: true
+        agv_sr_lidar:
+          Value: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        agv_footprint:
+          agv_base_link:
+            agv_platform:
+              agv_bl_hinge:
+                agv_bl_wheel:
+                  {}
+              agv_bl_lidar:
+                {}
+              agv_br_hinge:
+                agv_br_wheel:
+                  {}
+              agv_br_lidar:
+                {}
+              agv_fl_hinge:
+                agv_fl_wheel:
+                  {}
+              agv_fl_lidar:
+                {}
+              agv_fr_hinge:
+                agv_fr_wheel:
+                  {}
+              agv_fr_lidar:
+                {}
+              agv_fwd_mark:
+                {}
+              agv_sl_lidar:
+                {}
+              agv_sr_lidar:
+                {}
+      Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        agv_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_bl_hinge:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_bl_lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_bl_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_br_hinge:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_br_lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_br_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fl_hinge:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fl_lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fl_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fr_hinge:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fr_lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fr_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_fwd_mark:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_platform:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_sl_lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        agv_sr_lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: agv_footprint
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Topic: /initialpose
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 9.57229
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: 1.79789
+        Y: 0.686976
+        Z: 0.579549
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 0.309797
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 5.53499
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 1044
+  Hide Left Dock: false
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000019a00000353fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002800000353000000ee00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c0000026100000001000001a30000030cfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007300000000280000030c000000ca00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000006cfc0100000002fb0000000800540069006d00650100000000000007800000042500fffffffb0000000800540069006d00650100000000000004500000000000000000000005e00000035300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 1920
+  X: 0
+  Y: 36
