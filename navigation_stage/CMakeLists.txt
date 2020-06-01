@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 2.8.3)
 project(navigation_stage)
 
 # Find catkin
-find_package(catkin REQUIRED message_filters roscpp rospy std_msgs genmsg navi_msgs costmap_2d)
+find_package(catkin REQUIRED message_filters roscpp rospy std_msgs genmsg navi_msgs costmap_2d stage_ros)
 find_package(PkgConfig REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(stage REQUIRED)
 
 pkg_check_modules(playerc++ REQUIRED playerc++)
 pkg_check_modules(playerc REQUIRED playerc)
@@ -31,17 +32,17 @@ CATKIN_DEPENDS
     roscpp
 DEPENDS
     eigen3
+    stage_ros
 )
 
 add_compile_options(-std=c++11)
-#include_directories(include ${catkin_INCLUDE_DIRS})
+
 include_directories(include/navigation_stage ${catkin_INCLUDE_DIRS})
 include_directories(${pkg-config_INCLUDE_DIRS}) 
 include_directories(${player-3.0.2_INCLUDE_DIRS}) 
-#include_directories(/home/jendav/player-3.0.2/libplayercommon)
-#include_directories(/home/jendav/player-3.0.2/client_libs)
-#include_directories(/home/jendav/player-3.0.2/build)
+include_directories(/home/jennifer/stage4/Stage/libstage)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
+include_directories(${STAGE_INCLUDE_DIRS})
 
 #file(GLOB SOURCES "src/*.cpp")
 #PLAYER_ADD_PLAYERCPP_CLIENT (robot SOURCES src/robot.cpp src/RefreshItemList.cpp LINKFLAGS)
@@ -55,10 +56,11 @@ target_link_libraries(path_cost ${catkin_LIBRARIES})
 add_executable(euclidean src/euclidean.cpp)
 target_link_libraries(euclidean ${catkin_LIBRARIES})
 
+#link_directories(/home/jennifer/stage4/Stage/libstage)
 add_executable(send_goals_node src/send_goals_node.cpp)
-target_link_libraries(send_goals_node ${catkin_LIBRARIES})
+target_link_libraries(send_goals_node ${catkin_LIBRARIES} ${STAGE_LIBRARIES})
 
-add_executable(task_allocation_node src/task_allocation_node.cpp src/heuristic.cpp src/hungarian.cpp)
+add_executable(task_allocation_node src/task_allocation_node.cpp src/heuristic.cpp src/hungarian.cpp src/deterministic_annealing.cpp src/simulated_annealing.cpp)
 target_link_libraries(task_allocation_node ${catkin_LIBRARIES})
 
 #if it is your library

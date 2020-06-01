@@ -1,0 +1,92 @@
+include "/opt/ros/kinetic/share/turtlebot_stage/maps/stage/turtlebot.inc"
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  laser_return 1
+)
+
+resolution 0.02
+interval_sim 100  # simulation timestep in milliseconds
+
+window
+(
+  size [ 800 700 ]
+  center [ 0.0 0.0 ]
+  rotate [ 0.0 0.0 ]
+  scale 60
+  show_grid 1
+)
+
+floorplan
+(
+  name "my_map"
+  bitmap "../twoRooms.pgm"
+  size [ 37.0 35.3 2.0 ]
+ # pose [  0  0 0.0 0.0 ]
+ #location of the center of map
+   pose [  6.3  -5.75 0.0 0.0 ]
+)
+
+# throw in a robot
+
+turtlebot(pose [ 0.0 0.0 0.0 0.0 ] name "turtlebot" color "blue")
+turtlebot(pose [ 3.0 -8.0 0.0 0.0 ] name "turtlebot2" color "blue")
+turtlebot(pose [ -9.0 -5.0 0.0 0.0 ] name "turtlebot3" color "blue")
+turtlebot(pose [ 13.0 5.0 0.0 0.0 ] name "turtlebot4" color "blue")
+turtlebot(pose [ -4.0 9.0 0.0 0.0 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 1.0 4.0 0.0 0.0 ] name "turtlebot6" color "blue")
+
+define task model
+(
+	# this is a picture of an orange circle
+	bitmap "bitmaps/circle.png"
+	size [0.15 0.15 0]
+	color "orange"
+)
+
+task (name "task1" pose [ 8.25 0.27 0 0 ] ) #task1
+task (name "task2" pose [ 6.25 0.27 0 0 ] ) #task2
+task (name "task3" pose [ 14 14 0 0 ] )  #task3
+task (name "task4" pose [ 14 -12 0 0 ] ) #task4
+task (name "task5" pose [ -10 -16 0 0 ] ) #task5
+task (name "task6" pose [ -8 12 0 0 ] ) #task6
+task (name "task7" pose [ 16 8 0 0 ] ) #task7
+task (name "task8" pose [ 4 -4 0 0 ] ) #task8
+task (name "task9" pose [ 4 -16 0 0 ] ) #task9
+task (name "task10" pose [ 10 10 0 0 ] ) #task10
+task (name "task11" pose [ 10 -1 0 0 ] ) #task11
+task (name "task12" pose [ -6 -6 0 0 ] ) #task12
+task (name "task13" pose [ -6 12 0 0 ] ) #task13
+task (name "task14" pose [ 0 10 0 0 ] ) #task14
+task (name "task15" pose [ -2 14 0 0 ] ) #task15
+task (name "task16" pose [ 4 6 0 0 ] ) #task16
+task (name "task17" pose [ 17 -1 0 0 ] ) #task17
+task (name "task18" pose [  17 -17 0 0 ] ) #task18
+
+define dropoff model
+(
+  size [0.500 0.500 0 ]
+  color "green"
+)
+
+dropoff (name "dropoff19" pose [ -10.000 14.000 0 0 ])
+dropoff (name "dropoff20" pose [ 8.000 -16.000 0 0 ])
+dropoff (name "dropoff21" pose [ 12.000 15.000 0 0 ])
+dropoff (name "dropoff22" pose [ 18.000 4.000 0 0 ])
+dropoff (name "dropoff23" pose [ -10.000 -10.000 0 0 ])
+
+
+
+
+

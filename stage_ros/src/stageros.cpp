@@ -113,7 +113,10 @@ private:
 
     // Used to remember initial poses for soft reset
     std::vector<Stg::Pose> initial_poses;
+    std::vector<Stg::Pose> exit_poses;
+
     ros::ServiceServer reset_srv_;
+    ros::ServiceServer models_collect_srv_;
   
     ros::Publisher clock_pub_;
     ros::Publisher modelcoords_pub_;
@@ -179,8 +182,11 @@ public:
     // Service callback for soft reset
     bool cb_reset_srv(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response);
 
+    bool cb_models_collect_srv(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response);
+
     // The main simulator object
     Stg::World* world;
+        
 };
 
 // since stageros is single-threaded, this is OK. revisit if that changes!
@@ -293,7 +299,9 @@ StageNode::ghfunc(Stg::Model* mod, StageNode* node)
      node->cameramodels.push_back(dynamic_cast<Stg::ModelCamera *>(mod));
   }
   if (dynamic_cast<Stg::Model *>(mod)) {
-     node->modelmodels.push_back(dynamic_cast<Stg::Model *>(mod));
+     Stg::Model * ps = dynamic_cast<Stg::Model *>(mod);
+     node->modelmodels.push_back(ps);
+     node->initial_poses.push_back(ps->GetGlobalPose());
   }
 }
 
@@ -803,11 +811,9 @@ StageNode::WorldCallback()
                 camera_msg.P[5] = fy;
                 camera_msg.P[6] = cy;
                 camera_msg.P[10] = 1.0;
-
+                
                 robotmodel->camera_pubs[s].publish(camera_msg);
-
             }
-
         }
     }
     robotcoords_pub_.publish(robotground_truth_array_msg);
@@ -845,6 +851,7 @@ StageNode::WorldCallback()
 
         // Also publish the ground truth pose and velocity
         Stg::Pose gpose2 = modmodel->modelmodel->GetGlobalPose();
+        
         tf::Quaternion q_gpose2;
         q_gpose2.setRPY(0.0, 0.0, gpose2.a);
         tf::Transform gt2(q_gpose2, tf::Point(gpose2.x, gpose2.y, 0.0));

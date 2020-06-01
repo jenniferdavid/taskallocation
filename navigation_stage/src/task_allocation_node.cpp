@@ -34,16 +34,22 @@
 #include "navi_msgs/nameTasks.h"
 #include "navi_msgs/listIntTasks.h"
 #include "navi_msgs/listTasks.h"
+#include "navi_msgs/OdomArray.h"
+#include "nav_msgs/Odometry.h"
+
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include "std_msgs/Float64MultiArray.h"
-#include <geometry_msgs/PoseArray.h>
 #include <tf/transform_datatypes.h>
 #include "heuristic.h"
+#include "deterministic_annealing.h"
+#include "simulated_annealing.h"
+
+
 using namespace std;
 using namespace Eigen;
 
-std::vector<std::pair<std::string,std::tuple<double,double,double>> > totalCoord;
+std::vector<std::pair<std::string,std::tuple<double,double,double>> > robotCoord;
 std::string solStrA;
 std::string solStrB;
 std::string veh_alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -70,22 +76,15 @@ navi_msgs::listTasks stringD1;
 navi_msgs::listIntTasks intD2;
 navi_msgs::nameTasks stringD3;
 navi_msgs::Problem probmsg;
-navi_msgs::ItemStruct coordsmsg;
-navi_msgs::Item datamsg;
+navi_msgs::OdomArray coordsmsg;
 
-geometry_msgs::PoseArray poseArrayMsg;
-geometry_msgs::Pose poseMsg;
 std_msgs::Float64MultiArray deltaMatMsg;
-	
-ros::Publisher goalPub;
-ros::Publisher taskPub;   
-        
-boost::shared_ptr<navi_msgs::Problem const> probmsgptr;
-boost::shared_ptr<navi_msgs::ItemStruct const> coordsmsgptr;
-boost::shared_ptr<std_msgs::Float64MultiArray const> deltamsgptr;
 
-//parses the solution
-//std::tuple<std::string, std::string, int, std::vector <std::vector <char>> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &DeltaMatrix, Eigen::VectorXd &TVec) 
+ros::Publisher taskPub;   
+
+boost::shared_ptr<navi_msgs::OdomArray const> coordsmsgptr;
+boost::shared_ptr<navi_msgs::Problem const> probmsgptr;
+boost::shared_ptr<std_msgs::Float64MultiArray const> deltamsgptr;
 
 std::vector<std::vector<char> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &DeltaMatrix, Eigen::VectorXd &TVec, int &nVehicles, int &nTasks, int &nDim, int &rDim)
     {   
@@ -96,6 +95,21 @@ std::vector<std::vector<char> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen:
         sub = VectorXd::Ones(nVehicles);
 
         cout << "\nTHE SOLUTION is: \n" << endl;
+        cout << VMatrix << endl;
+        
+        for (int i = 0; i < nDim; i++)
+        {
+         for (int j = 0; j < nDim; j++)
+            {
+            if(VMatrix(i,j) > 0.8)
+                { VMatrix(i,j) = 1;}
+            else if (VMatrix(i,j) < 0.2)
+                {VMatrix(i,j) = 0;}
+            else
+                {VMatrix(i,j) = 0.5;}
+            }
+        }
+        cout << "\nTHE approximated SOLUTION is: \n" << endl;
         cout << VMatrix << endl;
         
         for (int i = 0; i < nVehicles; i++)
@@ -155,7 +169,7 @@ std::vector<std::vector<char> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen:
         checkTimeVec << cTime, cTime + (nVehicles * sub);
         VectorXf::Index maxE;
         checkTime = checkTimeVec.maxCoeff(&maxE) - nVehicles;
-        cout << "The tasks are ordered as:\n";
+        cout << "\nThe tasks are ordered as:\n";
         cout << "\n" <<solStrA << endl;
         cout << "\n" <<solStrB << endl;
         cout << "\n" <<checkTime << endl;
@@ -169,34 +183,30 @@ std::vector<std::vector<char> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen:
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "TaskAllocationNode"); 
+    ros::init(argc, argv, "TaskAllocation"); 
     ros::NodeHandle n;
-    Heuristic h;
-   
-    ros::Duration(5).sleep();
+    //Heuristic h;
+    DeterministicAnnealing h;
+    //SimulatedAnnealing h;
+        
+    //ros::Duration(5).sleep();
     probmsgptr = ros::topic::waitForMessage<navi_msgs::Problem>("/problem",ros::Duration(10));
         if (probmsgptr == NULL)
             {ROS_INFO("No problem input messages received");}
         else
-            {probmsg = * probmsgptr; }
-    nVehicles = probmsg.nRobots;
-    nTasks= probmsg.nTasks;
-    nDim = probmsg.nTotalmodels;
-    rDim = probmsg.nModels;     
-    
-    coordsmsgptr = ros::topic::waitForMessage<navi_msgs::ItemStruct>("/coords",ros::Duration(10));
-        if (coordsmsgptr == NULL)
-            {ROS_INFO("No coords messages received");}
-        else
-            {coordsmsg = * coordsmsgptr; }
-    for (int i=0; i< nDim; ++i) //msg->coords.size()
-    {datamsg = coordsmsg.coords[i];
-    totalCoord.push_back(std::make_pair(datamsg.name,(std::make_tuple(datamsg.x, datamsg.y, datamsg.yaw))));}
+            {
+                probmsg = * probmsgptr; 
+                nVehicles = probmsg.nRobots;
+                rDim = probmsg.nModels;     
+                int t = rDim - nVehicles;
+                nTasks = t;
+                nDim = 2*nVehicles + t;
+            }
     
     //Wait till the task list available
     deltamsgptr = ros::topic::waitForMessage<std_msgs::Float64MultiArray>("/deltamat",ros::Duration(10));
         if (deltamsgptr == NULL)
-            {ROS_INFO("No task messages received");}
+            {ROS_INFO("No deltamat messages received");}
         else
             {deltaMatMsg = * deltamsgptr; 
             DeltaMatrix = MatrixXd::Ones(nDim,nDim);
@@ -206,6 +216,23 @@ int main(int argc, char **argv)
                     DeltaMatrix(i,j) = deltaMatMsg.data[k];
                     k++;}}
             }
+            
+     coordsmsgptr = ros::topic::waitForMessage<navi_msgs::OdomArray>("/coords",ros::Duration(10));
+        if (coordsmsgptr == NULL)
+            {ROS_INFO("No coords messages received");}
+        else
+            {coordsmsg = * coordsmsgptr; }
+            double x,y,z; std::string name;
+        for (int i = 0; i < nDim; i++)
+                {
+                    name = coordsmsg.coords[i].header.frame_id;
+                    x = coordsmsg.coords[i].pose.pose.position.x;
+                    y = coordsmsg.coords[i].pose.pose.position.y;
+                    z = coordsmsg.coords[i].pose.pose.orientation.w;
+                    robotCoord.push_back(std::make_pair(name,std::make_tuple(x,y,z)));
+                }
+            
+    
     VMatrix = MatrixXd::Zero(nDim,nDim);
     VMatrix = h.compute(nVehicles,nTasks,nDim,rDim,DeltaMatrix);
     TVec = VectorXd(nDim);
@@ -213,12 +240,9 @@ int main(int argc, char **argv)
     
     plotString = displaySolution(VMatrix, DeltaMatrix, TVec, nVehicles, nTasks, nDim, rDim);
     
-    ros::Publisher goalPub = n.advertise<navi_msgs::Goals>("/goals", 1000);
     ros::Publisher taskPub = n.advertise<navi_msgs::GoalsList>("/tasks", 1000);
     ros::Rate loop_rate(10);
    
-    while(ros::ok())
-    {
     int q = 0;
 
     while (q < nVehicles)
@@ -245,101 +269,102 @@ int main(int argc, char **argv)
 
                 if (j != plotString[q].size() -1)
                 {    
-                    int y = x - 96;                      //int of all tasks
+                    int y = x - 96 - 1;                      //int of all tasks
                     intD2.liTask = y;
                     /*publish int of tasks*/
                     goalMsg.lIT.push_back(intD2);  
 
-                    std::string t = "task"+std::to_string(y);
+                    std::string t = "/task_"+std::to_string(y)+"/odom";
                     stringD3.namTask = t;     
                     /*publish string+int tasks*/
                     goalMsg.nT.push_back(stringD3);
                     
-                    for(int i = nVehicles; i<totalCoord.size(); i++)  //pose of all tasks 
+                    for(int i = nVehicles; i<robotCoord.size(); i++)  //loop through all the poses of tasks to find the right one 
                     {    
-                        if (t.compare(totalCoord[i].first) != 0)
+                        if (t.compare(robotCoord[i].first) != 0)
                             {
                                 //nothing
                             }
                         else
                             {
-                                poseMsg.position.x = std::get<1>(totalCoord[i].second);
-                                poseMsg.position.y = -1 * (std::get<0>(totalCoord[i].second));
+                                nav_msgs::Odometry msg;
+                               /* msg.pose.pose.position.x = std::get<0>(robotCoord[i].second);
+                                msg.pose.pose.position.y = std::get<1>(robotCoord[i].second);
+                                msg.pose.pose.orientation.z = std::get<2>(robotCoord[i].second);
+                               */ 
+                                msg.pose.pose.position.x = coordsmsg.coords[i].pose.pose.position.x;
+                                msg.pose.pose.position.y = coordsmsg.coords[i].pose.pose.position.y;
+                                msg.pose.pose.position.z = coordsmsg.coords[i].pose.pose.position.z;
+                                msg.pose.pose.orientation.x = coordsmsg.coords[i].pose.pose.orientation.x;
+                                msg.pose.pose.orientation.y = coordsmsg.coords[i].pose.pose.orientation.y;
+                                msg.pose.pose.orientation.z = coordsmsg.coords[i].pose.pose.orientation.z;
+                                msg.pose.pose.orientation.w = coordsmsg.coords[i].pose.pose.orientation.w;
+                    
+                                msg.twist.twist.linear.x = coordsmsg.coords[i].twist.twist.linear.x;
+                                msg.twist.twist.linear.y = coordsmsg.coords[i].twist.twist.linear.y;
+                                msg.twist.twist.linear.z = coordsmsg.coords[i].twist.twist.linear.z;
+                                msg.twist.twist.angular.x = coordsmsg.coords[i].twist.twist.angular.x;
+                                msg.twist.twist.angular.y = coordsmsg.coords[i].twist.twist.angular.y;
+                                msg.twist.twist.angular.z = coordsmsg.coords[i].twist.twist.angular.z;
                                 
-                                double radians = (std::get<2>(totalCoord[i].second)) * (M_PI/180);
-                                tf::Quaternion quaternion;
-                                quaternion = tf::createQuaternionFromYaw(radians);
-                                geometry_msgs::Quaternion qMsg;
-                                tf::quaternionTFToMsg(quaternion, qMsg);
-                                poseMsg.orientation = qMsg;
+                                goalMsg.pList.coords.push_back(msg);
                             }
                       }
                 }
                 else
                 {
-                    int z = x - 64 + nTasks; //int of all tasks                    
-                    std::string dt = "dropoff"+std::to_string(z);
+                    int z = x - 64 + nTasks - 1; //int of all tasks                    
+                    std::string dt = "/dropoff_"+std::to_string(z)+"/odom";
                     stringD3.namTask = dt;
                     goalMsg.nT.push_back(stringD3);
 
                     //pose of the dropoff
-                    for (int i = nTasks; i<totalCoord.size(); i++)
+                    for (int i = nTasks; i<robotCoord.size(); i++)
                     {
-                        if (dt.compare(totalCoord[i].first) == 0)
+                        if (dt.compare(robotCoord[i].first) == 0)
                             {
-                                poseMsg.position.x = std::get<1>(totalCoord[i].second);
-                                poseMsg.position.y = -1 * (std::get<0>(totalCoord[i].second));
-                                
-                                double radians = (std::get<2>(totalCoord[i].second)) * (M_PI/180);
-                                tf::Quaternion quaternion;
-                                quaternion = tf::createQuaternionFromYaw(radians);
-                                geometry_msgs::Quaternion qMsg;
-                                tf::quaternionTFToMsg(quaternion, qMsg);
-                                poseMsg.orientation = qMsg;
+                                nav_msgs::Odometry msg;
+//                                 msg.pose.pose.position.x = std::get<0>(robotCoord[i].second);
+//                                 msg.pose.pose.position.y = std::get<1>(robotCoord[i].second);
+//                                 msg.pose.pose.orientation.z = std::get<2>(robotCoord[i].second);
+                                msg.pose.pose.position.x = coordsmsg.coords[i].pose.pose.position.x;
+                                msg.pose.pose.position.y = coordsmsg.coords[i].pose.pose.position.y;
+                                msg.pose.pose.position.z = coordsmsg.coords[i].pose.pose.position.z;
+                                msg.pose.pose.orientation.x = coordsmsg.coords[i].pose.pose.orientation.x;
+                                msg.pose.pose.orientation.y = coordsmsg.coords[i].pose.pose.orientation.y;
+                                msg.pose.pose.orientation.z = coordsmsg.coords[i].pose.pose.orientation.z;
+                                msg.pose.pose.orientation.w = coordsmsg.coords[i].pose.pose.orientation.w;
+                    
+                                msg.twist.twist.linear.x = coordsmsg.coords[i].twist.twist.linear.x;
+                                msg.twist.twist.linear.y = coordsmsg.coords[i].twist.twist.linear.y;
+                                msg.twist.twist.linear.z = coordsmsg.coords[i].twist.twist.linear.z;
+                                msg.twist.twist.angular.x = coordsmsg.coords[i].twist.twist.angular.x;
+                                msg.twist.twist.angular.y = coordsmsg.coords[i].twist.twist.angular.y;
+                                msg.twist.twist.angular.z = coordsmsg.coords[i].twist.twist.angular.z;
+                                goalMsg.pList.coords.push_back(msg);
                             }
                     }
                 }
-             poseArrayMsg.header.stamp = ros::Time::now(); // timestamp of creation of the msg
-             poseArrayMsg.header.frame_id = "map" ;
-             poseArrayMsg.poses.push_back(poseMsg);
+             goalMsg.pList.header.stamp = ros::Time::now(); // timestamp of creation of the msg
+             goalMsg.pList.header.frame_id = "map" ;
             }
-     goalMsg.pList= poseArrayMsg;
-     goalPub.publish(goalMsg); //publishes
+    
      goalListMsg.list.push_back(goalMsg);
-     q++;       
      goalMsg.lT.clear();  
      goalMsg.lIT.clear();
      goalMsg.nT.clear();
-     poseArrayMsg.poses.clear();
+     goalMsg.pList.coords.clear();
+     q++;
     }
-    taskPub.publish(goalListMsg);  //publishes
-    cout << "Publishing TASKS... " << endl;
-    loop_rate.sleep();
-     
-    }
+     while (ros::ok())
+        {
+            taskPub.publish(goalListMsg); //publishes
+            loop_rate.sleep();
+        }
     return 0;
 }
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

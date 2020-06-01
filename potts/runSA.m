@@ -1,19 +1,20 @@
 
+
 %
 % Run Simulated annealing
 k = [0.9 0.99 0.999]
 for kTfac = k;
 
-for n = 1:3;
-nVehicles = 5;
-nTasks = 18;
+for n = 1:2;
+nVehicles = 7;
+nTasks = 40;
 kTinit = 100;
 kTend = 0.001;
 %kTfac = 0.9;             
 fprintf('nTasks = %.2f \n',nTasks);
 
-deltaMat = load("/home/jendav/Videos/potts_spin_nn/Matrices/inputs/M=5_N=18/deltaMat.txt");
-tVec = load("/home/jendav/Videos/potts_spin_nn/Matrices/inputs/M=5_N=18/tVec.txt");
+deltaMat = load("/home/jennifer/catkin_ws/src/taskallocation/potts/M=7_N=40/deltaMat.txt");
+tVec = load("/home/jennifer/catkin_ws/src/taskallocation/potts/M=7_N=40/tVec.txt");
 
 nDimActive = nVehicles + nTasks; % Used for the kT change...
 
@@ -41,6 +42,7 @@ for iRow = 1:nVehicles+nTasks
     end
     if(isempty(doCols))
         % This can only happen if the only available element in the last row 
+
         % is the diagonal. If so, then set the diagonal element to one and 
         % switch with another row
         vMat(iRow,iRow) = 1;
@@ -271,4 +273,3 @@ end
 fmt = [repmat('%4d ', 1, size(vMatBest,2)-1), '%4d\n'];
 %fprintf(fmt, vMatBest.');   %transpose is important!
 fprintf('\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-

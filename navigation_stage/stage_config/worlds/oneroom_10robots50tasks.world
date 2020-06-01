@@ -1,0 +1,186 @@
+define block model
+(
+  size [0.5 0.5 0.5]
+  gui_nose 0
+)
+
+define direction model
+(
+  size [0.050 0.500 0.000]
+)
+
+define topurg ranger
+(
+  sensor(
+    range_max 30.0
+    fov 270.25
+    samples 1081
+  )
+  # generic model properties
+  color "black"
+  size [ 0.050 0.050 0.100 ]
+)
+
+define turtlebot position
+(
+  size [0.650 0.650 0.250]
+  origin [-0.050 0.000 0.000 0.000]
+  gui_nose 1
+  drive "omni"
+    #topurg(pose [ 0.275 0.000 0 0.000 ])
+  topurg(pose [ 0.275 0.000 -0.125 0.000 ])
+  direction(pose [0.300 0.000 0.000 0.000])
+)
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  ranger_return 1.000
+)
+
+# set the resolution of the underlying raytrace model in meters
+resolution 0.02
+interval_sim 100  # simulation timestep in milliseconds
+
+
+window
+( 
+  size [ 745 448 ] 
+  rotate [ 0.000 0.000 ]
+  scale 6.269 
+)
+# load an environment bitmap
+floorplan
+( 
+  name "oneRoom"
+  bitmap "../maps/oneroom.pgm"
+  size [40.650 71.450 0.500]
+  pose [ 20.325 35.725 0.000 90.000 ]
+)
+
+
+# throw in a robot
+turtlebot(pose [ 43.000 47.000 0.000 0.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ 4.000 53.000 0.000 0.000 ] name "turtlebot1" color "blue")
+turtlebot(pose [ 15.000 34.000 0.000 0.000 ] name "turtlebot2" color "blue")
+turtlebot(pose [ 42.000 36.000 0.000 0.000 ] name "turtlebot3" color "blue")
+turtlebot(pose [ -7.000 45.000 0.000 0.000 ] name "turtlebot4" color "blue")
+turtlebot(pose [ 20.000 19.000 0.000 90.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 39.000 18.000 0.000 90.000 ] name "turtlebot6" color "blue")
+turtlebot(pose [ 26.000 43.000 0.000 90.000 ] name "turtlebot7" color "blue")
+turtlebot(pose [ -3.500 33.500 0.000 90.000 ] name "turtlebot8" color "blue")
+turtlebot(pose [ -6.000 26.000 0.000 90.000 ] name "turtlebot9" color "blue")
+
+define task model
+(
+	# this is a picture of an orange circle
+	bitmap "bitmaps/circle.png"
+	size [0.500 0.500 0.00]
+	color "orange"
+)
+
+task (name "task0" pose [ 34.000 39.000 0.300 0.000 ] ) #task1
+task (name "task1" pose [ 42.000 28.000 0.300 0.000 ] ) #task2
+task (name "task2" pose [ 0.000 54.000 0.300 0.000 ] ) #task3
+task (name "task3" pose [ 36.000 43.000 0.300 0.000 ] ) #task4
+task (name "task4" pose [ 13.000 50.000 0.300 0.000 ] ) #task5
+task (name "task5" pose [ 28.000 30.000 0.300 0.000 ] ) #task6
+task (name "task6" pose [ 15.000 37.000 0.300 0.000 ] ) #task7
+task (name "task7" pose [ 31.000 20.000 0.300 0.000 ] ) #task8
+task (name "task8" pose [ 29.000 49.000 0.300 0.000 ] ) #task9
+task (name "task9" pose [ 26.000 54.000 0.300 0.000 ] ) #task10
+task (name "task10" pose [ 46.000 22.000 0.300 0.000 ] ) #task11
+task (name "task11" pose [ 19.000 49.000 0.300 0.000 ] ) #task12
+task (name "task12" pose [ -8.000 29.000 0.300 0.000 ] ) #task13
+task (name "task13" pose [ -7.000 41.000 0.300 0.000 ] ) #task14
+task (name "task14" pose [ 49.000 31.000 0.300 0.000 ] ) #task15
+task (name "task15" pose [ 49.000 26.000 0.300 0.000 ] ) #task16
+task (name "task16" pose [ 49.000 52.000 0.300 0.000 ] ) #task17
+task (name "task17" pose [ 40.000 16.000 0.300 0.000 ] ) #task18
+task (name "task18" pose [ 28.000 24.000 0.300 0.000 ] ) #task19
+task (name "task19" pose [ 15.000 18.000 0.300 0.000 ] ) #task20
+task (name "task20" pose [ 3.500 35.000 0.300 0.000 ] ) #task21
+task (name "task21" pose [ 35.000 22.000 0.300 0.000 ] ) #task22
+task (name "task22" pose [ 35.000 22.000 0.300 0.000 ] ) #task23
+task (name "task23" pose [ 4.000 20.000 0.300 0.000 ] ) #task24
+task (name "task24" pose [ -13.000 24.000 0.300 0.000 ] ) #task25
+task (name "task25" pose [ 24.000 16.000 0.300 0.000 ] ) #task26
+task (name "task26" pose [ -13.000 29.000 0.300 0.000 ] ) #task27
+task (name "task27" pose [ 32.000 40.000 0.300 0.000 ] ) #task28
+task (name "task28" pose [ 9.000 38.000 0.300 0.000 ] ) #task29
+task (name "task29" pose [ 19.000 20.000 0.300 0.000 ] ) #task30
+task (name "task30" pose [ 2.000 17.500 0.300 0.000 ] ) #task31
+task (name "task31" pose [ 2.000 26.000 0.300 0.000 ] ) #task32
+task (name "task32" pose [ 13.000 46.000 0.300 0.000 ] )  #task33
+task (name "task33" pose [ 2.000 42.000 0.300 0.000 ] ) #task34
+task (name "task34" pose [ 10.000 25.000 0.300 0.000 ] ) #task35
+task (name "task35" pose [ 17.000 25.000 0.300 0.000 ] ) #task36
+task (name "task36" pose [ 32.000 17.000 0.300 0.000 ] ) #task37
+task (name "task37" pose [ 37.000 50.000 0.300 0.000 ] ) #task38
+task (name "task38" pose [ 36.000 29.000 0.300 0.000 ] ) #task39
+task (name "task39" pose [ -7.000 52.000 0.300 0.000 ] ) #task40
+task (name "task40" pose [ -9.000 20.500 0.300 0.000 ] ) #task41
+task (name "task41" pose [ -13.000 24.000 0.300 0.000 ] ) #task42
+task (name "task42" pose [ -2.000 45.000 0.300 0.000 ] )  #task43
+task (name "task43" pose [ 17.000 32.000 0.300 0.000 ] ) #task44
+task (name "task44" pose [ 20.000 40.000 0.300 0.000 ] ) #task45
+task (name "task45" pose [ 21.000 34.000 0.300 0.000 ] ) #task46
+task (name "task46" pose [ 42.000 44.000 0.300 0.000 ] ) #task47
+task (name "task47" pose [ 28.000 32.000 0.300 0.000 ] ) #task48
+task (name "task48" pose [ 6.000 30.000 0.300 0.000 ] ) #task49
+task (name "task49" pose [ 26.000 37.000 0.300 0.000 ] ) #task50
+
+
+define dropoff model
+(
+  size [1.000 1.000 0.00 ]
+  color "green"
+)
+
+dropoff (name "dropoff50" pose [ 10.000 54.000 0.300 0.000 ])
+dropoff (name "dropoff51" pose [ -4.000 26.000 0.300 0.000 ])
+dropoff (name "dropoff52" pose [ 51.000 42.000 0.300 0.000 ])
+dropoff (name "dropoff53" pose [ 4.000 44.000 0.300 0.000 ])
+dropoff (name "dropoff54" pose [ 8.000 19.000 0.300 0.000 ])
+dropoff (name "dropoff55" pose [ 41.000 21.000 0.300 0.000 ])
+dropoff (name "dropoff56" pose [ 11.000 42.500 0.300 0.000 ])
+dropoff (name "dropoff57" pose [ -13.000 51.000 0.000 0.000 ])
+dropoff (name "dropoff58" pose [ 33.000 51.000 0.300 0.000 ])
+dropoff (name "dropoff59" pose [ 32.000 28.000 0.000 0.000 ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+include "/opt/ros/kinetic/share/turtlebot_stage/maps/stage/turtlebot.inc"
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  laser_return 1
+)
+
+resolution 0.02
+interval_sim 100  # simulation timestep in milliseconds
+
+window
+(
+  size [ 100 100 ]
+  center [ 0.0 0.0 ]
+  rotate [ 0.0 0.0 ]
+  scale 3.5
+  show_grid 1
+)
+
+floorplan
+(
+  name "playpen"
+  bitmap "../playpen.png"
+  size [ 30.70 26.65 2.0 ]
+ # pose [  0  0 0.0 0.0 ]
+ # location of the center of map
+ # pose [  8.77  -7.61 0.0 0.0 ]
+)
+
+# throw in a robot
+turtlebot
+(
+  pose [ 0.0 0.0 0.0 0.0 ]
+  name "turtlebot"
+  color "black"
+)
+
+turtlebot
+(
+  pose [ 1.0 1.0 0.0 0.0 ]
+  name "turtlebot2"
+  color "green"
+)
+
+
+
+
+
+
+

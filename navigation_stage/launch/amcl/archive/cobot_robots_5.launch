@@ -1,0 +1,64 @@
+<!--Main-->
+<launch>
+<arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/stage_sample.world" />
+<arg name="map_file" default="$(find navigation_stage)/stage_config/maps/cobot.png 0.14" />
+
+	<arg name="waypoints" default='0' />
+	<arg name="robotName1" default="robot_0" />
+	<arg name="robotName2" default="robot_1" />
+	<arg name="robotName3" default="robot_2" />
+	<arg name="robotName4" default="robot_3" />
+	<arg name="robotName5" default="robot_4" />
+
+  <master auto="start"/>
+  <param name="/use_sim_time" value="true"/>
+
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" respawn="false" >
+    <param name="frame_id" value="/map" />
+  </node>
+
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(arg world_file)" respawn="false">
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+
+  <!-- BEGIN ROBOT 0 -->
+  <group ns="robot_0">
+    <param name="tf_prefix" value="$(arg robotName1)" />
+    <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
+    	<arg name="namespace" value="$(arg robotName1)"/>
+    	<arg name="initial_pose_x" value="10.00"/>
+    	<arg name="initial_pose_y" value="10.00"/>
+    	<arg name="initial_pose_a" value="0.0"/>
+    </include>
+  </group>
+  <!-- END ROBOT 0 -->
+
+  <!-- BEGIN ROBOT 1 -->
+  <group ns="robot_1">
+    <param name="tf_prefix" value="$(arg robotName2)" />
+    <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
+    	<arg name="namespace" value="$(arg robotName2)"/>
+    	<arg name="initial_pose_x" value="20.00"/>
+    	<arg name="initial_pose_y" value="20.00"/>
+    	<arg name="initial_pose_a" value="0.0"/>
+    </include>
+  </group>
+  <!-- END ROBOT 1 -->
+
+ <!-- BEGIN ROBOT 2 -->
+  <group ns="robot_2">
+    <param name="tf_prefix" value="$(arg robotName3)" />
+    <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
+    	<arg name="namespace" value="$(arg robotName3)"/>
+    	<arg name="initial_pose_x" value="30.00"/>
+    	<arg name="initial_pose_y" value="30.00"/>
+    	<arg name="initial_pose_a" value="0.0"/>
+    </include>
+  </group>
+  <!-- END ROBOT 2 -->
+
+ 
+  
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_maze_robot5.rviz" />
+
+</launch>

@@ -24,12 +24,13 @@
 #include <csignal>
 #include <map>
 #include "Hungarian.h"
-
+#include <functional>
+#include <bits/stdc++.h>
 using namespace std;
 using namespace Eigen;
 
-std::string outputpath = "/home/jendav/Videos/potts_spin_nn/Matrices/inputs/OUTPUTS/";
-std::string inputpath = "/home/jendav/Videos/potts_spin_nn/Matrices/inputs/";
+std::string outputpath = "/home/jennifer/catkin_ws/src/taskallocation/potts/OUTPUTS/";
+std::string inputpath = "/home/jennifer/catkin_ws/src/taskallocation/potts/";
 int nVehicles;
 int nTasks;
 int nDim;
@@ -55,18 +56,30 @@ std::string solStrA;
 std::string solStrB;std::string veh_alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 std::string task_alpha = "abcdefghijklmnopqrstuvwxyz{|}~^_`!#$&'()*+,-./:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~^_`!#$&'()*+,-./:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~^_`!#$&'()*+,-./:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~^_`!#$&'()*+,-./:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~^_`!#$&'()*+,-./:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~^_`!#$&'()*+,-./:;<=>?@";
 ofstream outfile14;
-
-//std::string task_alpha = "{|}~^_`!#$&'()*+,-./:;<=>?@abcdefghij";
-
 std::vector<char> plotVehicle;
 std::vector<std::vector<char>> plotString;
+std::vector<std::pair<double,double>> vehCoord;
+std::vector<std::pair<double,double>> taskCoord;
+std::vector<std::pair<double,double>> totalCoord;
+std::map<char, std::pair<double,double>> vehMap;
+std::map<char, std::pair<double,double>> taskMap;
 
-    std::vector<std::pair<double,double>> vehCoord;
-    std::vector<std::pair<double,double>> taskCoord;
-    std::vector<std::pair<double,double>> totalCoord;
-    std::map<char, std::pair<double,double>> vehMap;
-    std::map<char, std::pair<double,double>> taskMap;
 
+double euclideanDistance (std::pair<double,double> a, std::pair<double,double> b)
+	{
+		double dist, u, v;
+		u = b.first - a.first;
+		v = b.second - a.second;
+                //cout << "\n x2-x1 is " << u << endl;
+                //cout << "\n y2-y1 is " << v << endl;
+		dist = u*u + v*v; //xb-xa and yb-ya is 
+		//cout << "dist is" << dist <<endl;
+		dist = sqrt(dist);
+		//cout << "dist is" << dist <<endl;
+		return dist;
+	}
+
+	
 std::tuple<std::string, std::string, int> displaySolution(Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &DeltaMatrix, Eigen::VectorXd &TVec) //parses the solution
     {
         
@@ -177,6 +190,8 @@ int main(int argc, const char* argv[])
         
     std::string data = "M=" + std::to_string(nVehicles) +"_N="+std::to_string(nTasks);
     outputpath.append(std::string(data));
+    std::string newDir = "_new";
+
     std::string at = " AT TIME ";
     outputpath.append(std::string(at));
     outputpath.append(std::string(buffer));
@@ -187,7 +202,7 @@ int main(int argc, const char* argv[])
     TVec = VectorXd(nDim);
            
     std::string folder = inputpath + data;
-    std::string folder1, folder2, folder4, folder5;
+    std::string folder1, folder2, folder4, folder5, folder6;
 
     if (!strcmp(argv[3],"-random"))
     {    
@@ -207,7 +222,115 @@ int main(int argc, const char* argv[])
         cout << "\n DeltaMatrix is: \n" << DeltaMatrix <<endl;
     }
          
-    else if (!strcmp(argv[3],"-read"))
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     else if (!strcmp(argv[3],"-coordsRandom")) //generate random coordinates and then calculate DeltaMatrix
+    {    
+        for (int i=0; i<nDim; i++)
+           {
+               TVec(i) = 1;
+           }
+        cout << "\n TVec is: \n" << TVec <<endl;
+    
+        std::srand((unsigned int) time(0));
+        
+        ofstream outfile26;
+        ofstream outfile27;
+       
+        std::string createFile26 = "";    
+        createFile26 = inputpath + "/" + "vehCoord" + ".txt";             
+        outfile26.open(createFile26.c_str()); 
+        std::string createFile27 = "";    
+        createFile27 = inputpath + "/" + "taskCoord" + ".txt";              
+        outfile27.open(createFile27.c_str()); 
+        
+        inputpath.append(std::string (data));
+        inputpath.append(std::string (newDir));
+        mkdir(inputpath.c_str(),S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+        ofstream outfile28;
+        ofstream outfile29;
+        std::string createFile28 = "";    
+        std::string createFile29 = "";    
+        createFile28 = inputpath + "/" + "vehCoord" + ".txt";             
+        createFile29 = inputpath + "/" + "taskCoord" + ".txt";              
+        outfile28.open(createFile28.c_str()); 
+        outfile29.open(createFile29.c_str()); 
+        
+        ////////////////////****************************//////////////////////
+        char veh = 65;
+        //create a vehicle and task coordinates file and calculate deltamatrix
+        for (int i=0; i<nVehicles; i++)
+        {
+            double item8 = rand() % 300 + (-150.0);
+            double item9 = rand() % 300 + (-150.0);
+            vehCoord.push_back(std::make_pair(item8,item9));
+            vehMap.insert(make_pair(veh,make_pair(item8,item9)));
+            outfile26 <<item8<<"\t"<< item9 <<"\n";
+            outfile28 <<item8<<"\t"<< item9 <<"\n";
+            veh++;
+        } 
+        
+        for (std::map<char,std::pair<double,double>>::iterator it=vehMap.begin(); it!=vehMap.end(); ++it)
+        {std::cout <<(it->first) <<"....."<< (it->second).first<<"....."<< (it->second).second << endl;}
+        
+        ////////////////////****************************//////////////////////
+        char tas = 97;
+        for (int i=0; i<nTasks; i++)
+        {
+            double item10 = rand() % 100 + (-50.0);
+            double item11 = rand() % 100 + (-50.0);
+            totalCoord.push_back(std::make_pair(item10,item11));
+            taskCoord.push_back(std::make_pair(item10,item11));
+            taskMap[tas]=std::make_pair(item10,item11);
+            outfile27 <<item10<<"\t"<< item11 <<"\n";
+            outfile29 <<item10<<"\t"<< item11 <<"\n";
+            tas++;
+        } 
+        for (std::map<char,std::pair<double,double>>::iterator it=taskMap.begin(); it!=taskMap.end(); ++it)
+        {std::cout <<(it->first) <<"....."<< (it->second).first<<"....."<< (it->second).second << endl;}
+        
+        ////////////////////****************************//////////////////////
+        
+        totalCoord.insert(totalCoord.end(), vehCoord.begin(), vehCoord.end());
+        totalCoord.insert(totalCoord.begin(), vehCoord.begin(), vehCoord.end());
+
+        for(int i = 0; i < totalCoord.size(); i++) //print all coordinates for delta matrix
+        {cout << totalCoord[i].first << ", " << totalCoord[i].second << endl;}
+        
+        for (int i = 0; i < nDim; i++)
+            for (int j = 0; j < nDim; j++)
+                {
+                    DeltaMatrix(i,j) = euclideanDistance(totalCoord[i],totalCoord[j]);
+                }
+        cout << "\n DeltaMatrix is: \n" << DeltaMatrix <<endl;
+        DeltaMatrix.diagonal().array() = 10000000000;
+        DeltaMatrix.leftCols(nVehicles) *= 10000000000;
+        DeltaMatrix.bottomRows(nVehicles) *= 10000000000;
+        DeltaMatrix.topRightCorner(nVehicles,nVehicles) = DeltaMatrix.bottomRightCorner(nVehicles,nVehicles).eval(); 
+        DeltaMatrix.bottomLeftCorner(nVehicles,nVehicles) = DeltaMatrix.bottomRightCorner(nVehicles,nVehicles).eval();       
+    
+        ofstream outfile19;
+        ofstream outfile24;
+        
+        std::string createFile19 = "";  
+        std::string createFile24 = "";  
+        
+        createFile19 = inputpath + "/" + "coordDeltaMat" + ".txt"; 
+        createFile24 = inputpath + "/" + "coordTVec" + ".txt";          
+        
+        outfile19.open(createFile19.c_str());  
+        outfile24.open(createFile24.c_str());     
+        
+        outfile19 << DeltaMatrix << std::endl;
+        outfile24 << TVec << std::endl;
+        
+        outfile19.close();
+        outfile24.close();
+        outfile28.close();
+        outfile29.close();
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    else if (!strcmp(argv[3],"-read")) //read DeltaMatrix from the given input file
     {
         ifstream file;
         folder1 = folder+ "/tVec.txt"; 
@@ -227,7 +350,6 @@ int main(int argc, const char* argv[])
          return(0);
         }
         cout << "\n TVec is: \n" << TVec <<endl;
-        
         ifstream file2;
         folder2 = folder+ "/deltaMat.txt"; 
         cout <<"\n"<<folder2<<endl;
@@ -246,8 +368,37 @@ int main(int argc, const char* argv[])
         {cout <<"\n Deltamat file not open"<<endl;
         return(0);
         }
-        cout << "\n DeltaMatrix is: \n" << DeltaMatrix <<endl;
+        DeltaMatrix.diagonal().array() = 10000000000;
+        DeltaMatrix.leftCols(nVehicles) *= 10000000000;
+        DeltaMatrix.bottomRows(nVehicles) *= 10000000000;
+        DeltaMatrix.topRightCorner(nVehicles,nVehicles) = DeltaMatrix.bottomRightCorner(nVehicles,nVehicles).eval(); 
+        DeltaMatrix.bottomLeftCorner(nVehicles,nVehicles) = DeltaMatrix.bottomRightCorner(nVehicles,nVehicles).eval(); 
     
+        cout << "\n DeltaMatrix is: \n" << DeltaMatrix <<endl;
+        
+    }
+  
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    else if (!strcmp(argv[3],"-coordsRead")) //read coordinates from the given input file and then calculate DeltaMatrix
+    {
+        ifstream file6;  //read tVec from the given file
+        folder6 = folder+ "/tVec.txt"; 
+        cout <<"\n"<<folder6<<endl;
+        file6.open(folder6); 
+        if (file6.is_open())
+        {
+           for (int i=0; i<nDim; i++)
+           {
+               double item;
+               file6 >> item;
+               TVec(i) = item;
+           }
+        }
+        else
+        {cout <<"\n tVec file not open"<<endl;
+         return(0);
+        }
+        
         ofstream outfile26;
         ofstream outfile27;
        
@@ -281,6 +432,14 @@ int main(int argc, const char* argv[])
          return(0);
         }
         
+        cout << "\n*****************"<<endl;
+        for(int i = 0; i < vehCoord.size(); i++)
+        {cout << vehCoord[i].first << ", " << vehCoord[i].second << endl;}
+        cout << "\n*****************"<<endl;
+     
+        for(map<char, pair<double,double> >::const_iterator it = vehMap.begin();it != vehMap.end(); ++it)
+        {std::cout << it->first << " " << it->second.first << " " << it->second.second << "\n";}
+        
         ifstream file5; //read task coordinates
         folder5 = folder+ "/taskCoord.txt"; 
         cout <<"\n"<<folder5<<endl;
@@ -298,35 +457,57 @@ int main(int argc, const char* argv[])
                 outfile27 <<item5<<"\t"<< item7 <<"\n";
                 tas++;
             }
+            
         }
         else
         {cout <<"\n taskCoord file not open"<<endl;
          return(0);
         }
+        
+        cout << "\n*****************"<<endl;
+        for(int i = 0; i < taskCoord.size(); i++)
+        {cout << taskCoord[i].first << ", " << taskCoord[i].second << endl;}
+        cout << "\n*****************"<<endl;
+     
+        for(map<char, pair<double,double> >::const_iterator it = taskMap.begin();it != taskMap.end(); ++it)
+        {std::cout << it->first << " " << it->second.first << " " << it->second.second << "\n";}
+        
+        totalCoord = taskCoord;
+        totalCoord.insert(totalCoord.begin(), vehCoord.begin(), vehCoord.end());
+        totalCoord.insert(totalCoord.end(), vehCoord.begin(), vehCoord.end());
+
+        cout << "\n*****************"<<endl;
+        for(int i = 0; i < totalCoord.size(); i++)
+        {cout << totalCoord[i].first << ", " << totalCoord[i].second << endl;}
+        cout << "\n*****************"<<endl;
+        
+        //calculate DeltaMatrix from the coordinates
+        
+        for (int i = 0; i < nDim; i++)
+                for (int j = 0; j < nDim; j++)
+                {
+                    DeltaMatrix(i,j) = euclideanDistance(totalCoord[i],totalCoord[j]);
+                }
+        
+        cout <<"\n Delta Matrix generated using the graph coordinates and euclideanDistance \n" << DeltaMatrix << endl; 
+        DeltaMatrix.diagonal().array() = 10000000000;
+        DeltaMatrix.leftCols(nVehicles) *= 10000000000;
+        DeltaMatrix.bottomRows(nVehicles) *= 10000000000;
+        DeltaMatrix.topRightCorner(nVehicles,nVehicles) = DeltaMatrix.bottomRightCorner(nVehicles,nVehicles).eval(); 
+        DeltaMatrix.bottomLeftCorner(nVehicles,nVehicles) = DeltaMatrix.bottomRightCorner(nVehicles,nVehicles).eval(); 
+    
     }
     
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     else 
-    {cout << "\n Invalid option: " << argv[7] << "      exiting....\n";
+    {cout << "\n Invalid option: " << argv[3] << "      exiting....\n";
                 return(0);
     }
-    
    
-//     for (int i = 0; i < nDim; i++)
-//     {    for (int j = 0; j < nDim; j++)
-//             {
-//                 if (DeltaMatrix(i,j) > DeltaMatrix(j,i))
-//                     DeltaMatrix(i,j) = 10000000000; //removing multigraph 
-//             }
-//     }
-    
     DeltaMatrix.diagonal().array() = 10000000000;
     DeltaMatrix.leftCols(nVehicles) *= 10000000000;
     DeltaMatrix.bottomRows(nVehicles) *= 10000000000;
     DeltaMatrix.topRightCorner(nVehicles,nVehicles) = DeltaMatrix.bottomLeftCorner(nVehicles,nVehicles).eval();       
-    //DeltaMatrix.row(1) += 100* DeltaMatrix.row(0);
-    //DeltaMatrix.triangularView<Lower>() *= 10000000000; //for predefined order
-    //DeltaMatrix.topRows(nVehicles) = 0; //for vehicles 
-    //DeltaMatrix.rightCols(nVehicles) = 0; //that have same initial cost
 
     ofstream outfile1;
     std::string createFile1 = "";    
@@ -429,140 +610,141 @@ int main(int argc, const char* argv[])
     std::cout << std::endl; // the path array
              
     for ( std::vector<int>::size_type j = 0; j < paths_values_list[path_index].size(); j++ )
-    {   
-        std::cout << paths_values_list[path_index][j] << ' ';
-    } //the path array with values
-
-    std::vector<std::pair <int,int>> edge;
+    {std::cout << paths_values_list[path_index][j] << ' ';} //the path array with values
     
     double chunk_length = *smallest/(nVehicles);
     cout << "\nchunk_length " << chunk_length<< endl;
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
-    double val = 0;
-    double addChunk = 0;
-    int count =0;
-    vector<int>cut;
-   // cut.push_back(0);
-      
-    for ( std::vector<int>::size_type j = 0; j < paths_values_list[path_index].size(); j++ )
-    {  
-       if (count != (nVehicles-1))
-       {
-      // cout << "\nj is" << j<<endl;
-       val = val + paths_values_list[path_index][j];
-       addChunk = paths_values_list[path_index][j];
-      // cout << "val" << val<< endl;
-      // cout << "addChunk is" << addChunk<< endl;
-       
-//        if ((addChunk > chunk_length) && (val >chunk_length))
-//        {
-//            cout << "\naddChunk is big and chunk length reached"<<endl;
-//            if (j!=0)
-//            {cut.push_back(j-1);
-//                cout <<"pushing j-1"<<endl;}
-//            else {cut.push_back(j);
-//                cout <<"pushing j"<<endl;}
-//            count ++;
-//            val = 0;
-//            addChunk = 0;
-//        }
-       
-       if (addChunk > chunk_length)
-       {
-           
-        //   cout << "\naddChunk is big"<<endl;
-        //   cout << "adding j= "<<j-1<<endl;
-           cut.push_back(j-1);
-           /*if (val > chunk_length)
-           {cut.push_back(j);
-            cout << "adding j= "<<j<<endl;}
-           */count ++;
-           val = 0;
-           
-       }
-       
-       if (val > chunk_length)
-       {
-       // cout << "\nmin chunk length reached"<<endl;
-        cut.push_back(j-1);
-        cout << "adding j-1= "<<j-1<<endl;
-        count++;
-        val = 0;
-        if ((j != 0) || (j != paths_values_list[path_index].size()-1))
-        j=j-1;
-        else
-            break;
-        }
-       }
-    } 
-    int check = 0;
-    cout <<"before"<<endl;
-    for (int i=0; i<cut.size(); i++) 
-    { 
-        cout <<cut[i] << " " ;
-    } 
-    if ( std::any_of(cut.begin(), cut.end(), [](int i){return i<0;}))
-    {check=1;}
     
-    cut.push_back(nTasks-1);
-    cout << "\nafter" <<endl;
-    for (int i=0; i<cut.size(); i++) 
-    { 
-       if (check ==1)
-        { cut[i] = cut[i]+1;}
-         cout <<cut[i] << " ";
-    } 
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
-    int cutNo = cut.size();
-    cout <<"\nNo of cuts:"<<cutNo << endl;
-        
-    vector<double> temp_path;
-    vector<double> temp_path_value;
-    vector<double> reduced_chunk;
-    std::vector <std::vector<double>> chunks; //should be equal to number of vehicles
-    std::vector <std::vector<double>> chunks_path; //should be equal to number of vehicles
-    
-    for (int i = 0; i< paths_values_list[path_index].size(); i++)
-    {
-        reduced_chunk.push_back(paths_values_list[path_index][i]);
-    }
+    //create a tuple for holding path values and nodes
+    std::vector <tuple<double, int, int> > task_map;
 
-    for (int i = 0; i< cut.size(); i++)
-    {
-    reduced_chunk.erase(std::remove(reduced_chunk.begin(), reduced_chunk.end(), paths_values_list[path_index][cut[i]]), reduced_chunk.end());
-    }
+    for (int i = 0; i< paths_values_list[path_index].size(); i++)
+    {task_map.push_back(std::make_tuple (paths_values_list[path_index][i], paths_list[path_index][i], paths_list[path_index][i+1] ));}
+   
+    //sorting them according to size in descending order
+    sort(task_map.begin(), task_map.end()); 
+    reverse(task_map.begin(), task_map.end()); 
+
+	//printing them
+    std::cout << "taskMap contains:\n";
+    for(auto const &i : task_map)
+        {cout<<get<0>(i)<<" ==> "<<get<1>(i)<<"  "<<get<2>(i)<<endl;}
+    cout << "\n////////////////////////////////////////////////////////////////" << endl;
     
+    //we cut the (n-1) biggest chunks which does not have any repeated nodes
+    vector<int> cuts; //should be equal to (n-1)
+    int cutNo = nVehicles-1;
+    vector <vector <double>> chunks;
+	vector<int> recheck;
+    vector<int> recheck2;
+    int scount = 0;
+    int exp_cuts = (nVehicles-1);
+    vector<double> temp_path;
+    
+    //checking how many repeats of the nodes
+    for (auto it=task_map.begin(); it!=task_map.end(); ++it)
+      {
+		recheck.push_back(get<2>(*it));
+		std::vector<int>::iterator i1 = std::find(std::begin(recheck), std::end(recheck), get<1>(*it));
+		if (i1 != std::end(recheck)) 
+			{++scount;}
+	  }
+
+	cout << "\nscount is:" << scount <<endl;
+
+   if (nVehicles == nTasks)
+    {
+		for (int i =0; i< nVehicles; ++i)
+		{cuts.push_back(i);
+		cout <<cuts[i] << " ";}
+		
+    cout <<"\nNo of cuts:"<<cutNo << endl;
+	}
+	else
+	{
+        for (auto itr=task_map.begin(); itr!=task_map.end(); ++itr)
+		{
+			if (abs(exp_cuts - scount) < (nVehicles/2))    
+			{
+				//check if the biggest chunk node (get<1>(*itr)) value is in the paths_list
+				std::vector<int>::iterator is = std::find(std::begin(paths_list[path_index]), std::end(paths_list[path_index]), get<1>(*itr)); 
+				if (is != std::end(paths_list[path_index])) //if found
+					{
+						int ind = std::distance(paths_list[path_index].begin(), is); //find the index to add it to cut
+						cout << "..... " << get<1>(*itr) << " and found at " << ind << endl;
+						cuts.push_back(ind);
+					}
+			}
+			else
+			{
+				std::vector<int>::iterator i3 = std::find(std::begin(recheck2), std::end(recheck2), get<2>(*itr));
+				if (i3 != std::end(recheck2)) 
+				{
+					//do nothing  
+					cout << "here" << endl;
+				}
+				else
+				{
+					recheck2.push_back(get<2>(*itr)); //check if the second value of the biggest node is there in the present search
+					std::vector<int>::iterator i2 = std::find(std::begin(recheck2), std::end(recheck2), get<1>(*itr));
+						if (i2 != std::end(recheck2)) 
+							{
+								cout << "here2" << endl;
+							}
+						else
+						{
+							std::vector<int>::iterator is = std::find(std::begin(paths_list[path_index]), std::end(paths_list[path_index]), get<1>(*itr));
+							if (is != std::end(paths_list[path_index])) 
+							{   int ind = std::distance(paths_list[path_index].begin(), is);
+								cout << "searching " << get<1>(*itr) << " and found at " << ind << endl;
+								cuts.push_back(ind);
+								recheck2.push_back(get<1>(*itr));
+							}
+						}
+				}
+			}			
+			}
+	
+    cout << "\nCuts original size" << endl;
+    for (int i=0; i<cuts.size(); i++) 
+    {cout <<cuts[i] << " ";} 
+     
+    cout << "\nCuts after pruning" << endl;
+	//cuts.erase(cuts.begin(), cuts.size() > (nVehicles-1) ?  cuts.begin() + (nVehicles-1) : cuts.end() );
+    cuts.erase(cuts.begin()+(nVehicles-1), cuts.end());
+    for (int i=0; i<cuts.size(); i++) 
+    {cout <<cuts[i] << " ";} 
+                
+    cout << "\nCuts after pruning and sorting" << endl;
+    sort(cuts.begin(), cuts.end());
+    for (int i=0; i<cuts.size(); i++) 
+    {cout <<cuts[i] << " ";} 
+	
+	cutNo = cuts.size();
+    cout <<"\nNo of cuts:"<<cutNo << endl;
+}    
+
     int i =0;
     for ( std::vector<int>::size_type j = 0; j < paths_list.size(); j++ )
-        {  temp_path.push_back(paths_list[path_index][j]);
-           if (j == cut[i])
-           { chunks.push_back(temp_path); i++;
-               temp_path.clear();}
-        }
-    
-    int yy =0; int zz=0;
-    for ( std::vector<int>::size_type j = 0; j < paths_values_list.size(); j++ )
         {  
-           temp_path_value.push_back(paths_values_list[path_index][j]);
-           if(std::find(temp_path_value.begin(),temp_path_value.end(), paths_values_list[path_index][cut[zz]]) != temp_path_value.end() )
-           {temp_path_value.erase(std::remove(temp_path_value.begin(), temp_path_value.end(), paths_values_list[path_index][cut[zz]]), temp_path_value.end()); zz++;}
-           if (j == cut[yy]-1)
-           {     
-               chunks_path.push_back(temp_path_value); yy++;
-               temp_path_value.clear();
-           }
+			if (i < cuts.size())
+				{temp_path.push_back(paths_list[path_index][j]);
+					if (j == cuts[i])
+						{ chunks.push_back(temp_path); i++;
+						temp_path.clear();}
+				}
+			if (i >= cuts.size()) //the last chunk
+				{temp_path.push_back(paths_list[path_index][j+1]);
+				if (j == paths_list.size()-2)
+				{chunks.push_back(temp_path);}
+				}
         }
         
     cout <<"\nChunks are"<< endl;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
     {for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
     {std::cout << chunks[i][j] << ' ';}
-    std::cout << std::endl;}
-    
-    cout <<"\nChunks value are"<< endl;
-    for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks_path.size(); i++ )
-    {for ( std::vector<int>::size_type j = 0; j < chunks_path[i].size(); j++ )
-    {std::cout << chunks_path[i][j] << ' ';}
     std::cout << std::endl;}
     
     //start points
@@ -581,13 +763,13 @@ int main(int argc, const char* argv[])
     
     cout <<"\nStart Hung points are"<< endl;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
-    {    if ((chunks[i].size())-1 > 0)
-        {for ( std::vector<std::vector<int>>::size_type j = 1; j < (chunks[i].size())-1; j++ )
+    {   
+		if ((chunks[i].size())-2 > 0)
+			{for ( std::vector<std::vector<int>>::size_type j = 1; j < (chunks[i].size())-1; j++ )
             {sh_points.push_back(chunks[i][j]);}}
         else if ((chunks[i].size())-1 == 0)
-           {//sh_points.push_back(chunks[i][0]);
-               
-        } 
+            {//sh_points.push_back(chunks[i][0]);
+            } 
         else
         {}
         start_hung_points.push_back(sh_points);
@@ -614,13 +796,12 @@ int main(int argc, const char* argv[])
     std::vector<std::vector<double>> v2; //double rows of end hung matrix
     std::vector<double> v3; //rows of start hung matrix
     std::vector<double> v4; //rows of end hung matrix
-    std::vector<std::vector<double>> v5; //double rows of total_start_hung matrix
-    std::vector<double> v6; //rows of total_start hung matrix
+    
     std::cout <<"\nTaskMatrix is\n" << TaskMatrix <<endl;
     
-     for (int i = 0; i < cutNo; i++)
+     for (int i = 0; i < cutNo+1; i++)
         {
-            for (int j = 0; j < cutNo; j++)
+            for (int j = 0; j < cutNo+1; j++)
             {
                 StartHungMatrix(i,j) =  StartMatrix(j,start_points[i]);  
                 v3.push_back(StartMatrix(j,start_points[i]));
@@ -629,28 +810,10 @@ int main(int argc, const char* argv[])
             v3.clear();
         }
     std::cout <<"\nStartHungMatrix is\n" << StartHungMatrix <<endl;
-    TotalStartHungMatrix = StartHungMatrix;
     
-    for (int i = 0; i < cutNo; i++)
+    for (int i = 0; i < cutNo+1; i++)
         {
-            for (int j = 0; j < cutNo; j++)
-            {
-                if((start_hung_points[i].size()) > 0)
-                 { TotalStartHungMatrix(i,j) = TotalStartHungMatrix(i,j) + TaskMatrix(start_points[i],start_hung_points[i][0]);
-                     if ((start_hung_points[i].size()) > 1)
-                     {for(int k=0; k<(start_hung_points[i].size()-1); k++)
-                     { //cout << "\ntask value is:" << TaskMatrix(start_hung_points[i][k],start_hung_points[i][k+1]) << endl;
-                     TotalStartHungMatrix(i,j) = TotalStartHungMatrix(i,j) + TaskMatrix(start_hung_points[i][k],start_hung_points[i][k+1]);  
-                     }}
-                }   
-                else {}
-            }
-        }
-    std::cout <<"\nTotalStartHungMatrix is\n" << TotalStartHungMatrix <<endl;
-    
-    for (int i = 0; i < cutNo; i++)
-        {
-            for (int j = 0; j < cutNo; j++)
+            for (int j = 0; j < cutNo+1; j++)
             {
                  EndHungMatrix(i,j) = EndMatrix(end_points[i],j); 
                  v4.push_back(EndMatrix(end_points[i],j));
@@ -660,21 +823,14 @@ int main(int argc, const char* argv[])
         }
     std::cout <<"\nEndHungMatrix is\n" << EndHungMatrix <<endl;
     
-    //total start hung matrix in vector form
-    for ( std::vector<std::vector<int>>::size_type i = 0; i < nVehicles; i++ )
-    {for ( std::vector<int>::size_type j = 0; j < nVehicles; j++ )
-    {
-        v6.push_back(TotalStartHungMatrix(i,j));
-    }
-    v5.push_back(v6);
-    v6.clear();
-    }
     
-    std::cout <<"\nTotalStartHungMatrix in vector form is" <<endl;
-    for ( std::vector<std::vector<int>>::size_type i = 0; i < v5.size(); i++ )
-    {for ( std::vector<int>::size_type j = 0; j < v5[i].size(); j++ )
-    {std::cout << v5[i][j] << ' ';}
-    std::cout << std::endl;}   
+    std::cout <<"\nStartHungMatrix in vector form is" <<endl;
+    //start hung matrix in vector form
+    for ( std::vector<std::vector<int>>::size_type i = 0; i < v1.size(); i++ )
+    {for ( std::vector<int>::size_type j = 0; j < v1[i].size(); j++ )
+    {std::cout << v1[i][j] << ' ';}
+    std::cout << std::endl;}    
+    
     
     std::cout <<"\nEndHungMatrix in vector form is" <<endl;
     //end hung matrix in vector form
@@ -688,59 +844,57 @@ int main(int argc, const char* argv[])
     vector<int> assignment2;
     double start_cost = HungAlgo.Solve(v1, assignment);
     double end_cost = HungAlgo.Solve(v2, assignment2);
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
+    
+    cout << "\n////////////ASSIGNMENT OF START POINTS////////////////" << endl;
     for (unsigned int x = 0; x < v1.size(); x++)
     {
-     std::cout << x << "," << assignment[x] << "\n";
+     std::cout << x << " assigned to " << assignment[x] << "\n";
     }
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
+    cout << "\n///////////ASSIGNMENT OF END POINTS/////////////////////" << endl;
     for (unsigned int x = 0; x < v2.size(); x++)
     {
-     std::cout << x << "," << assignment2[x] << "\n";
+     std::cout << x << " assigned to " << assignment2[x] << "\n";
     }
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
-
-    chunks.clear();
-    temp_path.clear();
+    cout << "\n////////////////////////////////////////////////////" << endl;
+    
     int z =0;
-    for ( std::vector<int>::size_type j = 0; j < paths_list.size(); j++ )
-        {  
-           temp_path.push_back(paths_list[path_index][j]+nVehicles);
-           if (j == cut[z])
-           { 
-               temp_path.insert(temp_path.begin(),assignment[z]);
-               temp_path.push_back(assignment2[z]+nVehicles+nTasks);
-               chunks.push_back(temp_path); z++;
-               temp_path.clear();}
-        }
-     
+    for ( std::vector<int>::size_type i = 0; i < chunks.size(); i++ )
+	{
+        chunks[i].insert(chunks[i].begin(),(assignment[z]-nVehicles));
+		for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
+			{  chunks[i][j] = chunks[i][j] + nVehicles;}
+        chunks[i].push_back(assignment2[z]+nVehicles+nTasks);
+        z++;
+    }
+           
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
     {for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
     {std::cout << chunks[i][j] << ' ';}
     std::cout << std::endl;}
+    
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
     cout << "\nTotal number of vehicles are: " << chunks.size() <<endl;
-
     int count2 = 0;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
-    {std::cout << "\nVehicle " <<i+1<<" does "<<chunks[i].size()-2 <<" tasks"<<endl;
+    {std::cout << "\nVehicle " << (chunks[i][0] + 1)<<" does "<<chunks[i].size()-2 <<" tasks"<<endl;
     count2 = count2 + chunks[i].size()-2;}
     cout << "\nTotal number of tasks are: " << count2 <<endl;
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
 
-    Eigen::MatrixXd CostMatrix = MatrixXd::Zero(nDim,nDim);
+    Eigen::MatrixXd CostMatrix = MatrixXd::Zero(nDim,nDim);  
     vector<double>total_cost;
     double cost;
-    for ( std::vector<int>::size_type y = 0; y < nVehicles; y++ )
+    
+    for ( std::vector<int>::size_type i = 0; i < nVehicles; i++ )
     {
         cost=0;
-        for ( std::vector<int>::size_type j = 0; j < chunks[y].size()-1; j++ )
-        {cost = cost+DeltaMatrix(chunks[y][j],chunks[y][j+1]);
-         CostMatrix(chunks[y][j],chunks[y][j+1]) = 1;
+        for ( std::vector<int>::size_type j = 0; j < chunks[i].size()-1; j++ )
+        {cost = cost+DeltaMatrix(chunks[i][j],chunks[i][j+1]);
+         CostMatrix(chunks[i][j],chunks[i][j+1]) = 1;
         }
-        cost = cost + chunks[y].size()-2;
+        cost = cost + chunks[i].size()-2;
         total_cost.push_back(cost);
-        cout << "\nTotal cost is " <<total_cost[y] << endl;
+        cout << "\nTotal cost is " <<total_cost[i] << endl;
     }   
     
     cout << "\nCostMatrix is:\n" << CostMatrix << endl;

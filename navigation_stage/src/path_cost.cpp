@@ -57,14 +57,18 @@ public:
     std::vector<std::pair<double,double> > robotCoord;
     std::vector<std::pair<double,double> > modelCoord;
     navi_msgs::Problem probmsg;
+
     boost::shared_ptr<navi_msgs::Problem const> probmsgptr;
    
     double goalTolerance = 0.1;
     nav_msgs::GetPlan srv;
-
+    navi_msgs::OdomArray totalCoords;
+    
     Node()
 	{
         deltapub_ = node.advertise<std_msgs::Float64MultiArray>("/deltamat",10);
+        coordspub_ = node.advertise<navi_msgs::OdomArray>("/coords",10);
+        
         robotcoordpub_.subscribe(node, "robotcoords", 1);
         modelcoordpub_.subscribe(node, "modelcoords", 1);
         sync.reset(new Sync(MySyncPolicy(10), robotcoordpub_, modelcoordpub_));   
@@ -75,7 +79,7 @@ public:
     {
         string service_name = "robot_0/move_base_node/make_plan";
             while (!ros::service::waitForService(service_name, ros::Duration(3.0))) 
-            {ROS_INFO("Waiting for service move_base/make_plan to become available");}
+                {ROS_INFO("Waiting for service move_base/make_plan to become available");}
 
             serviceClient = node.serviceClient<nav_msgs::GetPlan>(service_name, true);
             if (!serviceClient) 
@@ -89,24 +93,63 @@ public:
                 probmsg = * probmsgptr; 
                 Robots = probmsg.nRobots;
                 Models = probmsg.nModels;     
-    
-                for (int i=0; i< Robots; ++i) 
+            }
+                for (int i=0; i< Robots; i++) 
                 {
                     double x1,y1;
                     x1 = in1->coords[i].pose.pose.position.x;
                     y1 = in1->coords[i].pose.pose.position.y;
                     robotCoord.push_back(std::make_pair(x1,y1));
+                    
+                    nav_msgs::Odometry odomsg;
+                    odomsg.header.frame_id = in1->coords[i].header.frame_id;
+                    odomsg.pose.pose.position.x = in1->coords[i].pose.pose.position.x;
+                    odomsg.pose.pose.position.y = in1->coords[i].pose.pose.position.y;
+                    odomsg.pose.pose.position.z = in1->coords[i].pose.pose.position.z;
+                    odomsg.pose.pose.orientation.x = in1->coords[i].pose.pose.orientation.x;
+                    odomsg.pose.pose.orientation.y = in1->coords[i].pose.pose.orientation.y;
+                    odomsg.pose.pose.orientation.z = in1->coords[i].pose.pose.orientation.z;
+                    odomsg.pose.pose.orientation.w = in1->coords[i].pose.pose.orientation.w;
+                    
+                    odomsg.twist.twist.linear.x = in1->coords[i].twist.twist.linear.x;
+                    odomsg.twist.twist.linear.y = in1->coords[i].twist.twist.linear.y;
+                    odomsg.twist.twist.linear.z = in1->coords[i].twist.twist.linear.z;
+                    odomsg.twist.twist.angular.x = in1->coords[i].twist.twist.angular.x;
+                    odomsg.twist.twist.angular.y = in1->coords[i].twist.twist.angular.y;
+                    odomsg.twist.twist.angular.z = in1->coords[i].twist.twist.angular.z;
+                    
+                    totalCoords.coords.push_back(odomsg);
                 }
                 
-                for (int i=0; i< Models; ++i) 
+                for (int i=0; i< Models; i++) 
                 {
                     double x2,y2;
                     x2 = in2->coords[i].pose.pose.position.x;
                     y2 = in2->coords[i].pose.pose.position.y;
                     modelCoord.push_back(std::make_pair(x2,y2));
+                    
+                    nav_msgs::Odometry odomsg;
+                    odomsg.header.frame_id = in2->coords[i].header.frame_id;
+                    odomsg.pose.pose.position.x = in2->coords[i].pose.pose.position.x;
+                    odomsg.pose.pose.position.y = in2->coords[i].pose.pose.position.y;
+                    odomsg.pose.pose.position.z = in2->coords[i].pose.pose.position.z;
+                    odomsg.pose.pose.orientation.x = in2->coords[i].pose.pose.orientation.x;
+                    odomsg.pose.pose.orientation.y = in2->coords[i].pose.pose.orientation.y;
+                    odomsg.pose.pose.orientation.z = in2->coords[i].pose.pose.orientation.z;
+                    odomsg.pose.pose.orientation.w = in2->coords[i].pose.pose.orientation.w;
+                    
+                    odomsg.twist.twist.linear.x = in2->coords[i].twist.twist.linear.x;
+                    odomsg.twist.twist.linear.y = in2->coords[i].twist.twist.linear.y;
+                    odomsg.twist.twist.linear.z = in2->coords[i].twist.twist.linear.z;
+                    odomsg.twist.twist.angular.x = in2->coords[i].twist.twist.angular.x;
+                    odomsg.twist.twist.angular.y = in2->coords[i].twist.twist.angular.y;
+                    odomsg.twist.twist.angular.z = in2->coords[i].twist.twist.angular.z;
+                    
+                    totalCoords.coords.push_back(odomsg);
                 }
-            }      
-        robotCoord.insert( robotCoord.end(), modelCoord.begin(), modelCoord.end());            
+                  
+        robotCoord.insert( robotCoord.end(), modelCoord.begin(), modelCoord.end());          
+        
         DeltaMatrix = MatrixXd::Ones(robotCoord.size(),robotCoord.size());
         for (int i = 0; i < robotCoord.size(); i++)
             for (int j = 0; j < robotCoord.size(); j++)
@@ -114,7 +157,10 @@ public:
 
         cout <<"\n"<< DeltaMatrix <<endl;
         tf::matrixEigenToMsg(DeltaMatrix,deltaMat); // convert EigenMatrix to Float64MultiArray ROS format to publish
-        deltapub_.publish(deltaMat);
+        while (ros::ok())
+        {deltapub_.publish(deltaMat);
+        coordspub_.publish(totalCoords);
+        }
     }  
     
     void fillPathRequest(nav_msgs::GetPlan::Request &request, std::pair<double,double> a, std::pair<double,double> b)
@@ -172,6 +218,7 @@ private:
 
     ros::NodeHandle node;
     ros::Publisher deltapub_;
+    ros::Publisher coordspub_;
     ros::ServiceClient serviceClient;
 
     message_filters::Subscriber<myMsg> robotcoordpub_;

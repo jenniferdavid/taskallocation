@@ -1,0 +1,274 @@
+<!--Main-->
+<launch>
+<!--------------------------------------MAZE--------------------------------------->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.pgm 0.3" /-->
+
+<!--------------------------------------WILLOW-------------------------------------->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/willow_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/willow-full-sparse.pgm 0.1" /-->
+
+<!--------------------------------------ONE_ROOM-------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneRoom_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneRoom_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneRoom_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneRoom.pgm 0.3" /-->
+
+<!-------------------------------------TWOROOMS-------------------------------------->
+  <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/twoRooms_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms1.pgm 0.3" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/twoRooms.png 0.3" /-->
+
+<!--------------------------------------RIDGEBACK--------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/ridgebackrace_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/ridgebackrace_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/ridgebackrace_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/ridgeback_race.pgm 0.1" /-->
+
+<!--------------------------------------ROBOPARK--------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/robopark_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/robopark_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/robopark_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/robopark_plan.yaml" /-->
+
+<!------------------------------------PLAYGROUND--------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/playground_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/playground_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/playground_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/playground.pgm 0.25" /-->
+
+<!-----------------------------------PLAYPEN--------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/playpen_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/playpen_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/playpen_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/playpen_map.yaml" /-->
+
+<!----------------------------------CIRCLEMAZE--------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/circlemaze_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/circlemaze_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/circlemaze_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/circle_maze.yaml" /-->
+
+<!-------------------------------------COBOT--------------------------------------->
+<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/cobot_7robots7tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/cobot_7robots18tasks.world" /-->
+    <!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/cobot_7robots40tasks.world" /-->
+    <!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/cobot.pgm 0.3" /-->
+
+
+    <master auto="start"/>
+    <param name="/use_sim_time" value="true"/>
+
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" respawn="false" >
+    <param name="frame_id" value="/map" />
+  </node>
+
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(arg world_file)" respawn="false">
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+
+  
+  <!-- BEGIN ROBOT 0 -->
+  <group ns="robot_0">
+    <param name="tf_prefix" value="robot_0" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+      <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+      <remap from="base_pose_ground_truth" to="robot_0/odom" />
+      <remap from="scan" to="base_scan"/>
+      <remap from="static_map" to="/static_map"/>
+        <param name="global_frame_id" value="/map" />
+        <param name="base_frame_id" value="robot_0/base_link" />
+        <param name="odom_frame_id" value="robot_0/odom" />
+     </node>
+      
+      <node pkg="tf" type="static_transform_publisher" name="map_odom0" args="5 45 0 0 0 0 /map /robot_0/odom 100" />
+
+  </group>
+  <!-- END ROBOT 0 -->
+
+  <!-- BEGIN ROBOT 1 -->
+  <group ns="robot_1">
+    <param name="tf_prefix" value="robot_1" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+   <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="robot_1/odom" />
+     <remap from="scan" to="base_scan"/>
+     <remap from="static_map" to="/static_map"/>
+     <param name="global_frame_id" value="/map" />
+     <param name="base_frame_id" value="robot_1/base_base_link" />
+     <param name="odom_frame_id" value="robot_1/odom" />
+   </node>
+    
+   <node pkg="tf" type="static_transform_publisher" name="map_odom1" args="24 46 0 0 0 0 /map /robot_1/odom 100" />
+  </group>
+  <!-- END ROBOT 1 -->
+  
+   <!-- BEGIN ROBOT 2 -->
+  <group ns="robot_2">
+    <param name="tf_prefix" value="robot_2" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+   <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="robot_1/odom" />
+     <remap from="scan" to="base_scan"/>
+     <remap from="static_map" to="/static_map"/>
+     <param name="global_frame_id" value="/map" />
+     <param name="base_frame_id" value="robot_2/base_base_link" />
+     <param name="odom_frame_id" value="robot_2/odom" />
+   </node>
+    
+   <node pkg="tf" type="static_transform_publisher" name="map_odom2" args="33 25 0 0 0 0 /map /robot_2/odom 100" />
+  </group>
+  <!-- END ROBOT 2 -->
+  
+   <!-- BEGIN ROBOT 3 -->
+  <group ns="robot_3">
+    <param name="tf_prefix" value="robot_3" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+   <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="robot_3/odom" />
+     <remap from="scan" to="base_scan"/>
+     <remap from="static_map" to="/static_map"/>
+     <param name="global_frame_id" value="/map" />
+     <param name="base_frame_id" value="robot_3/base_base_link" />
+     <param name="odom_frame_id" value="robot_3/odom" />
+   </node>
+    
+   <node pkg="tf" type="static_transform_publisher" name="map_odom3" args="44 56 0 0 0 0 /map /robot_3/odom 100" />
+  </group>
+  <!-- END ROBOT 3 -->
+  
+   <!-- BEGIN ROBOT 4 -->
+  <group ns="robot_4">
+    <param name="tf_prefix" value="robot_4" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+   <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="robot_4/odom" />
+     <remap from="scan" to="base_scan"/>
+     <remap from="static_map" to="/static_map"/>
+     <param name="global_frame_id" value="/map" />
+     <param name="base_frame_id" value="robot_4/base_base_link" />
+     <param name="odom_frame_id" value="robot_4/odom" />
+   </node>
+    
+   <node pkg="tf" type="static_transform_publisher" name="map_odom4" args="39 4 0 0 0 0 /map /robot_4/odom 100" />
+  </group>
+  <!-- END ROBOT 4 -->
+
+  <!-- BEGIN ROBOT 5 -->
+  <group ns="robot_5">
+    <param name="tf_prefix" value="robot_5" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+   <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="robot_5/odom" />
+     <remap from="scan" to="base_scan"/>
+     <remap from="static_map" to="/static_map"/>
+     <param name="global_frame_id" value="/map" />
+     <param name="base_frame_id" value="robot_5/base_base_link" />
+     <param name="odom_frame_id" value="robot_5/odom" />
+   </node>
+    
+   <node pkg="tf" type="static_transform_publisher" name="map_odom5" args="6 18 0 0 0 0 /map /robot_5/odom 100" />
+  </group>
+  <!-- END ROBOT 5 -->
+
+    <!-- BEGIN ROBOT 6 -->
+  <group ns="robot_6">
+    <param name="tf_prefix" value="robot_6" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <remap from="map" to="/map" />
+      <param name="controller_frequency" value="10.0" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find navigation_stage)/move_base_config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find navigation_stage)/move_base_config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+   <node pkg="fake_localization" type="fake_localization" name="fake_localization" clear_params="true" output="screen">
+     <remap from="base_pose_ground_truth" to="robot_6/odom" />
+     <remap from="scan" to="base_scan"/>
+     <remap from="static_map" to="/static_map"/>
+     <param name="global_frame_id" value="/map" />
+     <param name="base_frame_id" value="robot_6/base_base_link" />
+     <param name="odom_frame_id" value="robot_6/odom" />
+   </node>
+    
+   <node pkg="tf" type="static_transform_publisher" name="map_odom6" args="18 30 0 0 0 0 /map /robot_6/odom 100" />
+  </group>
+  <!-- END ROBOT 6 -->
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_robot7.rviz" />
+
+
+
+
+</launch>
+
+

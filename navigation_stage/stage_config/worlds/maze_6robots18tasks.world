@@ -66,18 +66,18 @@ floorplan
 ( 
   name "maze"
   bitmap "../maps/maze.pgm"
-  size [60.00 60.00 0.500]
-  pose [ -30.00 30.00 0.000 90.000 ]
+  size [52.35 52.65 0.500]
+  pose [ 26.175 26.325 0.000 90.000 ]
 )
 
+
 # throw in a robot
-#for maze.pgm 
-turtlebot(pose [ -11.000 55.000 0.000 90.000 ] name "turtlebot0" color "blue")
-turtlebot(pose [ -46.000 24.000 0.000 90.000 ] name "turtlebot1" color "blue")
-turtlebot(pose [ -25.000 33.000 0.000 90.000 ] name "turtlebot2" color "blue")
-turtlebot(pose [ -56.000 44.000 0.000 90.000 ] name "turtlebot3" color "blue")
-turtlebot(pose [ -4.000 39.000 0.000 90.000 ] name "turtlebot4" color "blue")
-turtlebot(pose [ -18.000 6.000 0.000 90.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 43.000 47.000 0.000 0.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ 16.000 4.000 0.000 0.000 ] name "turtlebot1" color "blue")
+turtlebot(pose [ 15.000 34.000 0.000 0.000 ] name "turtlebot2" color "blue")
+turtlebot(pose [ 42.000 36.000 0.000 0.000 ] name "turtlebot3" color "blue")
+turtlebot(pose [ 46.000 5.000 0.000 0.000 ] name "turtlebot4" color "blue")
+turtlebot(pose [ 9.000 46.000 0.000 90.000 ] name "turtlebot5" color "blue")
 
 define task model
 (
@@ -86,26 +86,24 @@ define task model
 	size [0.500 0.500 0.00]
 	color "orange"
 )
-
-#for maze.pgm
-task (name "task1" pose [ -37.000 49.000 0.300 0.000 ] ) #task1
-task (name "task2" pose [ -54.000 38.000 0.300 0.000 ] ) #task2
-task (name "task3" pose [ -18.000 38.000 0.300 0.000 ] )  #task3
-task (name "task4" pose [ -36.000 16.000 0.300 0.000 ] ) #task4
-task (name "task5" pose [ -22.000 46.000 0.300 0.000 ] ) #task5
-task (name "task6" pose [ -28.000 30.000 0.300 0.000 ] ) #task6
-task (name "task7" pose [ -15.000 47.000 0.300 0.000 ] ) #task7
-task (name "task8" pose [ -31.000 20.000 0.300 0.000 ] ) #task8
-task (name "task9" pose [ -12.000 29.000 0.300 0.000 ] ) #task9
-task (name "task10" pose [ -49.000 54.000 0.300 0.000 ] ) #task10
-task (name "task11" pose [ -55.000 21.000 0.300 0.000 ] ) #task11
-task (name "task12" pose [ -42.000 40.000 0.300 0.000 ] ) #task12
-task (name "task13" pose [ -23.000 12.000 0.300 0.000 ] ) #task13
-task (name "task14" pose [ -44.000 5.000 0.300 0.000 ] ) #task14
-task (name "task15" pose [ -4.000 25.000 0.300 0.000 ] ) #task15
-task (name "task16" pose [ -49.000 30.000 0.300 0.000 ] ) #task16
-task (name "task17" pose [ -48.000 18.000 0.300 0.000 ] ) #task17
-task (name "task18" pose [ -24.000 38.000 0.300 0.000 ] ) #task18
+task (name "task0" pose [ 34.000 39.000 0.300 0.000 ] ) #task1
+task (name "task1" pose [ 42.000 28.000 0.300 0.000 ] ) #task2
+task (name "task2" pose [ 23.000 2.5000 0.300 0.000 ] ) #task3
+task (name "task3" pose [ 36.000 43.000 0.300 0.000 ] ) #task4
+task (name "task4" pose [ 13.000 50.000 0.300 0.000 ] ) #task5
+task (name "task5" pose [ 28.000 30.000 0.300 0.000 ] ) #task6
+task (name "task6" pose [ 15.000 37.000 0.300 0.000 ] ) #task7
+task (name "task7" pose [ 31.000 20.000 0.300 0.000 ] ) #task8
+task (name "task8" pose [ 29.000 49.000 0.300 0.000 ] ) #task9
+task (name "task9" pose [ 31.000 9.000 0.300 0.000 ] ) #task10
+task (name "task10" pose [ 46.000 22.000 0.300 0.000 ] ) #task11
+task (name "task11" pose [ 19.000 49.000 0.300 0.000 ] ) #task12
+task (name "task12" pose [ 9.000 6.000 0.300 0.000 ] ) #task13
+task (name "task13" pose [ 41.000 2.000 0.300 0.000 ] ) #task14
+task (name "task14" pose [ 6.000 24.000 0.300 0.000 ] ) #task15
+task (name "task15" pose [ 50.000 35.000 0.300 0.000 ] ) #task16
+task (name "task16" pose [ 41.000 9.000 0.300 0.000 ] ) #task17
+task (name "task17" pose [ 40.000 16.000 0.300 0.000 ] ) #task18
 
 define dropoff model
 (
@@ -113,13 +111,12 @@ define dropoff model
   color "green"
 )
 
-#for maze.pgm
-dropoff (name "dropoff19" pose [ -12.000 24.000 0.300 0.000 ])
-dropoff (name "dropoff20" pose [ -38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff21" pose [ -12.000 54.000 0.300 0.000 ])
-dropoff (name "dropoff22" pose [ -45.000 48.000 0.300 0.000 ])
-dropoff (name "dropoff23" pose [ -54.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff24" pose [ -10.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff18" pose [ 16.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff19" pose [ 31.000 3.000 0.300 0.000 ])
+dropoff (name "dropoff20" pose [ 50.000 43.000 0.300 0.000 ])
+dropoff (name "dropoff21" pose [ 4.000 44.000 0.300 0.000 ])
+dropoff (name "dropoff22" pose [ 9.000 20.000 0.300 0.000 ])
+dropoff (name "dropoff23" pose [ 41.000 22.000 0.300 0.000 ])
 
 
 
