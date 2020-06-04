@@ -28,8 +28,8 @@
     <param name="tf_prefix" value="$(arg robotName1)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName1)"/>
-    	<arg name="initial_pose_x" value="21.00"/>
-    	<arg name="initial_pose_y" value="30.00"/>
+    	<arg name="initial_pose_x" value="43.00"/>
+    	<arg name="initial_pose_y" value="47.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -40,7 +40,7 @@
     <param name="tf_prefix" value="$(arg robotName2)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName2)"/>
-    	<arg name="initial_pose_x" value="38.00"/>
+    	<arg name="initial_pose_x" value="16.00"/>
     	<arg name="initial_pose_y" value="4.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
@@ -52,8 +52,8 @@
     <param name="tf_prefix" value="$(arg robotName3)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName3)"/>
-    	<arg name="initial_pose_x" value="10.00"/>
-    	<arg name="initial_pose_y" value="5.00"/>
+    	<arg name="initial_pose_x" value="15.00"/>
+    	<arg name="initial_pose_y" value="34.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -64,8 +64,8 @@
     <param name="tf_prefix" value="$(arg robotName4)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName4)"/>
-    	<arg name="initial_pose_x" value="30.00"/>
-    	<arg name="initial_pose_y" value="22.00"/>
+    	<arg name="initial_pose_x" value="42.00"/>
+    	<arg name="initial_pose_y" value="36.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -76,8 +76,8 @@
     <param name="tf_prefix" value="$(arg robotName5)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName5)"/>
-    	<arg name="initial_pose_x" value="4.00"/>
-    	<arg name="initial_pose_y" value="39.00"/>
+    	<arg name="initial_pose_x" value="46.00"/>
+    	<arg name="initial_pose_y" value="5.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>

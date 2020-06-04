@@ -67,7 +67,7 @@ floorplan
   name "maze"
    bitmap "../maps/maze.pgm"
   size [52.35 52.65 0.500]
-  pose [ 26.175 26.325 0.000 90.000 ]
+  pose [ 26.175 26.325 0.000 0.000 ]
 )
 
 
@@ -77,7 +77,7 @@ turtlebot(pose [ 16.000 4.000 0.000 0.000 ] name "turtlebot1" color "blue")
 turtlebot(pose [ 15.000 34.000 0.000 0.000 ] name "turtlebot2" color "blue")
 turtlebot(pose [ 42.000 36.000 0.000 0.000 ] name "turtlebot3" color "blue")
 turtlebot(pose [ 46.000 5.000 0.000 0.000 ] name "turtlebot4" color "blue")
-turtlebot(pose [ 9.000 46.000 0.000 90.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 9.000 46.000 0.000 0.000 ] name "turtlebot5" color "blue")
 
 define task model
 (
@@ -109,14 +109,14 @@ task (name "task18" pose [ 28.000 24.000 0.300 0.000 ] ) #task19
 task (name "task19" pose [ 15.000 18.000 0.300 0.000 ] ) #task20
 task (name "task20" pose [ 3.500 35.000 0.300 0.000 ] ) #task21
 task (name "task21" pose [ 35.000 22.000 0.300 0.000 ] ) #task22
-task (name "task22" pose [ 35.000 22.000 0.300 0.000 ] ) #task23
+task (name "task22" pose [ 35.000 25.000 0.300 0.000 ] ) #task23
 task (name "task23" pose [ 4.000 20.000 0.300 0.000 ] ) #task24
 task (name "task24" pose [ 3.000 4.000 0.300 0.000 ] ) #task25
 task (name "task25" pose [ 24.000 16.000 0.300 0.000 ] ) #task26
 task (name "task26" pose [ 7.000 11.000 0.300 0.000 ] ) #task27
 task (name "task27" pose [ 32.000 40.000 0.300 0.000 ] ) #task28
 task (name "task28" pose [ 25.000 6.000 0.300 0.000 ] ) #task29
-task (name "task29" pose [ 19.000 20.000 0.300 0.000 ] ) #task30
+task (name "task29" pose [ 20.000 20.000 0.300 0.000 ] ) #task30
 task (name "task30" pose [ 7.000 17.000 0.300 0.000 ] ) #task31
 task (name "task31" pose [ 2.000 26.000 0.300 0.000 ] ) #task32
 task (name "task32" pose [ 13.000 46.000 0.300 0.000 ] )  #task33

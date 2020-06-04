@@ -76,8 +76,8 @@ turtlebot(pose [ 47.000 7.000 0.000 0.000 ] name "turtlebot1" color "blue")
 turtlebot(pose [ 48.000 33.000 0.000 0.000 ] name "turtlebot2" color "blue")
 turtlebot(pose [ 30.000 22.000 0.000 0.000 ] name "turtlebot3" color "blue")
 turtlebot(pose [ 4.000 39.000 0.000 0.000 ] name "turtlebot4" color "blue")
-turtlebot(pose [ 11.000 52.000 0.000 90.000 ] name "turtlebot5" color "blue")
-turtlebot(pose [ 39.000 52.000 0.000 90.000 ] name "turtlebot6" color "blue")
+turtlebot(pose [ 11.000 52.000 0.000 0.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 39.000 52.000 0.000 0.000 ] name "turtlebot6" color "blue")
 
 define task model
 (

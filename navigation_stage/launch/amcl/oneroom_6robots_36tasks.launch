@@ -2,9 +2,8 @@
 <launch>
 
 <!--ONEROOM_MAP-->
-<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneroom_6robots36tasks.world" /-->
-<!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneroom.yaml" /-->
-
+<arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneroom_6robots36tasks.world" />
+<arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneroom.yaml" />
 	<arg name="waypoints" default='0' />
 	<arg name="robotName1" default="robot_0" />
 	<arg name="robotName2" default="robot_1" />
@@ -29,8 +28,8 @@
     <param name="tf_prefix" value="$(arg robotName1)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName1)"/>
-    	<arg name="initial_pose_x" value="54.00"/>
-    	<arg name="initial_pose_y" value="23.00"/>
+    	<arg name="initial_pose_x" value="33.00"/>
+    	<arg name="initial_pose_y" value="61.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -41,8 +40,8 @@
     <param name="tf_prefix" value="$(arg robotName2)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName2)"/>
-    	<arg name="initial_pose_x" value="6.00"/>
-    	<arg name="initial_pose_y" value="46.00"/>
+    	<arg name="initial_pose_x" value="4.00"/>
+    	<arg name="initial_pose_y" value="53.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -53,8 +52,8 @@
     <param name="tf_prefix" value="$(arg robotName3)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName3)"/>
-    	<arg name="initial_pose_x" value="33.00"/>
-    	<arg name="initial_pose_y" value="25.00"/>
+    	<arg name="initial_pose_x" value="15.00"/>
+    	<arg name="initial_pose_y" value="34.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -65,8 +64,8 @@
     <param name="tf_prefix" value="$(arg robotName4)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName4)"/>
-    	<arg name="initial_pose_x" value="44.00"/>
-    	<arg name="initial_pose_y" value="40.00"/>
+    	<arg name="initial_pose_x" value="12.60"/>
+    	<arg name="initial_pose_y" value="8.60"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -77,8 +76,8 @@
     <param name="tf_prefix" value="$(arg robotName5)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName5)"/>
-    	<arg name="initial_pose_x" value="39.00"/>
-    	<arg name="initial_pose_y" value="4.00"/>
+    	<arg name="initial_pose_x" value="11.50"/>
+    	<arg name="initial_pose_y" value="64.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -89,13 +88,13 @@
     <param name="tf_prefix" value="$(arg robotName6)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName6)"/>
-    	<arg name="initial_pose_x" value="6.00"/>
-    	<arg name="initial_pose_y" value="18.00"/>
+    	<arg name="initial_pose_x" value="19.00"/>
+    	<arg name="initial_pose_y" value="14.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
   <!-- END ROBOT 5 -->
   
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_maze_robot6.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/multi_maze_robot6.rviz" />
 
 </launch>

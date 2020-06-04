@@ -69,7 +69,7 @@ floorplan
   name "maze"
   bitmap "../maps/maze.pgm"
   size [52.35 52.65 0.500]
-  pose [ 26.175 26.325 0.000 90.000 ]
+  pose [ 26.175 26.325 0.000 0.000 ]
 )
 
 

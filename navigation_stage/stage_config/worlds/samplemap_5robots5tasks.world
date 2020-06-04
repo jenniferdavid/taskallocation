@@ -37,8 +37,8 @@ define floorplan model
   # sombre, sensible, artistic
   color "gray30"
 
-  # most maps will need a bounding box
-  boundary 1
+    # most maps will need a bounding box
+  boundary 0
 
   gui_nose 0
   gui_grid 0
@@ -56,8 +56,7 @@ interval_sim 100  # simulation timestep in milliseconds
 
 window
 ( 
-  #size [ 745 448 ] 
-  size [1400 800]
+  size [ 745 448 ] 
   rotate [ 0.000 0.000 ]
   scale 6.269 
 )
@@ -66,19 +65,20 @@ window
 floorplan
 ( 
   name "twoRooms"
-  bitmap "../maps/twoRooms.pgm"
-  size [ 37.0 35.3 2.0 ]
- # pose [  0  0 0.0 0.0 ]
- #location of the center of map
-   pose [  6.3  -5.75 0.0 0.0 ]
+  #bitmap "../maps/samplemap.pgm"
+  #size [44.500 51.500 0.500]
+  #pose [ 22.250 25.750 0.000 90.000 ]
+  bitmap "../maps/samplemap2.pgm"
+  size [42.850 49.00 0.500]
+  pose [ 21.425 24.500 0.000 0.000 ]
 )
 
 # throw in a robot
-turtlebot(pose [ -23.000 54.000 0.000 90.000 ] name "turtlebot0" color "blue")
-turtlebot(pose [ -46.000 6.000 0.000 90.000 ] name "turtlebot1" color "blue")
-turtlebot(pose [ -70.000 33.000 0.000 90.000 ] name "turtlebot2" color "blue")
-turtlebot(pose [ -40.000 44.000 0.000 90.000 ] name "turtlebot3" color "blue")
-turtlebot(pose [ -4.000 39.000 0.000 90.000 ] name "turtlebot4" color "blue")
+turtlebot(pose [ 22.000 47.000 0.000 0.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ 36.000 42.000 0.000 0.000 ] name "turtlebot1" color "blue")
+turtlebot(pose [ 7.500 6.500 0.000 0.000 ] name "turtlebot2" color "blue")
+turtlebot(pose [ 16.500 14.000 0.000 0.000 ] name "turtlebot3" color "blue")
+turtlebot(pose [ 7.500 42.000 0.000 0.000 ] name "turtlebot4" color "blue")
 
 define task model
 (
@@ -87,12 +87,11 @@ define task model
 	size [0.500 0.500 0.00]
 	color "orange"
 )
-
-task (name "task1" pose [ -37.000 50.000 0.300 0.000 ] ) #task1
-task (name "task2" pose [ -56.000 26.000 0.300 0.000 ] ) #task2
-task (name "task3" pose [ -18.000 38.000 0.300 0.000 ] ) #task3
-task (name "task4" pose [ -36.000 16.000 0.300 0.000 ] ) #task4
-task (name "task5" pose [ -22.000 46.000 0.300 0.000 ] ) #task5
+task (name "task0" pose [ 34.000 39.000 0.300 0.000 ] ) #task1
+task (name "task1" pose [ 10.000 20.000 0.300 0.000 ] ) #task2
+task (name "task2" pose [ 38.000 38.000 0.300 0.000 ] ) #task3
+task (name "task3" pose [ 33.000 25.000 0.300 0.000 ] ) #task4
+task (name "task4" pose [ 5.000 35.000 0.300 0.000 ] ) #task5
 
 define dropoff model
 (
@@ -100,11 +99,13 @@ define dropoff model
   color "green"
 )
 
-dropoff (name "dropoff6" pose [ -12.000 24.000 0.300 0.000 ])
-dropoff (name "dropoff7" pose [ -38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff8" pose [ -40.000 32.000 0.300 0.000 ])
-dropoff (name "dropoff9" pose [ -48.000 48.000 0.300 0.000 ])
-dropoff (name "dropoff10" pose [ -5.000 54.000 0.300 0.000 ])
+dropoff (name "dropoff5" pose [ 12.000 24.000 0.300 0.000 ])
+dropoff (name "dropoff6" pose [ 38.000 6.000 0.300 0.000 ])
+dropoff (name "dropoff7" pose [ 31.000 43.000 0.300 0.000 ])
+dropoff (name "dropoff8" pose [ 6.000 2.000 0.300 0.000 ])
+dropoff (name "dropoff9" pose [ 2.000 21.000 0.300 0.000 ])
+
+
 
 
 

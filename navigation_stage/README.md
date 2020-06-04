@@ -1,23 +1,25 @@
 roscd navigation_stage/src
-player multi_robot_task.cfg
-roslaunch navigation_stage main_multi.launch 
-rosrun navigation_stage stage_robot //starts the player connection and publishes /coords
-rosrun navigation_stage dist_cost // publishes /DeltaMat - the euclidean distance between all models
+player multi_robot_task_5.cfg (player config of the particular problem)
+roslaunch navigation_stage maze_5robots_5tasks.launch (navigation stack for that problem)
+rosrun navigation_stage stage_robots_node _numRobots:=5 _numTasks:=5  //starts the player connection and publishes /coords
+rosrun navigation_stage dist_cost // publishes /DeltaMat - the euclidean distance between all models OR
 rosrun navigation_stage path_cost // publishes /DeltaMat - the path distance between all models
-rosrun navigation_stage heuristic // computes the approximation method based task allocation to the robots.
+rosrun navigation_stage task_allocation_node // computes the task allocation to the robots using one of the 3 methods
+rosrun navigation_stage send_goals_node //send robots to the respective positions
 
 List of maps:
 1. maze
 2. willow-garage
-3. oneRoom
+3. oneroom
 4. robopark
-5. twoRooms
+5. tworooms
 6. cobotLab
 7. ridgeback_race
-8. hospital (to do)
+8. samplemap
 9. circlemaze
 10. playpen
 11. playground
+12. maze2
 
  name "willow"
   #bitmap "../maps/willow-full-sparse.pgm"

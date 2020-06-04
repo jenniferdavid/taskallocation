@@ -71,7 +71,7 @@ floorplan
 ( 
   name "circlemaze"
   bitmap "../maps/circlemaze.pgm"
-  size [41.1 41.5 0]
+  size [41.1 41.5 0.5]
   pose [20.5 20.75 0.0 0.0]
 )
 

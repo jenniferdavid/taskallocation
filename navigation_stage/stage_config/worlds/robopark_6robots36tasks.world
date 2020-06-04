@@ -61,22 +61,24 @@ window
   scale 6.269 
 )
 
+
+
 # load an environment bitmap
 floorplan
 ( 
-  name "robopark"
-  bitmap "../maps/robopark.pgm"
-  size [100.00 100.00 0.00]
-  pose [ -30.00 30.00 0.000 0.000 ]
+  name "robopark2"
+  bitmap "../maps/robopark2.pgm"
+  size [80.65 49.35 0.500]
+  pose [ 40.325 24.675 0.000 0.000 ]
 )
 
 # throw in a robot
-turtlebot(pose [ -5.000 13.000 0.000 90.000 ] name "turtlebot0" color "blue")
-turtlebot(pose [ -46.000 24.000 0.000 90.000 ] name "turtlebot1" color "blue")
-turtlebot(pose [ -25.000 33.000 0.000 90.000 ] name "turtlebot2" color "blue")
-turtlebot(pose [ -56.000 44.000 0.000 90.000 ] name "turtlebot3" color "blue")
-turtlebot(pose [ -4.000 39.000 0.000 90.000 ] name "turtlebot4" color "blue")
-turtlebot(pose [ -23.000 13.000 0.000 90.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 21.000 30.000 0.000 0.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ 59.000 16.000 0.000 0.000 ] name "turtlebot1" color "blue")
+turtlebot(pose [ 48.000 33.000 0.000 0.000 ] name "turtlebot2" color "blue")
+turtlebot(pose [ 18.000 10.000 0.000 0.000 ] name "turtlebot3" color "blue")
+turtlebot(pose [ 71.000 24.000 0.000 0.000 ] name "turtlebot4" color "blue")
+turtlebot(pose [ 5.000 41.000 0.000 0.000 ] name "turtlebot5" color "blue")
 
 define task model
 (
@@ -85,45 +87,42 @@ define task model
 	size [0.500 0.500 0.00]
 	color "orange"
 )
-
-
-task (name "task1" pose [ -37.000 49.000 0.300 0.000 ] ) #task1
-task (name "task2" pose [ -49.000 55.000 0.300 0.000 ] ) #task2
-task (name "task3" pose [ -18.000 38.000 0.300 0.000 ] )  #task3
-task (name "task4" pose [ -36.000 16.000 0.300 0.000 ] ) #task4
-task (name "task5" pose [ -22.000 46.000 0.300 0.000 ] ) #task5
-task (name "task6" pose [ -28.000 30.000 0.300 0.000 ] ) #task6
-task (name "task7" pose [ -15.000 47.000 0.300 0.000 ] ) #task7
-task (name "task8" pose [ -31.000 20.000 0.300 0.000 ] ) #task8
-task (name "task9" pose [ -5.000 26.000 0.300 0.000 ] ) #task9
-task (name "task10" pose [ -43.000 42.000 0.300 0.000 ] ) #task10
-task (name "task11" pose [ -33.000 4.000 0.300 0.000 ] ) #task11
-task (name "task12" pose [ -27.000 11.000 0.300 0.000 ] ) #task12
-task (name "task13" pose [ -16.000 13.000 0.300 0.000 ] ) #task13
-task (name "task14" pose [ -44.000 8.000 0.300 0.000 ] ) #task14
-task (name "task15" pose [ -10.000 55.000 0.300 0.000 ] ) #task15
-task (name "task16" pose [ -64.000 30.000 0.300 0.000 ] ) #task16
-task (name "task17" pose [ -48.000 18.000 0.300 0.000 ] ) #task17
-task (name "task18" pose [ -24.000 38.000 0.300 0.000 ] ) #task18
-task (name "task19" pose [ -28.000 22.000 0.300 0.000 ] ) #task19
-task (name "task20" pose [ -15.000 18.000 0.300 0.000 ] ) #task20
-task (name "task21" pose [ -31.000 55.000 0.300 0.000 ] ) #task21
-task (name "task22" pose [ -12.000 40.000 0.300 0.000 ] ) #task22
-task (name "task23" pose [ -42.000 24.000 0.300 0.000 ] ) #task23
-task (name "task24" pose [ -4.000 50.000 0.300 0.000 ] ) #task24
-task (name "task25" pose [ 4.000 13.000 0.300 0.000 ] ) #task25
-task (name "task26" pose [ -40.000 32.000 0.300 0.000 ] ) #task26
-task (name "task27" pose [ -8.000 16.000 0.300 0.000 ] ) #task27
-task (name "task28" pose [ -32.000 40.000 0.300 0.000 ] ) #task28
-task (name "task29" pose [ -53.000 38.000 0.300 0.000 ] ) #task29
-task (name "task30" pose [ -54.000 20.000 0.300 0.000 ] ) #task30
-task (name "task31" pose [ -47.000 47.000 0.300 0.000 ] ) #task31
-task (name "task32" pose [ -20.000 22.000 0.300 0.000 ] ) #task32
-task (name "task33" pose [ -44.000 38.000 0.300 0.000 ] )  #task33
-task (name "task34" pose [ -4.000 40.000 0.300 0.000 ] ) #task34
-task (name "task35" pose [ -55.000 55.000 0.300 0.000 ] ) #task35
-task (name "task36" pose [ -4.000 33.000 0.300 0.000 ] ) #task36
-
+task (name "task0" pose [ 33.000 36.000 0.300 0.000 ] ) #task1
+task (name "task1" pose [ 57.000 29.000 0.300 0.000 ] ) #task2
+task (name "task2" pose [ 52.000 43.000 0.300 0.000 ] ) #task3
+task (name "task3" pose [ 33.000 25.000 0.300 0.000 ] ) #task4
+task (name "task4" pose [ 72.000 40.000 0.300 0.000 ] ) #task5
+task (name "task5" pose [ 66.000 41.000 0.300 0.000 ] ) #task6
+task (name "task6" pose [ 15.000 37.000 0.300 0.000 ] ) #task7
+task (name "task7" pose [ 6.9600 36.000 0.300 0.000 ] ) #task8
+task (name "task8" pose [ 74.000 15.000 0.300 0.000 ] ) #task9
+task (name "task9" pose [ 45.000 35.000 0.300 0.000 ] ) #task10
+task (name "task10" pose [ 60.000 35.000 0.300 0.000 ] ) #task11
+task (name "task11" pose [ 61.000 25.000 0.300 0.000 ] ) #task12
+task (name "task12" pose [ 56.000 36.000 0.300 0.000 ] ) #task13
+task (name "task13" pose [ 75.000 38.000 0.300 0.000 ] ) #task14
+task (name "task14" pose [ 65.000 20.000 0.300 0.000 ] ) #task15
+task (name "task15" pose [ 47.000 28.000 0.300 0.000 ] ) #task16
+task (name "task16" pose [ 22.000 12.000 0.300 0.000 ] ) #task17
+task (name "task17" pose [ 55.000 32.000 0.300 0.000 ] ) #task18
+task (name "task18" pose [ 28.000 22.000 0.300 0.000 ] ) #task19
+task (name "task19" pose [ 15.000 18.000 0.300 0.000 ] ) #task20
+task (name "task20" pose [ 4.000 34.000 0.300 0.000 ] ) #task21
+task (name "task21" pose [ 16.000 28.000 0.300 0.000 ] ) #task22
+task (name "task22" pose [ 38.000 22.000 0.300 0.000 ] ) #task23
+task (name "task23" pose [ 4.000 20.000 0.300 0.000 ] ) #task24
+task (name "task24" pose [ 61.000 32.000 0.300 0.000 ] ) #task25
+task (name "task25" pose [ 24.000 16.000 0.300 0.000 ] ) #task26
+task (name "task26" pose [ 55.000 19.000 0.300 0.000 ] ) #task27
+task (name "task27" pose [ 43.000 38.000 0.300 0.000 ] ) #task28
+task (name "task28" pose [ 41.000 15.000 0.300 0.000 ] ) #task29
+task (name "task29" pose [ 67.000 36.000 0.300 0.000 ] ) #task30
+task (name "task30" pose [ 7.000 17.000 0.300 0.000 ] ) #task31
+task (name "task31" pose [ 4.000 27.000 0.300 0.000 ] ) #task32
+task (name "task32" pose [ 53.000 16.000 0.300 0.000 ] )  #task33
+task (name "task33" pose [ 8.000 33.000 0.300 0.000 ] ) #task34
+task (name "task34" pose [ 10.000 25.000 0.300 0.000 ] ) #task35
+task (name "task35" pose [ 67.000 15.000 0.300 0.000 ] ) #task36
 
 define dropoff model
 (
@@ -131,23 +130,13 @@ define dropoff model
   color "green"
 )
 
-dropoff (name "dropoff37" pose [ -12.000 24.000 0.300 0.000 ])
-dropoff (name "dropoff38" pose [ -38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff39" pose [ -12.000 54.000 0.300 0.000 ])
-dropoff (name "dropoff40" pose [ -45.000 48.000 0.300 0.000 ])
-dropoff (name "dropoff41" pose [ -54.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff42" pose [ -10.000 10.000 0.300 0.000 ])
 
-
-
-
-
-
-
-
-
-
-
+dropoff (name "dropoff36" pose [ 49.000 19.000 0.300 0.000 ])
+dropoff (name "dropoff37" pose [ 75.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff38" pose [ 45.000 38.000 0.300 0.000 ])
+dropoff (name "dropoff39" pose [ 18.000 36.000 0.300 0.000 ])
+dropoff (name "dropoff40" pose [ 5.000 21.000 0.300 0.000 ])
+dropoff (name "dropoff41" pose [ 22.000 17.000 0.300 0.000 ])
 
 
 

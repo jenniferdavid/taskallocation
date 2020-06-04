@@ -67,7 +67,7 @@ floorplan
   name "maze"
   bitmap "../maps/maze.pgm"
   size [52.35 52.65 0.500]
-  pose [ 26.175 26.325 0.000 90.000 ]
+  pose [ 26.175 26.325 0.000 0.000 ]
 )
 
 
@@ -77,8 +77,8 @@ turtlebot(pose [ 16.000 4.000 0.000 0.000 ] name "turtlebot1" color "blue")
 turtlebot(pose [ 15.000 34.000 0.000 0.000 ] name "turtlebot2" color "blue")
 turtlebot(pose [ 42.000 36.000 0.000 0.000 ] name "turtlebot3" color "blue")
 turtlebot(pose [ 46.000 5.000 0.000 0.000 ] name "turtlebot4" color "blue")
-turtlebot(pose [ 9.000 46.000 0.000 90.000 ] name "turtlebot5" color "blue")
-turtlebot(pose [ 34.000 10.000 0.000 90.000 ] name "turtlebot6" color "blue")
+turtlebot(pose [ 9.000 46.000 0.000 0.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 34.000 10.000 0.000 0.000 ] name "turtlebot6" color "blue")
 
 define task model
 (

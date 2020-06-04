@@ -64,21 +64,22 @@ window
 # load an environment bitmap
 floorplan
 ( 
-  name "willow"
-  bitmap "../maps/willow-full-sparse.pgm"
-  size [58.400 52.600 0.500] #for willow.pgm
-  pose [ -26.300 29.200 0.000 90.000 ] #for willow.pgm
+  name "willow2"
+  bitmap "../maps/willow2.pgm"
+  #size [152.350 158.30 0.500] #for willow.pgm
+  #pose [ 76.175 79.150 0.000 90.000 ] #for willow.pgm
+  size [75.6 76.1 0.500]
+  pose [37.8 38.05 0.00 0.00]
 )
+
 # throw in a robot
-
-
-turtlebot(pose [ -12.000 55.000 0.000 90.000 ] name "turtlebot0" color "blue")
-turtlebot(pose [ -46.000 24.000 0.000 90.000 ] name "turtlebot1" color "blue")
-turtlebot(pose [ -25.000 33.000 0.000 90.000 ] name "turtlebot2" color "blue")
-turtlebot(pose [ -50.000 44.000 0.000 90.000 ] name "turtlebot3" color "blue")
-turtlebot(pose [ -4.000 39.000 0.000 90.000 ] name "turtlebot4" color "blue")
-turtlebot(pose [ -18.000 6.000 0.000 90.000 ] name "turtlebot5" color "blue")
-turtlebot(pose [ -30.000 18.000 0.000 90.000 ] name "turtlebot6" color "blue")
+turtlebot(pose [ 4.000 29.000 0.000 0.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ 47.000 7.000 0.000 0.000 ] name "turtlebot1" color "blue")
+turtlebot(pose [ 48.000 33.000 0.000 0.000 ] name "turtlebot2" color "blue")
+turtlebot(pose [ 57.000 57.000 0.000 0.000 ] name "turtlebot3" color "blue")
+turtlebot(pose [ 22.000 63.000 0.000 0.000 ] name "turtlebot4" color "blue")
+turtlebot(pose [ 11.000 52.000 0.000 0.000 ] name "turtlebot5" color "blue")
+turtlebot(pose [ 39.000 52.000 0.000 0.000 ] name "turtlebot6" color "blue")
 
 define task model
 (
@@ -87,16 +88,16 @@ define task model
 	size [0.500 0.500 0.00]
 	color "orange"
 )
-
-
-
-task (name "task1" pose [ -37.000 54.000 0.300 0.000 ] ) #task1
-task (name "task2" pose [ -50.000 8.000 0.300 0.000 ] ) #task2
-task (name "task3" pose [ -26.000 4.000 0.300 0.000 ] )  #task3
-task (name "task4" pose [ -38.000 19.000 0.300 0.000 ] ) #task4
-task (name "task5" pose [ -13.000 40.000 0.300 0.000 ] ) #task5
-task (name "task6" pose [ -28.000 30.000 0.300 0.000 ] ) #task6
-task (name "task7" pose [ -15.000 47.000 0.300 0.000 ] ) #task7
+task (name "task0" pose [ 34.000 39.000 0.300 0.000 ] ) #task1
+task (name "task1" pose [ 28.000 54.000 0.300 0.000 ] ) #task2
+task (name "task2" pose [ 49.000 45.000 0.300 0.000 ] ) #task3
+task (name "task3" pose [ 33.000 25.000 0.300 0.000 ] ) #task4
+task (name "task4" pose [ 6.000 56.000 0.300 0.000 ] ) #task5
+task (name "task5" pose [ 55.000 45.000 0.300 0.000 ] ) #task6
+task (name "task6" pose [ 15.000 37.000 0.300 0.000 ] ) #task7
+task (name "task7" pose [ 5.000 61.000 0.300 0.000 ] ) #task8
+task (name "task8" pose [ 43.000 50.000 0.300 0.000 ] ) #task9
+task (name "task9" pose [ 45.000 35.000 0.300 0.000 ] ) #task10
 
 define dropoff model
 (
@@ -105,14 +106,13 @@ define dropoff model
 )
 
 
-
-dropoff (name "dropoff8" pose [ -12.000 22.000 0.300 0.000 ])
-dropoff (name "dropoff9" pose [ -38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff10" pose [ -40.000 32.000 0.300 0.000 ])
-dropoff (name "dropoff11" pose [ -48.000 55.000 0.300 0.000 ])
-dropoff (name "dropoff12" pose [ -5.000 54.000 0.300 0.000 ])
-dropoff (name "dropoff13" pose [ -10.000 10.000 0.300 0.000 ])
-dropoff (name "dropoff14" pose [ -18.000 45.000 0.300 0.000 ])
+dropoff (name "dropoff10" pose [ 49.000 19.000 0.300 0.000 ])
+dropoff (name "dropoff11" pose [ 38.000 8.000 0.300 0.000 ])
+dropoff (name "dropoff12" pose [ 47.000 42.000 0.300 0.000 ])
+dropoff (name "dropoff13" pose [ 65.000 65.000 0.300 0.000 ])
+dropoff (name "dropoff14" pose [ 4.000 73.000 0.300 0.000 ])
+dropoff (name "dropoff15" pose [ 73.000 73.000 0.300 0.000 ])
+dropoff (name "dropoff16" pose [ 8.000 50.500 0.300 0.000 ])
 
 
 

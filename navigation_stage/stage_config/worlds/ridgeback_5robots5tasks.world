@@ -68,7 +68,7 @@ floorplan
 ( 
   name "ridgeback"
   bitmap "../maps/ridgeback2.pgm"
-  size [54.65 60.9 0.00]
+  size [54.65 60.9 0.500]
   pose [ 27.325 30.450 0.000 0.00]
 )
 

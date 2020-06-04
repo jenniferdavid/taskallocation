@@ -2,8 +2,8 @@
 <launch>
 
 <!--RIDGEBACK_MAP-->
-<!--arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/ridgeback_5robots5tasks.world" /-->
-<!--arg name="map_file" default="$(find navigation_stage)/stage_config/maps/ridgeback.yaml" /-->
+<arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/ridgeback_5robots5tasks.world" />
+<arg name="map_file" default="$(find navigation_stage)/stage_config/maps/ridgeback.yaml" />
 
 	<arg name="waypoints" default='0' />
 	<arg name="robotName1" default="robot_0" />
@@ -40,8 +40,8 @@
     <param name="tf_prefix" value="$(arg robotName2)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName2)"/>
-    	<arg name="initial_pose_x" value="38.00"/>
-    	<arg name="initial_pose_y" value="4.00"/>
+    	<arg name="initial_pose_x" value="47.00"/>
+    	<arg name="initial_pose_y" value="7.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>
@@ -52,8 +52,8 @@
     <param name="tf_prefix" value="$(arg robotName3)" />
     <include file="$(find navigation_stage)/launch/amcl/includes/single_robot.launch">
     	<arg name="namespace" value="$(arg robotName3)"/>
-    	<arg name="initial_pose_x" value="10.00"/>
-    	<arg name="initial_pose_y" value="5.00"/>
+    	<arg name="initial_pose_x" value="48.00"/>
+    	<arg name="initial_pose_y" value="33.00"/>
     	<arg name="initial_pose_a" value="0.0"/>
     </include>
   </group>

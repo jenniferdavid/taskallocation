@@ -61,6 +61,7 @@ Eigen::VectorXd cTime;
 Eigen::VectorXd checkTimeVec;
 Eigen::VectorXd sub;
 std::vector<char> plotVehicle;
+clock_t tStart = clock();
 
 int nVehicles;      
 int nTasks;       
@@ -173,7 +174,8 @@ std::vector<std::vector<char> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen:
         cout << "\n" <<solStrA << endl;
         cout << "\n" <<solStrB << endl;
         cout << "\n" <<checkTime << endl;
-        
+        printf("\nTotal computational time taken: %.2f\n", (((double)(clock() - tStart)/CLOCKS_PER_SEC)));
+
         for ( std::vector<std::vector<char>>::size_type i = 0; i < plotString.size(); i++ )
             {for ( std::vector<char>::size_type j = 0; j < plotString[i].size(); j++ )
                 {std::cout << plotString[i][j] << ' ';}
@@ -185,6 +187,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "TaskAllocation"); 
     ros::NodeHandle n;
+
     //Heuristic h;
     DeterministicAnnealing h;
     //SimulatedAnnealing h;

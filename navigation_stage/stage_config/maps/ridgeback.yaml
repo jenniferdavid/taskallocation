@@ -1,6 +1,6 @@
-image: ridgeback.pgm
+image: ridgeback2.pgm
 resolution: 0.050000
-origin: [-1,-1, 0.000000]
+origin: [0.000,0.0000, 0.000000]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.196
