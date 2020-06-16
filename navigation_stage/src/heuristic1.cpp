@@ -129,6 +129,7 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
     cout << "\nchunk_length " << chunk_length<< endl;
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //create a tuple for holding path values and nodes
     std::vector <tuple<double, int, int> > task_map;
 
@@ -254,6 +255,8 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
 				}
         }
         
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     cout <<"\nChunks are"<< endl;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
     {for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )

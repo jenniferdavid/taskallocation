@@ -112,12 +112,12 @@ define dropoff model
   color "green"
 )
 
-dropoff (name "dropoff19" pose [ 12.000 24.000 0.300 0.000 ])
-dropoff (name "dropoff20" pose [ 38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff21" pose [ 40.000 32.000 0.300 0.000 ])
-dropoff (name "dropoff22" pose [ 19.000 10.000 0.300 0.000 ])
-dropoff (name "dropoff23" pose [ 2.000 21.000 0.300 0.000 ])
-dropoff (name "dropoff24" pose [ 22.000 17.000 0.300 0.000 ])
+dropoff (name "dropoff18" pose [ 12.000 24.000 0.300 0.000 ])
+dropoff (name "dropoff19" pose [ 38.000 8.000 0.300 0.000 ])
+dropoff (name "dropoff20" pose [ 40.000 32.000 0.300 0.000 ])
+dropoff (name "dropoff21" pose [ 19.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff22" pose [ 2.000 21.000 0.300 0.000 ])
+dropoff (name "dropoff23" pose [ 22.000 17.000 0.300 0.000 ])
 
 
 

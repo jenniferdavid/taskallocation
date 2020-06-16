@@ -3,7 +3,7 @@
 
 <!--MAZE_MAP-->
 <arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/maze_6robots18tasks.world" />
-<arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze2new.yaml" />
+<arg name="map_file" default="$(find navigation_stage)/stage_config/maps/maze.yaml" />
 
 	<arg name="waypoints" default='0' />
 	<arg name="robotName1" default="robot_0" />

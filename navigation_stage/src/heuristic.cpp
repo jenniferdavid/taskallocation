@@ -18,14 +18,13 @@ using namespace Eigen;
 
 Heuristic::Heuristic(){}
 
-Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix)
+Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, int eta)
 {
     cout << "\nnvehicle is:" << nVehicles<< endl;
     cout << "\ntask is:" << nTasks << endl;
     cout << "\nndim is:" << rDim << endl;
     cout << "\nrdim is:" << nDim << endl;
 
-    
     TaskMatrix = MatrixXd::Ones(nTasks,nTasks);
     TVec = VectorXd(nDim);
     for (int i=0; i<nDim; i++)
@@ -132,86 +131,91 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
     double chunk_length = *smallest/(nVehicles);
     cout << "\nchunk_length " << chunk_length<< endl;
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
-    double val = 0;
-    double addChunk = 0;
-    int count =0;
-    vector<int>cut;
-   // cut.push_back(0);
-      
-    for ( std::vector<int>::size_type j = 0; j < paths_values_list[path_index].size(); j++ )
-    {  
-       if (count != (nVehicles-1))
-       {
-       val = val + paths_values_list[path_index][j];
-       addChunk = paths_values_list[path_index][j];
-
-       if (addChunk > chunk_length)
-       {           
-           cut.push_back(j-1);
-           count ++;
-           val = 0;
-       }
-       
-       if (val > chunk_length)
-       {
-        cut.push_back(j-1);
-        cout << "adding j-1= "<<j-1<<endl;
-        count++;
-        val = 0;
-        if ((j != 0) || (j != paths_values_list[path_index].size()-1))
-        j=j-1;
-        else
-            break;
-        }
-       }
-    } 
-    int check = 0;
-    cout <<"before"<<endl;
-    for (int i=0; i<cut.size(); i++) 
-    { 
-        cout <<cut[i] << " " ;
-    } 
-    if ( std::any_of(cut.begin(), cut.end(), [](int i){return i<0;}))
-    {check=1;}
     
-    cut.push_back(nTasks-1);
-    cout << "\nafter" <<endl;
-    for (int i=0; i<cut.size(); i++) 
-    { 
-       if (check ==1)
-        { cut[i] = cut[i]+1;}
-         cout <<cut[i] << " ";
-    } 
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
-    int cutNo = cut.size();
-    cout <<"\nNo of cuts:"<<cutNo << endl;
-        
-    vector<double> temp_path;
-    vector<double> temp_path_value;
-    vector<double> reduced_chunk;
     std::vector <std::vector<double>> chunks; //should be equal to number of vehicles
-    std::vector <std::vector<double>> chunks_path; //should be equal to number of vehicles
-    
-    for (int i = 0; i< paths_values_list[path_index].size(); i++)
-    {
-        reduced_chunk.push_back(paths_values_list[path_index][i]);
-    }
+	std::vector <std::vector<double>> chunks_path; //should be equal to number of vehicles
+    vector<int>cuts;
+    vector<int>cut;
+	int cutNo;
 
-    for (int i = 0; i< cut.size(); i++)
-    {
-    reduced_chunk.erase(std::remove(reduced_chunk.begin(), reduced_chunk.end(), paths_values_list[path_index][cut[i]]), reduced_chunk.end());
-    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    int i =0;
-    for ( std::vector<int>::size_type j = 0; j < paths_list.size(); j++ )
+    if (eta == 0) //first heuristic method
+    {
+		cout << "THE FIRST APPROXIMATION METHOD" << endl;
+		double val = 0;
+		double addChunk = 0;
+		int count =0;
+		// cut.push_back(0);
+      
+		for ( std::vector<int>::size_type j = 0; j < paths_values_list[path_index].size(); j++ )
+		{  
+			if (count != (nVehicles-1))
+				{
+					val = val + paths_values_list[path_index][j];
+					addChunk = paths_values_list[path_index][j];
+
+					if (addChunk > chunk_length)
+						{           
+							cut.push_back(j-1);
+							count ++;
+							val = 0;
+						}
+       
+					if (val > chunk_length)
+						{
+							cut.push_back(j-1);
+							cout << "adding j-1= "<<j-1<<endl;
+							count++;
+							val = 0;
+							if ((j != 0) || (j != paths_values_list[path_index].size()-1))
+								{j=j-1;}
+							else
+								break;
+						}
+				}
+		} 
+		int check = 0;
+		cout <<"before"<<endl;
+		for (int i=0; i<cut.size(); i++) 
+			{ 
+				cout <<cut[i] << " " ;
+			} 
+		if ( std::any_of(cut.begin(), cut.end(), [](int i){return i<0;}))
+			{check=1;}
+    
+		cut.push_back(nTasks-1);
+		cout << "\nafter" <<endl;
+		for (int i=0; i<cut.size(); i++) 
+		{ 
+			if (check ==1)
+				{ cut[i] = cut[i]+1;}
+			cout <<cut[i] << " ";
+		} 
+		cout << "\n////////////////////////////////////////////////////////////////" << endl;
+		cutNo = cut.size();
+		cout <<"\nNo of cuts:"<<cutNo << endl;
+        
+		vector<double> temp_path;
+		vector<double> temp_path_value;
+		vector<double> reduced_chunk;
+		
+		for (int i = 0; i< paths_values_list[path_index].size(); i++)
+		{reduced_chunk.push_back(paths_values_list[path_index][i]);}
+
+		for (int i = 0; i< cut.size(); i++)
+		{reduced_chunk.erase(std::remove(reduced_chunk.begin(), reduced_chunk.end(), paths_values_list[path_index][cut[i]]), reduced_chunk.end());}
+    
+		int i =0;
+		for ( std::vector<int>::size_type j = 0; j < paths_list.size(); j++ )
         {  temp_path.push_back(paths_list[path_index][j]);
            if (j == cut[i])
            { chunks.push_back(temp_path); i++;
                temp_path.clear();}
         }
     
-    int yy =0; int zz=0;
-    for ( std::vector<int>::size_type j = 0; j < paths_values_list.size(); j++ )
+		int yy =0; int zz=0;
+		for ( std::vector<int>::size_type j = 0; j < paths_values_list.size(); j++ )
         {  
            temp_path_value.push_back(paths_values_list[path_index][j]);
            if(std::find(temp_path_value.begin(),temp_path_value.end(), paths_values_list[path_index][cut[zz]]) != temp_path_value.end() )
@@ -222,7 +226,435 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
                temp_path_value.clear();
            }
         }
-        
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	else if (eta == 1) //second heuristic method 
+    {	
+		cout << "THE SECOND APPROXIMATION METHOD" << endl;
+		//create a tuple for holding path values and nodes
+		std::vector <tuple<double, int, int> > task_map;
+
+		for (int i = 0; i< paths_values_list[path_index].size(); i++)
+		{task_map.push_back(std::make_tuple (paths_values_list[path_index][i], paths_list[path_index][i], paths_list[path_index][i+1] ));}
+   
+		//sorting them according to size in descending order
+		sort(task_map.begin(), task_map.end()); 
+		reverse(task_map.begin(), task_map.end()); 
+
+		//printing them
+		std::cout << "taskMap contains:\n";
+		for(auto const &i : task_map)
+			{cout<<get<0>(i)<<" ==> "<<get<1>(i)<<"  "<<get<2>(i)<<endl;}
+    
+		cout << "\n////////////////////////////////////////////////////////////////" << endl;
+    
+		//we cut the (n-1) biggest chunks which does not have any repeated nodes
+		//vector<int> cuts; //should be equal to (n-1)
+		cutNo = nVehicles-1;
+		vector<int> recheck;
+		vector<int> recheck2;
+		int scount = 0;
+		int exp_cuts = (nVehicles-1);
+		vector<double> temp_path;
+    
+		//checking how many repeats of the nodes
+		for (auto it=task_map.begin(); it!=task_map.end(); ++it)
+		{
+			recheck.push_back(get<2>(*it));
+			std::vector<int>::iterator i1 = std::find(std::begin(recheck), std::end(recheck), get<1>(*it));
+			if (i1 != std::end(recheck)) 
+				{++scount;}
+		}
+		cout << "\nscount is:" << scount <<endl;
+
+		if (nVehicles == nTasks)
+		{
+			for (int i =0; i< nVehicles; ++i)
+			{cuts.push_back(i);
+			cout <<cuts[i] << " ";}
+		
+		cout <<"\nNo of cuts:"<<cutNo << endl;
+		}
+		else
+		{
+			for (auto itr=task_map.begin(); itr!=task_map.end(); ++itr)
+			{
+				if (abs(exp_cuts - scount) < (nVehicles/2))    
+				{
+					//check if the biggest chunk node (get<1>(*itr)) value is in the paths_list
+					std::vector<int>::iterator is = std::find(std::begin(paths_list[path_index]), std::end(paths_list[path_index]), get<1>(*itr)); 
+					if (is != std::end(paths_list[path_index])) //if found
+						{
+							int ind = std::distance(paths_list[path_index].begin(), is); //find the index to add it to cut
+							cout << "..... " << get<1>(*itr) << " and found at " << ind << endl;
+							cuts.push_back(ind);
+						}
+				}
+				else
+				{
+					std::vector<int>::iterator i3 = std::find(std::begin(recheck2), std::end(recheck2), get<2>(*itr));
+					if (i3 != std::end(recheck2)) 
+					{
+						//do nothing  
+						cout << "here" << endl;
+					}
+					else
+					{
+						recheck2.push_back(get<2>(*itr)); //check if the second value of the biggest node is there in the present search
+						std::vector<int>::iterator i2 = std::find(std::begin(recheck2), std::end(recheck2), get<1>(*itr));
+						if (i2 != std::end(recheck2)) 
+							{
+								cout << "here2" << endl;
+							}
+						else
+						{
+							std::vector<int>::iterator is = std::find(std::begin(paths_list[path_index]), std::end(paths_list[path_index]), get<1>(*itr));
+							if (is != std::end(paths_list[path_index])) 
+							{   int ind = std::distance(paths_list[path_index].begin(), is);
+								cout << "searching " << get<1>(*itr) << " and found at " << ind << endl;
+								cuts.push_back(ind);
+								recheck2.push_back(get<1>(*itr));
+							}
+						}
+					}
+				}			
+			}
+	
+		cout << "\nCuts original size" << endl;
+		for (int i=0; i<cuts.size(); i++) 
+		{cout <<cuts[i] << " ";} 
+     
+		cout << "\nCuts after pruning" << endl;
+		//cuts.erase(cuts.begin(), cuts.size() > (nVehicles-1) ?  cuts.begin() + (nVehicles-1) : cuts.end() );
+		cuts.erase(cuts.begin()+(nVehicles-1), cuts.end());
+		for (int i=0; i<cuts.size(); i++) 
+		{cout <<cuts[i] << " ";} 
+                
+		cout << "\nCuts after pruning and sorting" << endl;
+		sort(cuts.begin(), cuts.end());
+		for (int i=0; i<cuts.size(); i++) 
+		{cout <<cuts[i] << " ";} 
+	
+		cutNo = cuts.size();
+		cout <<"\nNo of cuts:"<<cutNo << endl;
+	}    
+
+		int i =0;
+		for ( std::vector<int>::size_type j = 0; j < paths_list.size(); j++ )
+        {  
+			if (i < cuts.size())
+				{temp_path.push_back(paths_list[path_index][j]);
+					if (j == cuts[i])
+						{ chunks.push_back(temp_path); i++;
+						temp_path.clear();}
+				}
+			if (i >= cuts.size()) //the last chunk
+				{temp_path.push_back(paths_list[path_index][j+1]);
+				if (j == paths_list.size()-2)
+				{chunks.push_back(temp_path);}
+				}
+        }
+	cutNo = cutNo+1;	
+	}
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+	else if (eta == 2) //the third method
+	{
+		cout << "THE THIRD APPROXIMATION METHOD" << endl;
+		//create a tuple for holding path values and nodes
+		std::vector <tuple<double, int, int> > task_map;
+
+		for (int i = 0; i< paths_values_list[path_index].size(); i++)
+		{task_map.push_back(std::make_tuple (paths_values_list[path_index][i], paths_list[path_index][i], paths_list[path_index][i+1] ));}
+   
+		//sorting them according to size in descending order
+		sort(task_map.begin(), task_map.end()); 
+		reverse(task_map.begin(), task_map.end()); 
+
+		//printing them
+		std::cout << "taskMap contains:\n";
+		for(auto const &i : task_map)
+			{cout<<get<0>(i)<<" ==> "<<get<1>(i)<<"  "<<get<2>(i)<<endl;}
+		cout << "\n////////////////////////////////////////////////////////////////" << endl;
+    
+		//we cut the (n-1) biggest chunks which does not have any repeated nodes
+		cutNo = nVehicles-1;
+    
+		int lc = 0; int sc=0;
+		//find number of large and small chunks
+		for (int i = 0; i< paths_values_list[path_index].size(); i++)
+			{if (paths_values_list[path_index][i] > chunk_length)
+			++lc;
+			else ++sc;
+			}
+    
+		if (lc < 1) {lc = lc+1;}
+    
+		vector <int> chk;
+		vector <vector <int>> mainchk;
+		vector <int> inlist; // to track the nodes that are added
+		vector <int> outlist; // to track the nodes that are yet to be added
+		int lc_count = 0;
+		int sc_count = 0;
+		int repeat = 0;
+		int exp_lc = nVehicles - lc;
+		int ratio = nTasks/nVehicles;
+    
+		for (int i = 0; i< paths_list[path_index].size(); i++)
+		{outlist.push_back(paths_list[path_index][i]);}
+
+		for ( std::vector<std::vector<int>>::size_type i = 0; i < outlist.size(); i++ )
+		{ std::cout << outlist[i] << ' ';}
+   
+		//dividing the biggest chunks
+		auto it=task_map.begin();
+		while (lc_count < (exp_lc+repeat))
+		{
+		  // find the first largest chunk
+		  std::vector<int>::iterator i1 = std::find(std::begin(inlist), std::end(inlist), get<1>(*it));
+		  if (i1 != std::end(inlist)) 
+		  {  //cout << "\n first already exist" << endl;
+			 std::vector<int>::iterator i2 = std::find(std::begin(inlist), std::end(inlist), get<2>(*it));
+			 if (i2 != std::end(inlist)) 
+				{ //cout << "\n second already exist" << endl;
+					++repeat;}
+			 else
+				{
+					//cout << "first if else" << endl;
+					chk.push_back(get<2>(*it));
+					inlist.push_back(get<2>(*it));
+					outlist.erase(std::remove(outlist.begin(), outlist.end(), get<2>(*it)), outlist.end());
+					mainchk.push_back(chk); ++lc_count;
+					chk.clear();
+				}
+		  }
+		  else
+		  {
+			//cout << "first else" << endl;
+			chk.push_back(get<1>(*it));
+			inlist.push_back(get<1>(*it));
+			outlist.erase(std::remove(outlist.begin(), outlist.end(), get<1>(*it)), outlist.end());
+			mainchk.push_back(chk); ++lc_count;
+			chk.clear();
+			
+			std::vector<int>::iterator i2 = std::find(std::begin(inlist), std::end(inlist), get<2>(*it));
+		    if (i2 != std::end(inlist)) 
+				{ //cout << "\n second already exist" << endl;
+					}
+			 else
+				{
+					//cout << "second else else" << endl;
+					chk.push_back(get<2>(*it));
+					inlist.push_back(get<2>(*it));
+					outlist.erase(std::remove(outlist.begin(), outlist.end(), get<2>(*it)), outlist.end());
+					mainchk.push_back(chk); ++lc_count;
+					chk.clear();
+				}
+		  }
+		  ++it;
+		}
+	  
+		cout <<"\n Newchunks are"<< endl;
+		for ( std::vector<std::vector<int>>::size_type i = 0; i < mainchk.size(); i++ )
+		{for ( std::vector<int>::size_type j = 0; j < mainchk[i].size(); j++ )
+			{std::cout << mainchk[i][j] << ' ';}
+			std::cout << std::endl;}
+    
+		/* cout << "lc_count " << lc_count << endl;
+		cout << "sc_count " << sc_count << endl;
+		cout << "exp_lc " << exp_lc << endl;
+		cout << "lc is " << lc << endl;
+		cout << "sc is " << sc << endl;*/
+    
+		int repeat2 = 0;
+		//now adding small chunks for the remaining
+		int ncount = nVehicles - lc_count;
+	
+		for (auto it=task_map.rbegin(); it!=task_map.rbegin()+ncount; ++it)
+		{
+			std::vector<int>::iterator i1 = std::find(std::begin(inlist), std::end(inlist), get<1>(*it));
+			if (i1 != std::end(inlist)) 
+			{  //cout << "\n SC first already exist" << endl;
+			 std::vector<int>::iterator i2 = std::find(std::begin(inlist), std::end(inlist), get<2>(*it));
+			 if (i2 != std::end(inlist)) 
+				{ //cout << "\n SC second already exist" << endl; 
+					++repeat2;}
+			 else
+				{
+					//cout << "SC first if else" << endl;
+					chk.push_back(get<2>(*it));
+					inlist.push_back(get<2>(*it));
+					outlist.erase(std::remove(outlist.begin(), outlist.end(), get<2>(*it)), outlist.end());
+					mainchk.push_back(chk); ++sc_count;
+					chk.clear();
+				}
+			}
+			else
+			{
+				std::vector<int>::iterator i2 = std::find(std::begin(inlist), std::end(inlist), get<2>(*it));
+				if (i2 != std::end(inlist)) 
+				{ //cout << "\n SC2 second already exist" << endl;
+					}
+				else
+				{
+					chk.push_back(get<1>(*it));
+					inlist.push_back(get<1>(*it));
+					outlist.erase(std::remove(outlist.begin(), outlist.end(), get<1>(*it)), outlist.end());
+
+					chk.push_back(get<2>(*it));
+					inlist.push_back(get<2>(*it));
+					outlist.erase(std::remove(outlist.begin(), outlist.end(), get<2>(*it)), outlist.end());
+					
+					mainchk.push_back(chk); ++sc_count;
+					chk.clear();
+			
+					//cout << "both added" << endl;
+				}
+		  }
+		}
+
+		//now adding the remaining missing nodes 
+		// cout << "\new" <<mainchk.size() << endl;
+		int diff = nVehicles - mainchk.size();
+    
+		if (mainchk.size() != nVehicles)
+		{
+			for (int i = 0; i < diff; i++)
+			{
+				std::cout << outlist[i] << ' ' << endl;
+				chk.push_back(outlist[i]);
+				inlist.push_back(outlist[i]);
+				outlist.erase(std::remove(outlist.begin(), outlist.end(), outlist[i]), outlist.end());
+				mainchk.push_back(chk);
+				chk.clear();
+			}
+		}
+		vector <double> dummy;
+		cout <<"\n Newchunks are"<< endl;
+		for ( std::vector<std::vector<int>>::size_type i = 0; i < mainchk.size(); i++ )
+			{for ( std::vector<int>::size_type j = 0; j < mainchk[i].size(); j++ )
+			{   dummy.push_back(mainchk[i][j]);
+				std::cout << mainchk[i][j] << ' ';}
+	    chunks.push_back(dummy);
+	    dummy.clear();
+		std::cout << std::endl;}
+    
+		//now adding the remaining missing nodes depending upon the chunk_length
+    
+		cout <<"\ninlist size is "<< inlist.size()<< " with:"<<endl;
+		for ( int i = 0; i < inlist.size(); i++ )
+			{std::cout << inlist[i] << ' ';}
+    
+		cout <<"\noutlist size is "<< outlist.size()<< " with:"<<endl;
+		for ( int i = 0; i < outlist.size(); i++ )
+			{std::cout << outlist[i] << ' ';}
+    
+		cout <<"\n finalchunks are"<< endl;
+		for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
+			{for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
+				{std::cout << chunks[i][j] << ' ';}
+				std::cout << std::endl;}
+    
+		std::vector <int> dub_pairs_first;
+		std::vector <int> dub_pairs_second;
+
+		while (!outlist.empty())
+		{		
+			for (int i =0 ; i< nVehicles;i++)
+				{
+					//cout << "i is " << i << endl;
+					int first = chunks[i][0];
+					int c = chunks[i].size()-1;
+					int last = chunks[i][c];
+					int front_element, back_element;
+		
+					//cout << "chunk[i][first]"<< first << endl;
+					std::vector<int>::iterator it = std::find(paths_list[path_index].begin(), paths_list[path_index].end(), first);
+					if (it != paths_list[path_index].end()) 
+					{
+						//cout << "E " << chunks[i][0] << endl;
+						int max_ind = std::distance(paths_list[path_index].begin(), it);
+						//	cout << "max_ind " << max_ind << endl;
+						if (max_ind == 0)
+							{front_element = INT_MAX;}
+						else
+							{front_element = paths_list[path_index][max_ind  - 1];}
+						dub_pairs_first.push_back(front_element);
+					}
+				
+					//cout << "chunk[i][last]"<< last << endl;
+					std::vector<int>::iterator it3 = std::find(paths_list[path_index].begin(), paths_list[path_index].end(), last);
+					if (it3 != paths_list[path_index].end()) 
+					{
+						int max_ind = std::distance(paths_list[path_index].begin(), it3);
+						//	cout << "max_ind " << max_ind << endl;
+						if (max_ind == paths_list[path_index].size()-1)
+							{back_element = INT_MAX;}
+						else
+							{back_element = paths_list[path_index][max_ind  + 1];}
+							dub_pairs_second.push_back(back_element);
+						//	cout << "////////////////" << endl;
+					}
+						
+					cout << "front " << front_element << endl;
+					cout << "end " << back_element << endl;
+				}
+		cout <<"\nDubpairs first is"<< endl;
+		for ( int i = 0; i < dub_pairs_first.size(); i++ )
+			{std::cout << "first " <<dub_pairs_first[i] << endl;}
+  
+		cout <<"\nDubpairs second is"<< endl;
+		for ( int i = 0; i < dub_pairs_second.size(); i++ )
+		{std::cout << "second " <<dub_pairs_second[i] << endl;}
+    
+		for ( int i = 0; i < dub_pairs_first.size(); i++ )
+		{ 
+				if (std::find(inlist.begin(),inlist.end(), dub_pairs_first[i]) != inlist.end() )
+					{ //do nothing
+					}
+				else
+					{
+						if (dub_pairs_first[i] < 1000)
+							{
+								chunks[i].insert(chunks[i].begin(),dub_pairs_first[i]);
+								inlist.insert(inlist.begin(),dub_pairs_first[i]);
+								outlist.erase(std::remove(outlist.begin(), outlist.end(), dub_pairs_first[i]), outlist.end());}
+					}
+		}
+		for ( int i = 0; i < dub_pairs_second.size(); i++ )
+		{ 	if (std::find(inlist.begin(),inlist.end(), dub_pairs_second[i]) != inlist.end() )
+			{ //do nothing
+			}
+			else
+			{
+			  if (dub_pairs_second[i] < 1000)
+			  {
+				chunks[i].insert(chunks[i].begin()+chunks[i].size(),dub_pairs_second[i]);
+				inlist.insert(inlist.begin(),dub_pairs_second[i]);
+				outlist.erase(std::remove(outlist.begin(), outlist.end(), dub_pairs_second[i]), outlist.end());}
+			  }
+		}
+		dub_pairs_first.clear();
+		dub_pairs_second.clear();
+	  		
+		cout <<"\ninlist size is "<< inlist.size()<< " with:"<<endl;
+		for ( int i = 0; i < inlist.size(); i++ )
+			{std::cout << inlist[i] << ' ';}
+    
+		cout <<"\noutlist size is "<< outlist.size()<< " with:"<<endl;
+		for ( int i = 0; i < outlist.size(); i++ )
+		{std::cout << outlist[i] << ' ';}
+		}
+	
+	cutNo = cutNo+1;	
+	}
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+     
+    else
+    {cout << "\nMETHOD NOT SPECIFIED" << endl;}   
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     cout <<"\nChunks are"<< endl;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
     {for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
@@ -234,7 +666,7 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
     {for ( std::vector<int>::size_type j = 0; j < chunks_path[i].size(); j++ )
     {std::cout << chunks_path[i][j] << ' ';}
     std::cout << std::endl;}
-    
+   
     //start points
     vector<int> start_points;
     vector<int> end_points;
@@ -251,13 +683,13 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
     
     cout <<"\nStart Hung points are"<< endl;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
-    {    if ((chunks[i].size())-1 > 0)
-        {for ( std::vector<std::vector<int>>::size_type j = 1; j < (chunks[i].size())-1; j++ )
+    {   
+		if ((chunks[i].size())-2 > 0)
+			{for ( std::vector<std::vector<int>>::size_type j = 1; j < (chunks[i].size())-1; j++ )
             {sh_points.push_back(chunks[i][j]);}}
         else if ((chunks[i].size())-1 == 0)
-           {//sh_points.push_back(chunks[i][0]);
-               
-        } 
+            {//sh_points.push_back(chunks[i][0]);
+            } 
         else
         {}
         start_hung_points.push_back(sh_points);
@@ -284,8 +716,7 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
     std::vector<std::vector<double>> v2; //double rows of end hung matrix
     std::vector<double> v3; //rows of start hung matrix
     std::vector<double> v4; //rows of end hung matrix
-    std::vector<std::vector<double>> v5; //double rows of total_start_hung matrix
-    std::vector<double> v6; //rows of total_start hung matrix
+    
     std::cout <<"\nTaskMatrix is\n" << TaskMatrix <<endl;
     
      for (int i = 0; i < cutNo; i++)
@@ -299,24 +730,6 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
             v3.clear();
         }
     std::cout <<"\nStartHungMatrix is\n" << StartHungMatrix <<endl;
-    TotalStartHungMatrix = StartHungMatrix;
-    
-    for (int i = 0; i < cutNo; i++)
-        {
-            for (int j = 0; j < cutNo; j++)
-            {
-                if((start_hung_points[i].size()) > 0)
-                 { TotalStartHungMatrix(i,j) = TotalStartHungMatrix(i,j) + TaskMatrix(start_points[i],start_hung_points[i][0]);
-                     if ((start_hung_points[i].size()) > 1)
-                     {for(int k=0; k<(start_hung_points[i].size()-1); k++)
-                     { //cout << "\ntask value is:" << TaskMatrix(start_hung_points[i][k],start_hung_points[i][k+1]) << endl;
-                     TotalStartHungMatrix(i,j) = TotalStartHungMatrix(i,j) + TaskMatrix(start_hung_points[i][k],start_hung_points[i][k+1]);  
-                     }}
-                }   
-                else {}
-            }
-        }
-    std::cout <<"\nTotalStartHungMatrix is\n" << TotalStartHungMatrix <<endl;
     
     for (int i = 0; i < cutNo; i++)
         {
@@ -330,21 +743,14 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
         }
     std::cout <<"\nEndHungMatrix is\n" << EndHungMatrix <<endl;
     
-    //total start hung matrix in vector form
-    for ( std::vector<std::vector<int>>::size_type i = 0; i < nVehicles; i++ )
-    {for ( std::vector<int>::size_type j = 0; j < nVehicles; j++ )
-    {
-        v6.push_back(TotalStartHungMatrix(i,j));
-    }
-    v5.push_back(v6);
-    v6.clear();
-    }
     
-    std::cout <<"\nTotalStartHungMatrix in vector form is" <<endl;
-    for ( std::vector<std::vector<int>>::size_type i = 0; i < v5.size(); i++ )
-    {for ( std::vector<int>::size_type j = 0; j < v5[i].size(); j++ )
-    {std::cout << v5[i][j] << ' ';}
-    std::cout << std::endl;}   
+    std::cout <<"\nStartHungMatrix in vector form is" <<endl;
+    //start hung matrix in vector form
+    for ( std::vector<std::vector<int>>::size_type i = 0; i < v1.size(); i++ )
+    {for ( std::vector<int>::size_type j = 0; j < v1[i].size(); j++ )
+    {std::cout << v1[i][j] << ' ';}
+    std::cout << std::endl;}    
+    
     
     std::cout <<"\nEndHungMatrix in vector form is" <<endl;
     //end hung matrix in vector form
@@ -358,59 +764,57 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
     vector<int> assignment2;
     double start_cost = HungAlgo.Solve(v1, assignment);
     double end_cost = HungAlgo.Solve(v2, assignment2);
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
+    
+    cout << "\n////////////ASSIGNMENT OF START POINTS////////////////" << endl;
     for (unsigned int x = 0; x < v1.size(); x++)
     {
-     std::cout << x << "," << assignment[x] << "\n";
+     std::cout << x << " assigned to " << assignment[x] << "\n";
     }
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
+    cout << "\n///////////ASSIGNMENT OF END POINTS/////////////////////" << endl;
     for (unsigned int x = 0; x < v2.size(); x++)
     {
-     std::cout << x << "," << assignment2[x] << "\n";
+     std::cout << x << " assigned to " << assignment2[x] << "\n";
     }
-    cout << "\n////////////////////////////////////////////////////////////////" << endl;
-
-    chunks.clear();
-    temp_path.clear();
+    cout << "\n////////////////////////////////////////////////////" << endl;
+    
     int z =0;
-    for ( std::vector<int>::size_type j = 0; j < paths_list.size(); j++ )
-        {  
-           temp_path.push_back(paths_list[path_index][j]+nVehicles);
-           if (j == cut[z])
-           { 
-               temp_path.insert(temp_path.begin(),assignment[z]);
-               temp_path.push_back(assignment2[z]+nVehicles+nTasks);
-               chunks.push_back(temp_path); z++;
-               temp_path.clear();}
-        }
-     
+    for ( std::vector<int>::size_type i = 0; i < chunks.size(); i++ )
+	{
+        chunks[i].insert(chunks[i].begin(),(assignment[z]-nVehicles));
+		for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
+			{  chunks[i][j] = chunks[i][j] + nVehicles;}
+        chunks[i].push_back(assignment2[z]+nVehicles+nTasks);
+        z++;
+    }
+           
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
     {for ( std::vector<int>::size_type j = 0; j < chunks[i].size(); j++ )
     {std::cout << chunks[i][j] << ' ';}
     std::cout << std::endl;}
+    
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
     cout << "\nTotal number of vehicles are: " << chunks.size() <<endl;
-
     int count2 = 0;
     for ( std::vector<std::vector<int>>::size_type i = 0; i < chunks.size(); i++ )
-    {std::cout << "\nVehicle " <<i+1<<" does "<<chunks[i].size()-2 <<" tasks"<<endl;
+    {std::cout << "\nVehicle " << (chunks[i][0] + 1)<<" does "<<chunks[i].size()-2 <<" tasks"<<endl;
     count2 = count2 + chunks[i].size()-2;}
     cout << "\nTotal number of tasks are: " << count2 <<endl;
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
 
-    Eigen::MatrixXd CostMatrix = MatrixXd::Zero(nDim,nDim);
+    Eigen::MatrixXd CostMatrix = MatrixXd::Zero(nDim,nDim);  
     vector<double>total_cost;
     double cost;
-    for ( std::vector<int>::size_type y = 0; y < nVehicles; y++ )
+    
+    for ( std::vector<int>::size_type i = 0; i < nVehicles; i++ )
     {
         cost=0;
-        for ( std::vector<int>::size_type j = 0; j < chunks[y].size()-1; j++ )
-        {cost = cost+DeltaMatrix(chunks[y][j],chunks[y][j+1]);
-         CostMatrix(chunks[y][j],chunks[y][j+1]) = 1;
+        for ( std::vector<int>::size_type j = 0; j < chunks[i].size()-1; j++ )
+        {cost = cost+DeltaMatrix(chunks[i][j],chunks[i][j+1]);
+         CostMatrix(chunks[i][j],chunks[i][j+1]) = 1;
         }
-        cost = cost + chunks[y].size()-2;
+        cost = cost + chunks[i].size()-2;
         total_cost.push_back(cost);
-        cout << "\nTotal cost is " <<total_cost[y] << endl;
+        cout << "\nTotal cost is " <<total_cost[i] << endl;
     }   
     
     cout << "\nCostMatrix is:\n" << CostMatrix << endl;
@@ -421,7 +825,7 @@ Eigen::MatrixXd Heuristic::compute(int nVehicles, int nTasks, int nDim, int rDim
      std::cout << total_cost[x] << "\n";
     }
     cout << "\n////////////////////////////////////////////////////////////////" << endl;
-           
+            
     //displaySolution(CostMatrix, DeltaMatrix, TVec);//Printing out the solution
     //publish(nVehicles, plotString);
     return CostMatrix;

@@ -1,3 +1,40 @@
+/* stage_robots_node.cpp
+ *
+ * Copyright (C) 2014 Jennifer David. All rights reserved.
+ *
+ * BSD license:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holder nor the names of
+ *    contributors to this software may be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR THE CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This C++ program is part of the Task Allocation framework with Stage.
+ * It connects with the player configuration file, reads the position 
+ * data about robots, tasks and dropoffs and publishes them as ROS topics. 
+ * INPUT: Player configuration
+ * OUTPUT: Two ROS topics - 1. All coordinates 2. Problem details
+ */
 #include "ros/ros.h"
 #include "libplayerc++/playerc++.h"
 #include <iostream>
@@ -70,7 +107,7 @@ int main(int argc, char *argv[])
     for(int i=0;i<numTasks;i++)
         {
             char taskStr[] = "task%d";
-            sprintf(modelList[i].name, taskStr, i+1);
+            sprintf(modelList[i].name, taskStr, i);
             modelList[i].id = i+101;
             modelList[i].A = taskL; 
             simProxy.GetPose2d(modelList[i].name, modelList[i].x, modelList[i].y, modelList[i].yaw);
@@ -81,7 +118,7 @@ int main(int argc, char *argv[])
     for(int j =numTasks;j<numModels;j++)
         {
             char dropoff[] = "dropoff%d";
-            sprintf(modelList[j].name, dropoff, j+1);
+            sprintf(modelList[j].name, dropoff, j);
             modelList[j].id = j+1001;
             modelList[j].A = dropL; 
             simProxy.GetPose2d(modelList[j].name, modelList[j].x, modelList[j].y, modelList[j].yaw);
@@ -98,7 +135,7 @@ int main(int argc, char *argv[])
     
     delete []position;
 
-    ros::Publisher coords_pub = n.advertise<navi_msgs::ItemStruct>("/coords", 10);
+    ros::Publisher coords_pub = n.advertise<navi_msgs::ItemStruct>("/allcoords", 10);
     ros::Publisher problem_pub = n.advertise<navi_msgs::Problem>("/problem", 10);
     ros::Rate loop_rate(10);
 

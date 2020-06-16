@@ -116,16 +116,16 @@ task (name "task26" pose [ 7.000 11.000 0.300 0.000 ] ) #task27
 task (name "task27" pose [ 32.000 40.000 0.300 0.000 ] ) #task28
 task (name "task28" pose [ 3.000 8.000 0.300 0.000 ] ) #task29
 task (name "task29" pose [ 4.000 10.000 0.300 0.000 ] ) #task30
-task (name "task31" pose [ 7.000 17.000 0.300 0.000 ] ) #task31
-task (name "task32" pose [ 2.000 26.000 0.300 0.000 ] ) #task32
-task (name "task33" pose [ 4.000 38.000 0.300 0.000 ] )  #task33
-task (name "task34" pose [ 3.000 40.000 0.300 0.000 ] ) #task34
-task (name "task35" pose [ 10.000 25.000 0.300 0.000 ] ) #task35
-task (name "task36" pose [ 12.000 35.000 0.300 0.000 ] ) #task36
-task (name "task37" pose [ 37.000 11.000 0.300 0.000 ] ) #task37
-task (name "task38" pose [ 34.000 5.000 0.300 0.000 ] ) #task38
-task (name "task39" pose [ 36.000 29.000 0.300 0.000 ] ) #task39
-task (name "task40" pose [ 19.000 13.000 0.300 0.000 ] ) #task40
+task (name "task30" pose [ 7.000 17.000 0.300 0.000 ] ) #task31
+task (name "task31" pose [ 2.000 26.000 0.300 0.000 ] ) #task32
+task (name "task32" pose [ 4.000 38.000 0.300 0.000 ] )  #task33
+task (name "task33" pose [ 3.000 40.000 0.300 0.000 ] ) #task34
+task (name "task34" pose [ 10.000 25.000 0.300 0.000 ] ) #task35
+task (name "task35" pose [ 12.000 35.000 0.300 0.000 ] ) #task36
+task (name "task36" pose [ 37.000 11.000 0.300 0.000 ] ) #task37
+task (name "task37" pose [ 34.000 5.000 0.300 0.000 ] ) #task38
+task (name "task38" pose [ 36.000 29.000 0.300 0.000 ] ) #task39
+task (name "task39" pose [ 19.000 13.000 0.300 0.000 ] ) #task40
 
 define dropoff model
 (
@@ -133,13 +133,13 @@ define dropoff model
   color "green"
 )
 
-dropoff (name "dropoff41" pose [ 12.000 24.000 0.300 0.000 ])
-dropoff (name "dropoff42" pose [ 38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff43" pose [ 40.000 32.000 0.300 0.000 ])
-dropoff (name "dropoff44" pose [ 19.000 10.000 0.300 0.000 ])
-dropoff (name "dropoff45" pose [ 2.000 21.000 0.300 0.000 ])
-dropoff (name "dropoff46" pose [ 22.000 17.000 0.300 0.000 ])
-dropoff (name "dropoff47" pose [ 26.000 33.000 0.300 0.000 ])
+dropoff (name "dropoff40" pose [ 12.000 24.000 0.300 0.000 ])
+dropoff (name "dropoff41" pose [ 38.000 8.000 0.300 0.000 ])
+dropoff (name "dropoff42" pose [ 40.000 32.000 0.300 0.000 ])
+dropoff (name "dropoff43" pose [ 19.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff44" pose [ 2.000 21.000 0.300 0.000 ])
+dropoff (name "dropoff45" pose [ 22.000 17.000 0.300 0.000 ])
+dropoff (name "dropoff46" pose [ 26.000 33.000 0.300 0.000 ])
 
 
 

@@ -1,3 +1,39 @@
+/* Task Allocation Node
+ *
+ * Copyright (C) 2014 Jennifer David. All rights reserved.
+ *
+ * BSD license:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holder nor the names of
+ *    contributors to this software may be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR THE CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This C++ program is to do task allocation based on Deterministic 
+ * Annealing on Potts-spin model with ROS. 
+ * INPUT: One of the methods - DA or SA or Heuristic with arguments
+ * OUTPUT: Task allocation solution
+ */
 
 #include <fstream>
 #include <sstream>
@@ -183,14 +219,32 @@ std::vector<std::vector<char> > displaySolution(Eigen::MatrixXd &VMatrix, Eigen:
        return plotString;
     }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-    ros::init(argc, argv, "TaskAllocation"); 
+    ros::init(argc, argv, "TaskAllocationNode"); 
     ros::NodeHandle n;
+    
+    std::string method;
+    double kT_start, kT_end, kT_step, gamma, eta;
+    
+    n.getParam("/TaskAllocationNode/method", method);
 
-    //Heuristic h;
-    DeterministicAnnealing h;
-    //SimulatedAnnealing h;
+    kT_start = atof(argv[1]);
+    kT_end = atof(argv[2]);
+    kT_step = atof(argv[3]);
+    gamma = atof(argv[4]);
+    eta = atof(argv[5]);
+    
+    // The inputs can be
+    // rosrun navigation_stage task_allocation_node _method:=DeterministicAnnealing 100 1 0.9 1 1
+    // rosrun navigation_stage task_allocation_node _method:=SimulatedAnnealing 100 1 0.9 0 0 // gamma and eta not applicable
+    // rosrun navigation_stage task_allocation_node _method:=Heuristic 0 0 0 0 0 // eta is 0 (DA), 1 (SA) and 2 (Heuristic)
+    
+    cout << "1: " << kT_start << endl;
+    cout << "2: " << kT_end << endl;
+    cout << "3: " << kT_step << endl;
+    cout << "4: " << gamma << endl;
+    cout << "5: " << eta << endl;
         
     //ros::Duration(5).sleep();
     probmsgptr = ros::topic::waitForMessage<navi_msgs::Problem>("/problem",ros::Duration(10));
@@ -220,7 +274,7 @@ int main(int argc, char **argv)
                     k++;}}
             }
             
-     coordsmsgptr = ros::topic::waitForMessage<navi_msgs::OdomArray>("/coords",ros::Duration(10));
+    coordsmsgptr = ros::topic::waitForMessage<navi_msgs::OdomArray>("/coords",ros::Duration(10));
         if (coordsmsgptr == NULL)
             {ROS_INFO("No coords messages received");}
         else
@@ -235,9 +289,20 @@ int main(int argc, char **argv)
                     robotCoord.push_back(std::make_pair(name,std::make_tuple(x,y,z)));
                 }
             
-    
     VMatrix = MatrixXd::Zero(nDim,nDim);
-    VMatrix = h.compute(nVehicles,nTasks,nDim,rDim,DeltaMatrix);
+    
+    if (method == "Heuristic")
+    {Heuristic h;
+	VMatrix = h.compute(nVehicles,nTasks,nDim,rDim,DeltaMatrix, eta);}
+
+    else if (method == "DeterministicAnnealing")
+    {DeterministicAnnealing h;
+    VMatrix = h.compute(nVehicles,nTasks,nDim,rDim,DeltaMatrix,kT_start, kT_end, kT_step, gamma, eta);}
+    
+    else
+    {SimulatedAnnealing h;
+    VMatrix = h.compute(nVehicles,nTasks,nDim,rDim,DeltaMatrix,kT_start, kT_end, kT_step);}
+    
     TVec = VectorXd(nDim);
     for (int i=0; i<nDim; i++) {TVec(i) = 1;}
     

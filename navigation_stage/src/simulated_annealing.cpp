@@ -1,3 +1,37 @@
+/* Simulated Annealing
+ *
+ * Copyright (C) 2014 Jennifer David. All rights reserved.
+ *
+ * BSD license:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holder nor the names of
+ *    contributors to this software may be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR THE CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This C++ program is to do task allocation based on Simulated 
+ * Annealing with ROS. 
+ */
 #include <iostream>
 #include <fstream>
 #include <Eigen/Dense>
@@ -77,12 +111,12 @@ float SimulatedAnnealing::calculateLR(Eigen::MatrixXd VMatrix, Eigen::MatrixXd P
    }
 
 
-Eigen::MatrixXd SimulatedAnnealing::SA_algo(int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix)
+Eigen::MatrixXd SimulatedAnnealing::SA_algo(int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix, double &kT_start, double &kT_end, double &kT_step)
     
 {
     cout << "\n kT_start is "<< kT_start << endl;
-    cout << "\n kT_stop is "<< kT_stop << endl;
-    cout << "\n kT_fac is "<< kT_fac << endl;
+    cout << "\n kT_end is "<< kT_end << endl;
+    cout << "\n kT_step is "<< kT_step << endl;
     cout << "\n ///////////////////////////////////////////////////////////////////// " << endl;
     
     std::vector<int> v; 
@@ -203,11 +237,11 @@ Eigen::MatrixXd SimulatedAnnealing::SA_algo(int &nVehicles, int &nTasks, int &nD
                     costValueBest = costValue;
                     cout << "\n better solution found " << endl;
                     }
-                kT *= kT_fac;
+                kT *= kT_step;
                 cout << "\n new kT is: " << kT << endl;
                 cout << "\n" << iteration << " ITERATION DONE" << endl;
                 iteration = iteration + 1;
-                if (kT < kT_stop) 
+                if (kT < kT_end) 
                 FLAG = 0;
                 }
             else
@@ -219,7 +253,7 @@ Eigen::MatrixXd SimulatedAnnealing::SA_algo(int &nVehicles, int &nTasks, int &nD
      return vMatBest;
 }
 
-Eigen::MatrixXd SimulatedAnnealing::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix)
+Eigen::MatrixXd SimulatedAnnealing::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_end, double kT_step)
 {
     Eigen::MatrixXd Best = MatrixXd::Zero(nDim,nDim);
     cout << "\nnvehicle is:" << nVehicles<< endl;
@@ -239,7 +273,7 @@ Eigen::MatrixXd SimulatedAnnealing::compute(int nVehicles, int nTasks, int nDim,
     //subscribe to DeltaMatrix
     cout << "\nDeltaMatrix is:" << DeltaMatrix << endl;
 
-    Best = SA_algo(nVehicles, nTasks, nDim, rDim, DeltaMatrix);    //NN_algo - updating equations
+    Best = SA_algo(nVehicles, nTasks, nDim, rDim, DeltaMatrix, kT_start, kT_end, kT_step);    //NN_algo - updating equations
     cout << "\nAnnealing done \n" << endl;
 
 //     Gnuplot gp;

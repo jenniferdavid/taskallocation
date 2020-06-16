@@ -2,7 +2,7 @@
 <launch>
 
 <!--ONEROOM_MAP-->
-<arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneroom_5robots36tasks.world" />
+<arg name="world_file" default="$(find navigation_stage)/stage_config/worlds/oneroom_5robots30tasks.world" />
 <arg name="map_file" default="$(find navigation_stage)/stage_config/maps/oneroom.yaml" />
 	<arg name="waypoints" default='0' />
 	<arg name="robotName1" default="robot_0" />

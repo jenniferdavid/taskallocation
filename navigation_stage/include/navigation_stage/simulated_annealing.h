@@ -38,14 +38,14 @@ int nVehicles;
 int nTasks;
 int nDim;
 int rDim;
-double kT_start=100;
-double kT_stop=0.01;
-double kT_fac=0.9;
+double kT_start;
+double kT_end;
+double kT_step;
 double kT;
 double lk;
 double costValue;
-	Eigen::MatrixXd vMatBest; 
 
+Eigen::MatrixXd vMatBest; 
 Eigen::VectorXd cTime;
 Eigen::VectorXd vdVecL;
 Eigen::VectorXd vdVecR; 
@@ -64,8 +64,8 @@ Eigen::VectorXd checkTimeVec;
 
 bool isValid(Eigen::MatrixXd x);
 float calculateLR(Eigen::MatrixXd VMatrix, Eigen::MatrixXd PMatrix, Eigen::MatrixXd DeltaMatrix); //calculate LR from V and PMatrix
-	Eigen::MatrixXd compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix);
-	Eigen::MatrixXd SA_algo(int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix);
+	Eigen::MatrixXd compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_end, double kT_step);
+	Eigen::MatrixXd SA_algo(int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix, double &kT_start, double &kT_end, double &kT_step);
 
 };//End of class SimulatedAnnealing
 

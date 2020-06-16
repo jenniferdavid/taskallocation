@@ -1,6 +1,38 @@
-/*
- * SendGoals.cpp
+/* Send Goals node
  *
+ * Copyright (C) 2014 Jennifer David. All rights reserved.
+ *
+ * BSD license:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holder nor the names of
+ *    contributors to this software may be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR THE CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This C++ program is to send paths to each of the robots after getting
+ * the task allocation details with ROS.
+ * INPUT: ROS topic with task allocation solution
+ * OUTPUT: ROS topic with send navigation goals to each robot
  */
 
 #include <ros/ros.h>
@@ -65,8 +97,8 @@ void taskNavigation(int a, navi_msgs::GoalsList task_msg)
         {   
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();	
-            goal.target_pose.pose.position.x = task_msg.list[a].pList.coords[i].pose.pose.position.y;
-            goal.target_pose.pose.position.y = -1 * (task_msg.list[a].pList.coords[i].pose.pose.position.x);
+            goal.target_pose.pose.position.x = task_msg.list[a].pList.coords[i].pose.pose.position.x;
+            goal.target_pose.pose.position.y = task_msg.list[a].pList.coords[i].pose.pose.position.y;
             
             double radians = task_msg.list[a].pList.coords[i].pose.pose.position.z * (M_PI/180);
             tf::Quaternion quaternion;
@@ -132,35 +164,3 @@ int main(int argc, char** argv)
     return 0;
 }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

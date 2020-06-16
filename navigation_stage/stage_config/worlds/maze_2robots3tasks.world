@@ -30,6 +30,7 @@ define turtlebot position
     #topurg(pose [ 0.275 0.000 0 0.000 ])
   topurg(pose [ 0.275 0.000 -0.125 0.000 ])
   direction(pose [0.300 0.000 0.000 0.000])
+
 )
 
 define floorplan model
@@ -37,8 +38,8 @@ define floorplan model
   # sombre, sensible, artistic
   color "gray30"
 
-    # most maps will need a bounding box
-  boundary 0
+  # most maps will need a bounding box
+  boundary 1
 
   gui_nose 0
   gui_grid 0
@@ -47,6 +48,7 @@ define floorplan model
   gripper_return 0
   fiducial_return 0
   ranger_return 1.000
+trail_length 400
 )
 
 # set the resolution of the underlying raytrace model in meters
@@ -64,18 +66,16 @@ window
 # load an environment bitmap
 floorplan
 ( 
-  name "twoRooms"
-  bitmap "../maps/tworooms.pgm"
-  size [43.3 53.45 0.500]
-  pose [ 21.650 26.725 0.000 0.000 ]
+  name "maze"
+  bitmap "../maps/maze.pgm"
+  size [52.35 52.65 0.500]
+  pose [ 26.175 26.325 0.000 0.000 ]
 )
 
+
 # throw in a robot
-turtlebot(pose [ 9.000 49.000 0.000 0.000 ] name "turtlebot0" color "blue")
-turtlebot(pose [ 38.000 51.000 0.000 0.000 ] name "turtlebot1" color "blue")
-turtlebot(pose [ 10.000 7.000 0.000 0.000 ] name "turtlebot2" color "blue")
-turtlebot(pose [ 36.000 25.000 0.000 0.000 ] name "turtlebot3" color "blue")
-turtlebot(pose [ 4.000 39.000 0.000 0.000 ] name "turtlebot4" color "blue")
+turtlebot(pose [ 43.000 47.000 0.000 0.000 ] name "turtlebot0" color "blue")
+turtlebot(pose [ 16.000 4.000 0.000 0.000 ] name "turtlebot1" color "blue")
 
 define task model
 (
@@ -85,10 +85,8 @@ define task model
 	color "orange"
 )
 task (name "task0" pose [ 34.000 39.000 0.300 0.000 ] ) #task1
-task (name "task1" pose [ 14.000 50.000 0.300 0.000 ] ) #task2
-task (name "task2" pose [ 41.000 37.000 0.300 0.000 ] ) #task3
-task (name "task3" pose [ 33.000 25.000 0.300 0.000 ] ) #task4
-task (name "task4" pose [ 3.500 50.000 0.300 0.000 ] ) #task5
+task (name "task1" pose [ 42.000 28.000 0.300 0.000 ] ) #task2
+task (name "task2" pose [ 23.000 2.5000 0.300 0.000 ] ) #task3
 
 define dropoff model
 (
@@ -96,11 +94,11 @@ define dropoff model
   color "green"
 )
 
-dropoff (name "dropoff5" pose [ 6.000 27.000 0.300 0.000 ])
-dropoff (name "dropoff6" pose [ 34.000 2.000 0.300 0.000 ])
-dropoff (name "dropoff7" pose [ 40.000 32.000 0.300 0.000 ])
-dropoff (name "dropoff8" pose [ 3.000 2.000 0.300 0.000 ])
-dropoff (name "dropoff9" pose [ 3.000 17.000 0.300 0.000 ])
+dropoff (name "dropoff3" pose [ 16.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff4" pose [ 31.000 3.000 0.300 0.000 ])
+
+
+
 
 
 

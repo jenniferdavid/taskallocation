@@ -130,12 +130,12 @@ define dropoff model
 )
 
 
-dropoff (name "dropoff37" pose [ 12.000 24.000 0.300 0.000 ])
-dropoff (name "dropoff38" pose [ 38.000 8.000 0.300 0.000 ])
-dropoff (name "dropoff39" pose [ 40.000 32.000 0.300 0.000 ])
-dropoff (name "dropoff40" pose [ 19.000 10.000 0.300 0.000 ])
-dropoff (name "dropoff41" pose [ 2.000 21.000 0.300 0.000 ])
-dropoff (name "dropoff42" pose [ 22.000 17.000 0.300 0.000 ])
+dropoff (name "dropoff36" pose [ 12.000 24.000 0.300 0.000 ])
+dropoff (name "dropoff37" pose [ 38.000 8.000 0.300 0.000 ])
+dropoff (name "dropoff38" pose [ 40.000 32.000 0.300 0.000 ])
+dropoff (name "dropoff39" pose [ 19.000 10.000 0.300 0.000 ])
+dropoff (name "dropoff40" pose [ 2.000 21.000 0.300 0.000 ])
+dropoff (name "dropoff41" pose [ 22.000 17.000 0.300 0.000 ])
 
 
 
