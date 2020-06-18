@@ -72,7 +72,8 @@ using namespace Eigen;
 
 DeterministicAnnealing::DeterministicAnnealing(){}
 
-Eigen::MatrixXd DeterministicAnnealing::sinkhorn (Eigen::MatrixXd & VMatrix, int &nVehicles, int &nTasks, int &nDim, int &rDim ) //this function normalises a matrix - makes into doubly stochastic matrix
+
+Eigen::MatrixXd DeterministicAnnealing::Sinkhorn (Eigen::MatrixXd & VMatrix, int nDim, int rDim, int nVehicles) //this function normalises a matrix - makes into doubly stochastic matrix
 {
     Eigen::VectorXd sumd(rDim);
     Eigen::VectorXd c(rDim); 
@@ -100,7 +101,7 @@ Eigen::MatrixXd DeterministicAnnealing::sinkhorn (Eigen::MatrixXd & VMatrix, int
     r = reducedVMat * rd;
     r = r.cwiseInverse();
     
-    cout << "\nr is:\n"<< r << endl;
+    cout << "\n r is:\n"<< r << endl;
     
     while (iter < maxiter)
     {
@@ -109,7 +110,7 @@ Eigen::MatrixXd DeterministicAnnealing::sinkhorn (Eigen::MatrixXd & VMatrix, int
       //      cout << "\n cinv is:\n"<< cinv << endl;
             
             if (((cinv.cwiseProduct(c)-one).cwiseAbs().maxCoeff()) <= tol) //tol
-            {cout << "\nans is:\n"<< ((cinv.cwiseProduct(c)-one).cwiseAbs().maxCoeff()) <<endl;
+            {cout << "\n ans is:\n"<< ((cinv.cwiseProduct(c)-one).cwiseAbs().maxCoeff()) <<endl;
             break;}
             
             c = cinv.cwiseInverse();
@@ -132,15 +133,15 @@ Eigen::MatrixXd DeterministicAnnealing::sinkhorn (Eigen::MatrixXd & VMatrix, int
      VMatrix.bottomRows(nVehicles) *= 0;
      VMatrix.block(0,nVehicles,rDim,rDim) = reducedVMat;
      
-     cout << "\nV is:\n"<< VMatrix << endl;
-
+     cout << "\n V is:\n"<< VMatrix << endl;
      return VMatrix;
     
 }
 
-  
-Eigen::MatrixXd DeterministicAnnealing::normalisation (Eigen::MatrixXd &VMatrix, int &nDim, int &rDim) //this function normalises a matrix - makes into doubly stochastic matrix
-  { 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Eigen::MatrixXd DeterministicAnnealing::normalisation (Eigen::MatrixXd & VMatrix, int &nDim, int &rDim) //this function normalises a matrix - makes into doubly stochastic matrix
+  {
       //Normalising rows of VMatrix
       int y = 0;
       LABEL0:
@@ -166,8 +167,6 @@ Eigen::MatrixXd DeterministicAnnealing::normalisation (Eigen::MatrixXd &VMatrix,
    
        //Normalising columns of VMatrix
        sumc = VMatrix.colwise().sum();
-       cout << "\n sumc is:" <<sumc << endl;
-
        for (int i = 0; i < nDim; i++)
                 {
                     if (sumc(i) == 0)
@@ -210,12 +209,12 @@ Eigen::MatrixXd DeterministicAnnealing::normalisation (Eigen::MatrixXd &VMatrix,
          
          if ((sum_norm == rDim) && (col_norm == rDim))
              {
-            cout << "\nVMatrix is NORMALISED \n" << endl;
-            cout << "Sum of VMatrix after row normalisation \n" << VMatrix.rowwise().sum() << endl;
-            cout << "Sum of VMatrix after col normalisation \n" << VMatrix.colwise().sum() << endl;
+            cout << "\n VMatrix is NORMALISED \n" << endl;
+          //  cout << "Sum of VMatrix after row normalisation \n" << VMatrix.rowwise().sum() << endl;
+          //  cout << "Sum of VMatrix after col normalisation \n" << VMatrix.colwise().sum() << endl;
              }
         else 
-            goto LABEL0;
+            {goto LABEL0;}
               
 //        if (y != NofNorm) //number of normalisation times
 //             {goto LABEL0;}
@@ -228,17 +227,17 @@ Eigen::MatrixXd DeterministicAnnealing::normalisation (Eigen::MatrixXd &VMatrix,
   
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Eigen::MatrixXd DeterministicAnnealing::getVMatrix (int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd &DeltaMatrix) //initialize VMatrix
+Eigen::MatrixXd DeterministicAnnealing::getVMatrix (int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix) //initialize VMatrix
   {
-      cout << "\n///////////////////////////////////////////////////////////////////// " << endl;
-      cout << "\nNo. of Vehicles M = " << nVehicles << endl;
-      cout << "\nNo. of Tasks N = " << nTasks << endl;
-      cout << "\nDimension of VMatrix is: " << nDim << endl;
-      cout << "\nTotal no of Vij: " << nDim*nDim << endl;
+      cout << "\n ///////////////////////////////////////////////////////////////////// " << endl;
+      cout << "\n No. of Vehicles M = " << nVehicles << endl;
+      cout << "\n No. of Tasks N = " << nTasks << endl;
+      cout << "\n Dimension of VMatrix is: " << nDim << endl;
+      cout << "\n Total no of Vij: " << nDim*nDim << endl;
         
       VMatrix = MatrixXd::Zero(nDim,nDim);
       double tmp = 1./(nDim-1);
-      cout << "\ntmp is: " << tmp << endl;
+      cout << "\n tmp is: " << tmp << endl;
       std::srand((unsigned int) time(0));
 
       // intitalising VMatrix with 1/n values
@@ -249,8 +248,7 @@ Eigen::MatrixXd DeterministicAnnealing::getVMatrix (int &nVehicles, int &nTasks,
                 VMatrix(i,j) = tmp + (((double) rand() / (RAND_MAX))/80) ;// + 0.02*(rand() - 0.5);	// +-1 % noise
             }
         }
-      cout << "\nVMatrix is \n" << VMatrix << endl;
-      	        cout << "\nDeltaMatrix is \n" << DeltaMatrix << endl;
+      cout << "\n VMatrix is \n" << VMatrix << endl;
 
       // If DeltaMatrix values is huge, then VMatrix values are set to zero
       for (int i = 0; i < nDim; i++)
@@ -263,7 +261,7 @@ Eigen::MatrixXd DeterministicAnnealing::getVMatrix (int &nVehicles, int &nTasks,
             }
         }
       
-      cout << "\nVMatrix set according to DeltaMatrix is \n" << VMatrix << endl;
+      cout << "\n VMatrix set according to DeltaMatrix is \n" << VMatrix << endl;
 //    adding all the constraints for the vehicles and tasks
    VMatrix.diagonal().array() = 0;
    VMatrix.leftCols(nVehicles) *= 0;
@@ -272,21 +270,18 @@ Eigen::MatrixXd DeterministicAnnealing::getVMatrix (int &nVehicles, int &nTasks,
    /*VMatrix.triangularView<Lower>() *= 0; //for predefined order
    VMatrix.topRows(nDim) *= 0;           //for a=b and b=a ..
    VMatrix.rightCols(nVehicles) *= 0;    //.. setting same values*/
-
-      cout << "\nVMatrix is \n" << VMatrix << endl;
-
       VMatrix = normalisation(VMatrix, nDim, rDim);
-
+	  cout << "VM is done" << endl;
       return VMatrix;
   }
   
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-Eigen::MatrixXd DeterministicAnnealing::syncUpdate (Eigen::MatrixXd & E_local, Eigen::MatrixXd & UpdatedVMatrix, int refix, int rDim, int nDim, double kT, int nVehicles) //Updating mean field equations (VMatrix) along row-wise
+Eigen::MatrixXd DeterministicAnnealing::syncUpdate (Eigen::MatrixXd & E_local, Eigen::MatrixXd & UpdatedVMatrix, int refix, double kT, int nDim, int rDim, int nVehicles) //Updating mean field equations (VMatrix) along row-wise
   {
         if (refix == 1) { cout << "\nUpdating without Nan" << endl; 
         Eigen::VectorXd X = UpdatedVMatrix.rowwise().maxCoeff();}
-        Eigen::MatrixXd UpdatedWMatrix = MatrixXd::Zero(nDim,nDim);
+        
         //in case to use random switch between row and col
         //rn = rand() % 2; cout << "\nrn is: " << rn << endl;      
             
@@ -294,14 +289,8 @@ Eigen::MatrixXd DeterministicAnnealing::syncUpdate (Eigen::MatrixXd & E_local, E
         Eigen::MatrixXd E = MatrixXd::Zero(nDim,nDim);
         E = ((-1*E_local)/kT);
         
-//         cout << "\n  E_local is: \n" << E_local << endl;
-// 
-//         cout << "\n  VMatrix is: \n" << UpdatedVMatrix << endl;
-// 
-//         cout << "\n  kT is: \n" << kT << endl;
-// 
-//         cout << "\n  E is: \n" << E << endl;
-                
+        cout << "\n Updating VMatrix is: \n" << UpdatedVMatrix << endl;
+
         if (refix == 1) //for Nan type
         {
             for (int i = 0; i < rDim; i++)
@@ -324,7 +313,7 @@ Eigen::MatrixXd DeterministicAnnealing::syncUpdate (Eigen::MatrixXd & E_local, E
         UpdatedWMatrix = UpdatedVMatrix;
         }
         
-        cout << "\nUpdating VMatrix is: (the numerator is updated) \n" << UpdatedVMatrix << endl;
+        cout << "\n Updating VMatrix is: (the numerator is updated) \n" << UpdatedVMatrix << endl;
         
         //Updating the denominator - either row or col wise
         Eigen::VectorXd sumv = UpdatedVMatrix.rowwise().sum(); //row sum
@@ -370,13 +359,14 @@ Eigen::MatrixXd DeterministicAnnealing::syncUpdate (Eigen::MatrixXd & E_local, E
 //                     {UpdatedVMatrix(i,j) = sqrt((UpdatedWMatrix(i,j)*UpdatedVMatrix(i,j)));}
 //              }
 //         cout << "\n The Geometric Mean Update is: \n" << UpdatedVMatrix << endl;
-        cout << "\nUpdatedVMatrix is: \n" << UpdatedVMatrix << endl;
+        cout << "\n UpdatedVMatrix is: \n" << UpdatedVMatrix << endl;
         return UpdatedVMatrix;
     }
       
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::MatrixXf::Index, Eigen::MatrixXf::Index, double> DeterministicAnnealing::calculateLR (Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, Eigen::MatrixXd & DeltaMatrix, int &nVehicles) //calculate LR from V and PMatrix
+std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::MatrixXf::Index, Eigen::MatrixXf::Index, double> DeterministicAnnealing::calculateLR 
+(Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, Eigen::MatrixXd & DeltaMatrix, Eigen::VectorXd & TVec, int nVehicles) //calculate LR from V and PMatrix
   {
         cout << "\n VMatrix is: \n" << VMatrix << endl;
         vDeltaL = VMatrix.transpose() * DeltaMatrix;
@@ -406,7 +396,9 @@ std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::MatrixXf::Index, Eigen::Matr
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Eigen::VectorXd & rightVec, Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, int & TaskState, bool & LoopState, double kappa, double Okappa, int iteration, int nDim, Eigen::MatrixXd & DeltaMatrix, int nVehicles) //calculate ELocal using L,R and PMatrix
+Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Eigen::VectorXd & rightVec, Eigen::MatrixXd & VMatrix, 
+Eigen::MatrixXd & PMatrix, int & TaskState, bool & LoopState, double kappa, double Okappa, double g, double beta, int iteration, int nDim, 
+int rDim, Eigen::MatrixXd DeltaMatrix, Eigen::VectorXd TVec, int nVehicles) //calculate ELocal using L,R and PMatrix
   {
         if (TaskState == 1)
         {
@@ -414,10 +406,6 @@ Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Ei
         cout << "\nmaxl is " <<maxl <<endl;
         cout << "\nmaxr is " <<maxr <<endl;
         cout << "\nkappa is " <<kappa <<endl;
-               
-        cout << "\nDeltaMatrix is " << endl;
-        cout << DeltaMatrix <<endl;
-
 
         for (int i = 0; i < nDim; i++)
             {
@@ -462,13 +450,13 @@ Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Ei
             }
         }
             
+    cout << "\nE_task is: \n" << E_task << endl;
         
     E_task.diagonal().array() = 10000000000;
     E_task.leftCols(nVehicles) = DeltaMatrix.leftCols(nVehicles).eval();
     E_task.bottomRows(nVehicles) = DeltaMatrix.bottomRows(nVehicles).eval();
     E_task.topRightCorner(nVehicles,nVehicles) = DeltaMatrix.bottomLeftCorner(nVehicles,nVehicles).eval();   
-    
-    cout << "\nE_task is: \n" << E_task << endl;
+        cout << "\nE_task is: \n" << E_task << endl;
 
     /////////////////////////////////////Printing out Etask////////////////////////////////////
 
@@ -644,8 +632,6 @@ Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Ei
                         }
                     }
                 }
-            cout << "\nE_norm is: \n" << E_norm << endl;
-
     
 //             cout << "\nSum of all E_norm is: \n" << E_normaverage << endl;
 //             cout << "\nNo of valid element in Enorm are: \n" << normelement << endl;
@@ -663,7 +649,13 @@ Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Ei
 //             outfile18 << "\n ///////////////////////////////////////////////////////////////////// " << endl;
 //             }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+        cout << "\nE_norm is: \n" << E_norm << endl;
+                cout << "\n g is: \n" << g << endl;
+                cout << "\n Tkappa is: \n" << Tkappa << endl;
+                                cout << "\n eta is: \n" << beta << endl;
+        cout << "\nVMatrix is: \n" << VMatrix << endl;
+
+
     E_local = (g*E_loop) + (Tkappa*E_task) + (beta*E_norm); //calculating E matrix
     
             double E_localaverage = 0;
@@ -704,7 +696,7 @@ Eigen::MatrixXd DeterministicAnnealing::calculateE (Eigen::VectorXd &leftVec, Ei
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Eigen::MatrixXd DeterministicAnnealing::updateP (Eigen::MatrixXd &UpdatedVMatrix, Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &PMatrix, int &PState) //calculate Updated P
+Eigen::MatrixXd DeterministicAnnealing::UpdateP (Eigen::MatrixXd &UpdatedVMatrix, Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &PMatrix, int &PState) //calculate Updated P
   {
         Eigen::MatrixXd P = MatrixXd::Zero(nDim,nDim);
         if (PState == 1)
@@ -753,9 +745,8 @@ Eigen::MatrixXd DeterministicAnnealing::updateP (Eigen::MatrixXd &UpdatedVMatrix
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-bool DeterministicAnnealing::validity (Eigen::MatrixXd &Matrix, int &nDim, int &rDim) //finds the validity of the matrix
+bool DeterministicAnnealing::validity (Eigen::MatrixXd &Matrix) //finds the validity of the matrix
   {
-    cout << "CHECKING VALIDITY OF \n" << Matrix << endl; 
     sumrow = Matrix.rowwise().sum();
     sumcol = Matrix.colwise().sum();
     int row_sum = 0;
@@ -811,7 +802,7 @@ bool DeterministicAnnealing::validity (Eigen::MatrixXd &Matrix, int &nDim, int &
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnealing::NN_algo(int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix, double kT_start, double kT_stop, double kT_fac, double g, double beta) //the algorithm
+std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnealing::NN_algo(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_stop, double kT_in, double g, double beta) //the algorithm
   {             
          //calculating initial values L,R, energy for V and P
          Eigen::MatrixXd E_local = MatrixXd::Zero(nDim,nDim);
@@ -822,7 +813,7 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
          E_loop = MatrixXd::Zero(nDim,nDim);
          E_norm = MatrixXd::Zero(nDim,nDim);
          vMatBest = MatrixXd::Zero(nDim,nDim);
-        
+         I = MatrixXd::Identity(nDim,nDim); 
          DeltaVMatrix = MatrixXd::Zero(nDim,nDim);
          NonNormUpdatedVMatrix = MatrixXd::Zero(nDim,nDim);
          NonNormUpdatedPMatrix = MatrixXd::Zero(nDim,nDim);
@@ -830,15 +821,14 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
          leftVec = VectorXd(nDim);
          rightVec = VectorXd(nDim);
          
-         I = MatrixXd::Identity(nDim,nDim); 
-
          VMatrix = getVMatrix(nVehicles, nTasks, nDim, rDim, DeltaMatrix);
-         
+         cout << "\n VMatrix is \n" << VMatrix << endl;
+
          PMatrix = (I - VMatrix).inverse(); //calculates initial P
          cout << "\ninitial PMatrix is \n" << PMatrix << endl;
          cout << "\ninitial VMatrix is \n" << VMatrix << endl;
          
-         calculateLR(VMatrix, PMatrix, DeltaMatrix, nVehicles); // calculates LR for initial values
+         calculateLR(VMatrix, PMatrix, DeltaMatrix, TVec, nVehicles); // calculates LR for initial values
          Okappa = kappa;
          cout << "\ninitial leftVec is: \n" << leftVec << endl;
          cout << "\ninitial rightVec is: \n" << rightVec << endl;
@@ -848,30 +838,26 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
          int FLAG = 1;
          kT = kT_start;
          
-         E_local = calculateE(leftVec,rightVec,VMatrix,PMatrix,TaskState,LoopState,kappa,Okappa,iteration,nDim, DeltaMatrix, nVehicles); //calculate initial local energy using VMatrix
+         E_local = calculateE(leftVec,rightVec,VMatrix,PMatrix,TaskState,LoopState,kappa,Okappa, g,beta,iteration,nDim,rDim,DeltaMatrix,TVec,nVehicles); //calculate initial local energy using VMatrix
          cout << "\ninitial E_local is: \n" << E_local << endl;
          iteration = iteration + 1;
          int refix = 0;
          bool hold = false;
-         double old_KT;
-         double CT = nVehicles/nTasks;
-         clock_t tStart = clock();
-         kT_in = kT_fac;
          
          while (FLAG != 0) //iteration starting  //while (!done)
          {	
 
-            cout << "\n////////////////////////////////////////////////////////////////////////// " << endl;
+            cout << "\n ////////////////////////////////////////////////////////////////////////// " << endl;
             cout << "\n" << iteration << " ITERATION STARTING" << endl;
-            cout << "\nkT is " << kT << endl;
-            cout << "\nCurrent PMatrix is \n" << PMatrix << endl;
-            cout << "\nCurrent VMatrix is \n" << VMatrix << endl;
+            cout << "\n kT is " << kT << endl;
+            cout << "\n Current PMatrix is \n" << PMatrix << endl;
+            cout << "\n Current VMatrix is \n" << VMatrix << endl;
             
             saveV = UpdatedVMatrix;
-            UpdatedVMatrix = syncUpdate(E_local, VMatrix, refix, rDim, nDim, kT, nVehicles); //calculate updatedVMatrix using ELocal
-            cout << "\nUpdatedVMatrix now is \n" << UpdatedVMatrix << endl;
-            cout << "\ncol sum before normalisation is \n" << UpdatedVMatrix.colwise().sum() << endl;
-            cout << "\nrow sum before normalisation is \n" << UpdatedVMatrix.rowwise().sum() << endl;
+            UpdatedVMatrix = syncUpdate(E_local, VMatrix, refix, kT, nDim, rDim, nVehicles); //calculate updatedVMatrix using ELocal
+            cout << "\n UpdatedVMatrix now is \n" << UpdatedVMatrix << endl;
+            cout << "\n col sum before normalisation is \n" << UpdatedVMatrix.colwise().sum() << endl;
+            cout << "\n row sum before normalisation is \n" << UpdatedVMatrix.rowwise().sum() << endl;
             
             for (int i = 0; i < nDim; i++)
                 {                    
@@ -879,45 +865,46 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
                     {   
                         if ( std::isnan(UpdatedVMatrix(i,j)))// || std::isinf(UpdatedVMatrix(i,j)) )
                         {
-                          cout << "\nThe matrix has Nan" << endl;
+                          cout << "\n The matrix has Nan" << endl;
                           refix = 1;
                           goto out;
-                        //  UpdatedVMatrix = syncUpdate(E_local, VMatrix, refix); //reupdate V because of Nan
+                        //  UpdatedVMatrix = syncUpdate(E_local, VMatrix, refix, kT, nDim, rDim, nVehicles); //reupdate V because of Nan
                         }                            
                     }
                 }
-                
+           
             NonNormUpdatedVMatrix = UpdatedVMatrix;
            
             //Normalising till the values along the row/columns is zero
-            cout << "\n/////////////////////////////////////////////////////////////////////////////////////// " << endl;
-            cout << "\nNORMALISATION BEGINS \n" << endl;
+            cout << "\n /////////////////////////////////////////////////////////////////////////////////////// " << endl;
+            cout << "\n NORMALISATION BEGINS \n" << endl;
             //UpdatedVMatrix = normalisation(UpdatedVMatrix);
-            UpdatedVMatrix = sinkhorn(UpdatedVMatrix, nVehicles, nTasks, nDim, rDim);
-            cout << "\nFINAL NORMALISATION COL SUM is \n" << UpdatedVMatrix.colwise().sum() << endl;
-            cout << "\nFINAL NORMALISATION ROW SUM is \n" << UpdatedVMatrix.rowwise().sum() << endl;
-            cout << "\nFinal row and column normalised UpdatedVMatrix is \n" << UpdatedVMatrix << endl;
-            cout << "\nNORMALISATION ENDS \n" << endl;
-            cout << "\n/////////////////////////////////////////////////////////////////////////////////////// " << endl;
-
-            UpdatedPMatrix = updateP(UpdatedVMatrix, VMatrix, PMatrix, PState); //update PMatrix
+            UpdatedVMatrix = Sinkhorn(UpdatedVMatrix, nDim, rDim, nVehicles);
+            cout << "\n FINAL NORMALISATION COL SUM is \n" << UpdatedVMatrix.colwise().sum() << endl;
+            cout << "\n FINAL NORMALISATION ROW SUM is \n" << UpdatedVMatrix.rowwise().sum() << endl;
+            cout << "\n Final row and column normalised UpdatedVMatrix is \n" << UpdatedVMatrix << endl;
+            cout << "\n NORMALISATION ENDS \n" << endl;
+            cout << "\n /////////////////////////////////////////////////////////////////////////////////////// " << endl;
+            
+            UpdatedPMatrix = UpdateP(UpdatedVMatrix, VMatrix, PMatrix, PState); //update PMatrix
             for (int i = 0; i < nDim; i++)
                 {                    
                     for (int j = 0; j< nDim; j++)
                     {   
                         if ( std::isnan(UpdatedPMatrix(i,j)) )
                         {
-                          cout << "\nThe Pmatrix has Nan so converging to loop solutions" << endl;
+                          cout << "\n The Pmatrix has Nan so converging to loop solutions" << endl;
                           UpdatedVMatrix = saveV;
                           goto out;
                         }                            
                     }
                 }
-            calculateLR(UpdatedVMatrix, UpdatedPMatrix, DeltaMatrix, nVehicles);   //Calculate LR
-            E_local = calculateE(leftVec,rightVec,UpdatedVMatrix,UpdatedPMatrix, TaskState, LoopState, kappa,Okappa, iteration, nDim, DeltaMatrix, nVehicles); //calculate E
-            cout << "\nE_local is: \n " << E_local << endl;
+            calculateLR(UpdatedVMatrix, UpdatedPMatrix, DeltaMatrix, TVec, nVehicles);   //Calculate LR
+            E_local = calculateE(leftVec,rightVec,UpdatedVMatrix,UpdatedPMatrix, TaskState, LoopState, kappa,Okappa, g, beta,iteration, nDim, rDim,DeltaMatrix,TVec,nVehicles); //calculate E
+            cout << "\n E_local is: \n " << E_local << endl;
 
-           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             //Calculate the costvalue if the updatedVMatrix is above 0.8 and valid, if so, save it as best solution
             int ck = 0;
             for (int i = 0; i < nDim; i++)
@@ -925,20 +912,14 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
                     for (int j = 0; j< nDim; j++)
                     {   
                         if(UpdatedVMatrix(i,j) > 0.8)
-                            { cout << "\n GOING TO SATURATE" << endl;
-								ck = ck+1;
-								}
+                            {ck = ck+1;}
                     }
                 }
             if (ck == rDim)
             {
-				cout << "\n CK IS" << ck << endl;
-				cout << "\n rDim IS" << rDim << endl;
-
-                if (validity(UpdatedVMatrix, nDim, rDim) == false)
+                if (validity(UpdatedVMatrix) == false)
                     {
-                        calculateLR(UpdatedVMatrix, UpdatedPMatrix, DeltaMatrix, nVehicles);
-                        cout << "\n GOING NEXT" << endl;
+                        calculateLR(UpdatedVMatrix, UpdatedPMatrix, DeltaMatrix, TVec, nVehicles);
                         float costValue = kappa;
                         if (costValue < costValueBest)
                             {
@@ -950,6 +931,9 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
                     }
             }
             
+            cout << "\n UodatedVMatrix is: \n " << UpdatedVMatrix << endl;
+            cout << "\n VMatrix is: \n " << VMatrix << endl;
+
             DeltaVMatrix = (UpdatedVMatrix - VMatrix);
             saveV = UpdatedVMatrix; //a copy of the updatedVMatrix used in case of Nan
             double maxdV = DeltaVMatrix.maxCoeff();
@@ -971,14 +955,14 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
                     }
                 }
             if (check1 == rDim)
-            {cout << "\nNormalized matrix is saturated " << endl;}    
+            {cout << "\n Normalized matrix is saturated " << endl;}    
             if (check2 == rDim)
-            {cout << "\nUpdatedV matrix is saturated " << endl;
+            {cout << "\n UpdatedV matrix is saturated " << endl;
              goto out;
             }  
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
-            //cout << "\nDeltaVMatrix is\n" << DeltaVMatrix << endl;
+            cout << "\nDeltaVMatrix is\n" << DeltaVMatrix << endl;
             cout << "\nmaxdV is " << maxdV << endl;
             cout << "\nmeandV is " << meandV << endl;
 
@@ -998,12 +982,11 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
                 
             if (kT_fac > 0.99) {kT_fac = 0.99;}
             cout << "\nkT_fac is " << kT_fac <<endl;
-            cout << "\nkT is: " << kT << endl;
-
-            kT =kT * kT_fac;
+            
+            kT *= kT_fac;
             
             cout << "\nNew kT is: " << kT << endl;
-            cout << "\n" << iteration << "ITERATION DONE" << endl;
+            cout << "\n" << iteration << " ITERATION DONE" << endl;
             iteration = iteration + 1;
             VMatrix = UpdatedVMatrix;
             PMatrix = UpdatedPMatrix;
@@ -1011,43 +994,19 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> DeterministicAnnea
             if (kT < kT_stop) 
             {FLAG = 0;}
             cout << "\n ///////////////////////////////////////////////////////////////////// " << endl;
-            cout << "\nvMatBest is \n" << vMatBest << endl;
-
          }
          out:
-            cout << "\nvMatBest is \n" << vMatBest << endl;
-            cout << "\nVMatrix is \n" << VMatrix << endl;
-         
-    if (validity(NonNormUpdatedVMatrix, nDim, rDim) == true)
-    {
-        cout << "\nInvalid NonNormalised VMatrix" << endl;
-    }
-    
-    cout << "\n///////////////////////////////////////////////////////////////// " << endl;
-    
-    if (validity(vMatBest, nDim, rDim) == true)
-    {
-        cout << "\nInvalid VMat" << endl;
-    }
-
-    cout << "\nThe input parameters are for : " << nVehicles << " vehicles " << nTasks << " tasks taken for "  <<" cost with gamma = " <<g<< " and eta = " << beta << " and Tkappa as " << Tkappa << " with kT_fac as " << kT_fac << " and kT_start as " << kT_start << " and kT_stop as " << kT_stop << endl;
-    printf("\nTotal computational time taken: %.2f\n", (((double)(clock() - tStart)/CLOCKS_PER_SEC)));
-    
-    cout << "\nvMatBest is \n" << vMatBest << endl;
-    cout << "\nUpdatedVMatrix is \n" << UpdatedVMatrix << endl;
-    //cout << "\nNonNormUpdatedVMatrix is \n" << NonNormUpdatedVMatrix << endl;
-
-    
-    return std::make_tuple(vMatBest, UpdatedVMatrix, NonNormUpdatedVMatrix);
+         return std::make_tuple(vMatBest, UpdatedVMatrix, NonNormUpdatedVMatrix);
  }  
-    
 
-Eigen::MatrixXd DeterministicAnnealing::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_stop, double kT_fac, double g, double beta)
-{
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Eigen::MatrixXd DeterministicAnnealing::compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_stop, double kT_in, double g, double beta)
+  {
     cout << "\nnvehicle is:" << nVehicles<< endl;
     cout << "\ntask is:" << nTasks << endl;
-    cout << "\nndim is:" << rDim << endl;
-    cout << "\nrdim is:" << nDim << endl;
+    cout << "\nndim is:" << nDim << endl;
+    cout << "\nrdim is:" << rDim << endl;
     
     TVec = VectorXd(nDim);
     for (int i=0; i<nDim; i++)
@@ -1060,8 +1019,7 @@ Eigen::MatrixXd DeterministicAnnealing::compute(int nVehicles, int nTasks, int n
     
     //subscribe to DeltaMatrix
     cout << "\nDeltaMatrix is:" << DeltaMatrix << endl;
-
-    NN_algo(nVehicles, nTasks, nDim, rDim, DeltaMatrix, kT_start, kT_stop, kT_fac, g, beta);    //NN_algo - updating equations
+    NN_algo(nVehicles, nTasks, nDim, rDim, DeltaMatrix, kT_start, kT_stop, kT_in, g, beta);    //NN_algo - updating equations
     cout << "\nAnnealing done \n" << endl;
 
 //     Gnuplot gp;

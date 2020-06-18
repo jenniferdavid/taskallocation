@@ -424,7 +424,7 @@ int main(int argc, char *argv[])
      goalMsg.pList.coords.clear();
      q++;
     }
-     while (ros::ok())
+		while (ros::ok())
         {
             taskPub.publish(goalListMsg); //publishes
             loop_rate.sleep();

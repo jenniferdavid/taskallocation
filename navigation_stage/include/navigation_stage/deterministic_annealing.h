@@ -45,12 +45,11 @@ public:
 	int NofNorm;
 	int PState = 2;
 	int TaskState = 1;
-	int VState;
 
 	double kT_start; //from arguments
 	double kT_stop; //from arguments
-	double kT_fac;//from arguments
-	double kT_in; //set to kT_fac
+	double kT_fac;
+	double kT_in; //from arguments
 	double g;    //from arguments
 	double kT;
 	double lk;
@@ -67,14 +66,16 @@ public:
 	float small = FLT_MIN; //very small	
 	float onemsmall = 1 - small; //1
 	float lk0 = 1/small - 1; //big number
-	float big = FLT_MAX; //big number
+	//float big = FLT_MAX; //big number
+	float big = 10000.00;	
 	float costValueBest = big; 
     
 	Eigen::MatrixXd VMatrix;
 	Eigen::MatrixXd DeltaMatrix;
 	Eigen::MatrixXd PMatrix;
 	Eigen::MatrixXd I;//
-        Eigen::MatrixXf::Index maxl, maxr;
+        Eigen::MatrixXf::Index maxl, maxr;    
+
 	Eigen::MatrixXd NonNormUpdatedVMatrix;
 	Eigen::MatrixXd NonNormUpdatedPMatrix;
 	Eigen::MatrixXd DeltaVMatrix;
@@ -107,18 +108,28 @@ public:
 	Eigen::VectorXd X;
 
 	DeterministicAnnealing();
-	Eigen::MatrixXd sinkhorn (Eigen::MatrixXd & VMatrix, int &nVehicles, int &nTasks, int &nDim, int &rDim);
- 	Eigen::MatrixXd normalisation (Eigen::MatrixXd &VMatrix, int &nDim, int &rDim);
-	Eigen::MatrixXd getVMatrix (int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix); 
-	Eigen::MatrixXd syncUpdate (Eigen::MatrixXd & E_local, Eigen::MatrixXd & UpdatedVMatrix, int refix, int rDim, int nDim, double kT, int nVehicles); 
-	Eigen::MatrixXd calculateE (Eigen::VectorXd &leftVec, Eigen::VectorXd & rightVec, Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, int & TaskState, bool & LoopState, double kappa, double Okappa, int iteration, int nDim, Eigen::MatrixXd & DeltaMatrix, int nVehicles);
-	Eigen::MatrixXd updateP (Eigen::MatrixXd &UpdatedVMatrix, Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &PMatrix, int &PState); 
-	Eigen::MatrixXd compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_end, double kT_step, double gamma, double eta);
-	
-	std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> NN_algo(int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix, double kT_start, double kT_end, double kT_step, double gamma, double eta); 
-	std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::MatrixXf::Index, Eigen::MatrixXf::Index, double> calculateLR (Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, Eigen::MatrixXd & DeltaMatrix, int &nVehicles);
 
-	bool validity (Eigen::MatrixXd &Matrix, int &nDim, int &rDim);
+	Eigen::MatrixXd Sinkhorn (Eigen::MatrixXd & VMatrix, int nDim, int rDim, int nVehicles); //this function normalises a matrix - makes into doubly stochastic matrix
+
+ 	Eigen::MatrixXd normalisation (Eigen::MatrixXd & VMatrix, int &nDim, int &rDim); //this function normalises a matrix - makes into doubly stochastic matrix
+
+	Eigen::MatrixXd getVMatrix (int &nVehicles, int &nTasks, int &nDim, int &rDim, Eigen::MatrixXd & DeltaMatrix); //initialize VMatrix
+
+	Eigen::MatrixXd syncUpdate (Eigen::MatrixXd & E_local, Eigen::MatrixXd & UpdatedVMatrix, int refix, double kT, int nDim, int rDim, int nVehicles); //Updating mean field equations (VMatrix) along row-wise
+	
+	std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::MatrixXf::Index, Eigen::MatrixXf::Index, double> calculateLR (Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, Eigen::MatrixXd & DeltaMatrix, Eigen::VectorXd & TVec, int nVehicles); //calculate LR from V and PMatrix
+
+	Eigen::MatrixXd calculateE (Eigen::VectorXd &leftVec, Eigen::VectorXd & rightVec, Eigen::MatrixXd & VMatrix, Eigen::MatrixXd & PMatrix, int & TaskState, bool & LoopState, double kappa, double Okappa, double g, double beta, int iteration, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, Eigen::VectorXd TVec, int nVehicles); //calculate ELocal using L,R and PMatrix
+
+	Eigen::MatrixXd UpdateP (Eigen::MatrixXd &UpdatedVMatrix, Eigen::MatrixXd &VMatrix, Eigen::MatrixXd &PMatrix, int &PState); //calculate Updated P
+
+	bool validity (Eigen::MatrixXd &Matrix); //finds the validity of the matrix
+
+	std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> NN_algo(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_stop, double kT_fac, double g, double beta); //the algorithm
+
+	Eigen::MatrixXd compute(int nVehicles, int nTasks, int nDim, int rDim, Eigen::MatrixXd DeltaMatrix, double kT_start, double kT_stop, double kT_fac, double g, double beta);
+
+
 };//End of class DeterministicAnnealing
 
 
